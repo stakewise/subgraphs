@@ -20,3 +20,4 @@ yarn-error.log*
 
 # Graph build files
 build/
+generated/
