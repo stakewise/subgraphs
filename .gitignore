@@ -21,3 +21,4 @@ yarn-error.log*
 # Graph build files
 build/
 generated/
+subgraphs/**/subgraph.yaml
