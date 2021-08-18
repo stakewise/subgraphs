@@ -1,0 +1,7 @@
+{
+  "network": "mainnet",
+  "pool": {
+    "address": "0xc874b064f465bdd6411d45734b56fac750cda29a",
+    "startBlock": "11726298"
+  }
+}

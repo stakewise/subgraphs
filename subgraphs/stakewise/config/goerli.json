@@ -1,0 +1,7 @@
+{
+  "network": "goerli",
+  "pool": {
+    "address": "0x8c1efecfb5c4f1099ab0460b5659342943764df7",
+    "startBlock": "4468087"
+  }
+}
