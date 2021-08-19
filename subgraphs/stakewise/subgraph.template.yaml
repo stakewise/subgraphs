@@ -1,0 +1,40 @@
+specVersion: 0.0.3
+description: The StakeWise ETH2 liquid staking protocol
+repository: https://github.com/stakewise/subgraphs/subgraphs/stakewise
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Pool
+    network: {{ network }}
+    source:
+      address: '{{ pool.address }}'
+      abi: Pool
+      startBlock: {{ pool.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/pool.ts
+      entities:
+        - Pool
+        - Settings
+        - DepositActivation
+      abis:
+        - name: Pool
+          file: ./packages/abis/Pool.json
+      eventHandlers:
+        - event: MinActivatingDepositUpdated(uint256,address)
+          handler: handleMinActivatingDepositUpdated
+        - event: PendingValidatorsLimitUpdated(uint256,address)
+          handler: handlePendingValidatorsLimitUpdated
+        - event: ActivatedValidatorsUpdated(uint256,address)
+          handler: handleActivatedValidatorsUpdated
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+        - event: ActivationScheduled(indexed address,uint256,uint256)
+          handler: handleActivationScheduled
+        - event: Activated(indexed address,uint256,uint256,indexed address)
+          handler: handleActivated

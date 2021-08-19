@@ -1,0 +1,47 @@
+"""
+Pool settings
+"""
+type Pool @entity {
+    "Pool contract address"
+    id: ID!
+
+    "The minimal deposit amount considered for the activation"
+    minActivatingDeposit: BigDecimal!
+
+    "The pending validators limit percentage. When it's exceeded, the deposits will be set for the activation"
+    pendingValidatorsLimit: Int!
+
+    "The total amount of pending validators"
+    pendingValidators: Int!
+
+    "The total amount of activated validators"
+    activatedValidators: Int!
+}
+
+"""
+Contracts' Settings
+"""
+type Settings @entity {
+    "Set to 1"
+    id: ID!
+
+    "Defines whether the Pool contract is paused"
+    poolPaused: Boolean!
+}
+
+"""
+Pool deposit activation
+"""
+type DepositActivation @entity {
+    "Set to `account-validatorIndex`"
+    id: ID!
+
+    "The address of the account that has pending activation"
+    account: Bytes!
+
+    "The validator index that is handling the deposit"
+    validatorIndex: Int!
+
+    "The amount that will be activated"
+    amount: BigDecimal!
+}
