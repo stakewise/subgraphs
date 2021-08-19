@@ -44,3 +44,37 @@ dataSources:
           handler: handleValidatorInitialized
         - event: ValidatorRegistered(bytes,address)
           handler: handleValidatorRegistered
+
+  - kind: ethereum/contract
+    name: PoolValidators
+    network: {{ network }}
+    source:
+      address: '{{ poolValidators.address }}'
+      abi: PoolValidators
+      startBlock: {{ poolValidators.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/poolValidators.ts
+      entities:
+        - Operator
+        - Validator
+      abis:
+        - name: PoolValidators
+          file: ./packages/abis/PoolValidators.json
+      eventHandlers:
+        - event: OperatorAdded(indexed address,indexed bytes32,string,indexed bytes32,string)
+          handler: handleOperatorAdded
+        - event: OperatorRemoved(indexed address,indexed address)
+          handler: handleOperatorRemoved
+        - event: OperatorSlashed(indexed address,indexed bytes,uint256)
+          handler: handleOperatorSlashed
+        - event: CollateralDeposited(indexed address,uint256)
+          handler: handleCollateralDeposited
+        - event: CollateralWithdrawn(indexed address,indexed address,uint256)
+          handler: handleCollateralWithdrawn
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
