@@ -16,9 +16,17 @@ type Pool @entity {
 
     "The total amount of activated validators"
     activatedValidators: Int!
+}
 
-    "Defines whether the contract is paused"
-    isPaused: Boolean!
+"""
+Contracts' Settings
+"""
+type Settings @entity {
+    "Set to 1"
+    id: ID!
+
+    "Defines whether the Pool contract is paused"
+    poolPaused: Boolean!
 }
 
 """
@@ -36,10 +44,4 @@ type DepositActivation @entity {
 
     "The amount that will be activated"
     amount: BigDecimal!
-
-    "Defines whether the deposit is activated"
-    isActivated: Boolean!
-
-    "The address of the account that has activated the deposit"
-    activationSender: Bytes!
 }

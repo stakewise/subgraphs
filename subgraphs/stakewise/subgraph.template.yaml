@@ -18,16 +18,18 @@ dataSources:
       file: ./src/mappings/pool.ts
       entities:
         - Pool
+        - Settings
+        - DepositActivation
       abis:
         - name: Pool
           file: ./packages/abis/Pool.json
       eventHandlers:
         - event: MinActivatingDepositUpdated(uint256,address)
-          handler: handleSetMinActivatingDeposit
+          handler: handleMinActivatingDepositUpdated
         - event: PendingValidatorsLimitUpdated(uint256,address)
-          handler: handleSetPendingValidatorsLimit
+          handler: handlePendingValidatorsLimitUpdated
         - event: ActivatedValidatorsUpdated(uint256,address)
-          handler: handleSetActivatedValidators
+          handler: handleActivatedValidatorsUpdated
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)

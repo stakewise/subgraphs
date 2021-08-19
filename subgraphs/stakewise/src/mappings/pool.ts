@@ -1,4 +1,4 @@
-import { log } from "@graphprotocol/graph-ts";
+import { log, store } from "@graphprotocol/graph-ts";
 
 import {
   Activated,
@@ -9,74 +9,57 @@ import {
   PendingValidatorsLimitUpdated,
   Unpaused,
 } from "../../generated/Pool/Pool";
-import { createOrLoadDepositActivation, createOrLoadPool } from "../entities";
+import {
+  createOrLoadDepositActivation,
+  createOrLoadPool,
+  createOrLoadSettings,
+  getDepositActivationId,
+} from "../entities";
+import { DepositActivation } from "../../generated/schema";
 
-export function handleSetMinActivatingDeposit(
+export function handleMinActivatingDepositUpdated(
   event: MinActivatingDepositUpdated
 ): void {
-  const pool = createOrLoadPool(event.block);
+  const pool = createOrLoadPool();
 
   pool.minActivatingDeposit = event.params.minActivatingDeposit.toBigDecimal();
+  pool.save();
 
   log.info(
     "[Pool] MinActivatingDepositUpdated sender={} minActivatingDeposit={}",
     [event.params.sender.toHexString(), pool.minActivatingDeposit.toString()]
   );
-
-  pool.save();
 }
 
-export function handleSetPendingValidatorsLimit(
+export function handlePendingValidatorsLimitUpdated(
   event: PendingValidatorsLimitUpdated
 ): void {
-  const pool = createOrLoadPool(event.block);
+  const pool = createOrLoadPool();
 
   pool.pendingValidatorsLimit = event.params.pendingValidatorsLimit.toI32();
+  pool.save();
 
   log.info(
     "[Pool] PendingValidatorsLimitUpdated sender={} pendingValidatorsLimit={}",
     [event.params.sender.toHexString(), pool.pendingValidatorsLimit.toString()]
   );
-
-  pool.save();
 }
 
-export function handleSetActivatedValidators(
+export function handleActivatedValidatorsUpdated(
   event: ActivatedValidatorsUpdated
 ): void {
-  const pool = createOrLoadPool(event.block);
+  const pool = createOrLoadPool();
   const newActivatedValidators = event.params.activatedValidators.toI32();
   const activatedValidators = newActivatedValidators - pool.activatedValidators;
 
   pool.pendingValidators = pool.pendingValidators - activatedValidators;
   pool.activatedValidators = newActivatedValidators;
+  pool.save();
 
   log.info(
     "[Pool] ActivatedValidatorsUpdated sender={} activatedValidators={}",
     [event.params.sender.toHexString(), pool.activatedValidators.toString()]
   );
-
-  pool.save();
-}
-
-export function handlePaused(event: Paused): void {
-  const pool = createOrLoadPool(event.block);
-
-  pool.isPaused = true;
-
-  log.info("[Pool] Paused account={}", [event.params.account.toHexString()]);
-
-  pool.save();
-}
-
-export function handleUnpaused(event: Unpaused): void {
-  const pool = createOrLoadPool(event.block);
-
-  pool.isPaused = false;
-
-  log.info("[Pool] Unpaused account={}", [event.params.account.toHexString()]);
-
-  pool.save();
 }
 
 export function handleActivationScheduled(event: ActivationScheduled): void {
@@ -84,6 +67,7 @@ export function handleActivationScheduled(event: ActivationScheduled): void {
     event.params.sender,
     event.params.validatorIndex
   );
+  activation.save();
 
   const addedAmount = event.params.value.toBigDecimal();
   activation.amount = activation.amount.plus(addedAmount);
@@ -93,25 +77,41 @@ export function handleActivationScheduled(event: ActivationScheduled): void {
     activation.validatorIndex.toString(),
     addedAmount.toString(),
   ]);
-
-  activation.save();
 }
 
 export function handleActivated(event: Activated): void {
-  const activation = createOrLoadDepositActivation(
+  const activationId = getDepositActivationId(
     event.params.account,
     event.params.validatorIndex
   );
+  let activation = DepositActivation.load(activationId);
 
-  activation.isActivated = true;
-  activation.activationSender = event.params.sender;
+  if (activation != null) {
+    store.remove("DepositActivation", activationId);
+  }
 
   log.info("[Pool] Activated account={} validatorIndex={} value={} sender={}", [
-    activation.account.toHexString(),
-    activation.validatorIndex.toString(),
-    activation.amount.toString(),
+    event.params.account.toHexString(),
+    event.params.validatorIndex.toString(),
+    event.params.value.toBigDecimal().toString(),
     event.params.sender.toHexString(),
   ]);
+}
 
-  activation.save();
+export function handlePaused(event: Paused): void {
+  const settings = createOrLoadSettings();
+
+  settings.poolPaused = true;
+  settings.save();
+
+  log.info("[Pool] Paused account={}", [event.params.account.toHexString()]);
+}
+
+export function handleUnpaused(event: Unpaused): void {
+  const settings = createOrLoadSettings();
+
+  settings.poolPaused = false;
+  settings.save();
+
+  log.info("[Pool] Unpaused account={}", [event.params.account.toHexString()]);
 }
