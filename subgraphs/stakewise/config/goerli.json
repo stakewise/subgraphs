@@ -2,6 +2,10 @@
   "network": "goerli",
   "pool": {
     "address": "0x8c1efecfb5c4f1099ab0460b5659342943764df7",
-    "startBlock": "4468087"
+    "startBlock": "0"
+  },
+  "poolValidators": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "startBlock": "0"
   }
 }
