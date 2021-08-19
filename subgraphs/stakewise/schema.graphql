@@ -27,6 +27,9 @@ type Settings @entity {
 
     "Defines whether the Pool contract is paused"
     poolPaused: Boolean!
+
+    "Defines whether the PoolValidators contract is paused"
+    poolValidatorsPaused: Boolean!
 }
 
 """
@@ -44,4 +47,53 @@ type DepositActivation @entity {
 
     "The amount that will be activated"
     amount: BigDecimal!
+}
+
+"""
+StakeWise Operator
+"""
+type Operator @entity {
+    "The operator address"
+    id: ID!
+
+    "The initialize merkle root used to verify validator registration initialization"
+    initializeMerkleRoot: Bytes!
+
+    "The initialize merkle root proofs link"
+    initializeMerkleProofs: String!
+
+    "The finalize merkle root used to verify validator registration finalization"
+    finalizeMerkleRoot: Bytes!
+
+    "The finalize merkle root proofs link"
+    finalizeMerkleProofs: String!
+
+    "The collateral amount deposited for ensuring the validator registration process"
+    collateral: BigDecimal!
+
+    "The operator validators"
+    validators: [Validator!] @derivedFrom(field: "operator")
+}
+
+"""
+Enum to track status of the validator registration.
+Uninitialized - validator has not been initialized.
+Initialized - 1 ether deposit has been made to the ETH2 registration contract for the public key.
+Finalized - 31 ether deposit has been made to the ETH2 registration contract for the public key.
+Failed - 1 ether deposit has failed as it was assigned to the different from the protocol's withdrawal key.
+"""
+enum RegistrationStatus { Uninitialized, Initialized, Finalized, Failed }
+
+"""
+StakeWise Validator
+"""
+type Validator @entity {
+    "The validator public key"
+    id: ID!
+
+    "The validator operator"
+    operator: Operator!
+
+    "The validator registration status"
+    registrationStatus: RegistrationStatus!
 }
