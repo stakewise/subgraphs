@@ -1,4 +1,4 @@
-import { BigDecimal, Bytes } from "@graphprotocol/graph-ts/index";
+import { BigDecimal, Bytes } from "@graphprotocol/graph-ts";
 
 import { Operator, Validator } from "../../generated/schema";
 

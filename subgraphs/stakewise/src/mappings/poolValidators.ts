@@ -1,4 +1,4 @@
-import { Bytes, log } from "@graphprotocol/graph-ts/index";
+import { Bytes, log } from "@graphprotocol/graph-ts";
 
 import {
   createOrLoadOperator,
