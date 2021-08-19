@@ -8,10 +8,10 @@ import {
 import { DepositActivation, Pool } from "../../generated/schema";
 
 export function createOrLoadPool(): Pool {
-  let poolAddress = dataSource.address().toHexString();
+  const poolAddress = dataSource.address().toHexString();
   let pool = Pool.load(poolAddress);
 
-  if (pool == null) {
+  if (!pool) {
     pool = new Pool(poolAddress);
 
     pool.minActivatingDeposit = BigDecimal.fromString("0");
@@ -28,7 +28,7 @@ export function getDepositActivationId(
   account: Address,
   validatorIndex: BigInt
 ): string {
-  return account.toHexString().concat("-").concat(validatorIndex.toString());
+  return account.toHexString().concat("-", validatorIndex.toString());
 }
 
 export function createOrLoadDepositActivation(
@@ -38,7 +38,7 @@ export function createOrLoadDepositActivation(
   const activationId = getDepositActivationId(account, validatorIndex);
   let activation = DepositActivation.load(activationId);
 
-  if (activation == null) {
+  if (!activation) {
     activation = new DepositActivation(activationId);
 
     activation.account = account;
