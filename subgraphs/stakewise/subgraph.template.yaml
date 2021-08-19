@@ -20,6 +20,8 @@ dataSources:
         - Pool
         - Settings
         - DepositActivation
+        - Operator
+        - Validator
       abis:
         - name: Pool
           file: ./packages/abis/Pool.json
@@ -38,3 +40,7 @@ dataSources:
           handler: handleActivationScheduled
         - event: Activated(indexed address,uint256,uint256,indexed address)
           handler: handleActivated
+        - event: ValidatorInitialized(bytes,address)
+          handler: handleValidatorInitialized
+        - event: ValidatorRegistered(bytes,address)
+          handler: handleValidatorRegistered

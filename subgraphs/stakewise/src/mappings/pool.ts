@@ -8,12 +8,17 @@ import {
   Paused,
   PendingValidatorsLimitUpdated,
   Unpaused,
+  ValidatorInitialized,
+  ValidatorRegistered,
 } from "../../generated/Pool/Pool";
 import {
   createOrLoadDepositActivation,
   createOrLoadPool,
-  createOrLoadSettings,
+  createOrLoadOperator,
+  createOrLoadValidator,
   getDepositActivationId,
+  createOrLoadSettings,
+  RegistrationStatus,
 } from "../entities";
 import { DepositActivation } from "../../generated/schema";
 
@@ -95,6 +100,38 @@ export function handleActivated(event: Activated): void {
     event.params.validatorIndex.toString(),
     event.params.value.toBigDecimal().toString(),
     event.params.sender.toHexString(),
+  ]);
+}
+
+export function handleValidatorInitialized(event: ValidatorInitialized): void {
+  const operator = createOrLoadOperator(event.params.operator.toHexString());
+  const validator = createOrLoadValidator(event.params.publicKey.toHexString());
+
+  validator.operator = operator.id;
+  validator.registrationStatus = RegistrationStatus.Initialized;
+  validator.save();
+
+  log.info("[Pool] ValidatorInitialized publicKey={} operator={}", [
+    validator.id,
+    operator.id,
+  ]);
+}
+
+export function handleValidatorRegistered(event: ValidatorRegistered): void {
+  const operator = createOrLoadOperator(event.params.operator.toHexString());
+  const validator = createOrLoadValidator(event.params.publicKey.toHexString());
+
+  validator.operator = operator.id;
+  validator.registrationStatus = RegistrationStatus.Finalized;
+  validator.save();
+
+  const pool = createOrLoadPool();
+  pool.pendingValidators += 1;
+  pool.save();
+
+  log.info("[Pool] ValidatorRegistered publicKey={} operator={}", [
+    validator.id,
+    operator.id,
   ]);
 }
 

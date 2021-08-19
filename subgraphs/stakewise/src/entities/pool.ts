@@ -18,7 +18,6 @@ export function createOrLoadPool(): Pool {
     pool.pendingValidatorsLimit = 0;
     pool.pendingValidators = 0;
     pool.activatedValidators = 0;
-
     pool.save();
   }
   return pool as Pool;
