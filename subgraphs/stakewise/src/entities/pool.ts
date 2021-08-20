@@ -8,7 +8,7 @@ import {
 import { DepositActivation, Pool } from "../../generated/schema";
 
 export function createOrLoadPool(): Pool {
-  const poolAddress = dataSource.address().toHexString();
+  let poolAddress = dataSource.address().toHexString();
   let pool = Pool.load(poolAddress);
 
   if (!pool) {
@@ -27,14 +27,14 @@ export function getDepositActivationId(
   account: Address,
   validatorIndex: BigInt
 ): string {
-  return account.toHexString().concat("-", validatorIndex.toString());
+  return account.toHexString().concat("-").concat(validatorIndex.toString());
 }
 
 export function createOrLoadDepositActivation(
   account: Address,
   validatorIndex: BigInt
 ): DepositActivation {
-  const activationId = getDepositActivationId(account, validatorIndex);
+  let activationId = getDepositActivationId(account, validatorIndex);
   let activation = DepositActivation.load(activationId);
 
   if (!activation) {
