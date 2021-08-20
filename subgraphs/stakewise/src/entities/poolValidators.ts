@@ -1,13 +1,5 @@
-import { BigDecimal, Bytes } from "@graphprotocol/graph-ts";
-
 import { Operator, Validator } from "../../generated/schema";
-
-export enum RegistrationStatus {
-  Uninitialized = "Uninitialized",
-  Initialized = "Initialized",
-  Finalized = "Finalized",
-  Failed = "Failed",
-}
+import { EMPTY_BIG_DECIMAL, EMPTY_BYTES } from "../constants";
 
 export function createOrLoadOperator(operatorAddress: string): Operator {
   let operator = Operator.load(operatorAddress);
@@ -15,11 +7,11 @@ export function createOrLoadOperator(operatorAddress: string): Operator {
   if (!operator) {
     operator = new Operator(operatorAddress);
 
-    operator.initializeMerkleRoot = Bytes.fromI32(0);
+    operator.initializeMerkleRoot = EMPTY_BYTES;
     operator.initializeMerkleProofs = "";
-    operator.finalizeMerkleRoot = Bytes.fromI32(0);
+    operator.finalizeMerkleRoot = EMPTY_BYTES;
     operator.finalizeMerkleProofs = "";
-    operator.collateral = BigDecimal.fromString("0");
+    operator.collateral = EMPTY_BIG_DECIMAL;
     operator.save();
   }
   return operator as Operator;
@@ -32,7 +24,7 @@ export function createOrLoadValidator(publicKey: string): Validator {
     validator = new Validator(publicKey);
 
     validator.operator = "";
-    validator.registrationStatus = RegistrationStatus.Uninitialized;
+    validator.registrationStatus = "Uninitialized";
     validator.save();
   }
   return validator as Validator;

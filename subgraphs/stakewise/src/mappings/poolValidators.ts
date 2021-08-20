@@ -1,10 +1,9 @@
-import { Bytes, log } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
 
 import {
   createOrLoadOperator,
   createOrLoadSettings,
   createOrLoadValidator,
-  RegistrationStatus,
 } from "../entities";
 import {
   CollateralDeposited,
@@ -15,9 +14,10 @@ import {
   Paused,
   Unpaused,
 } from "../../generated/PoolValidators/PoolValidators";
+import { EMPTY_BYTES } from "../constants";
 
 export function handleOperatorAdded(event: OperatorAdded): void {
-  const operator = createOrLoadOperator(event.params.operator.toHexString());
+  let operator = createOrLoadOperator(event.params.operator.toHexString());
 
   operator.initializeMerkleRoot = event.params.initializeMerkleRoot;
   operator.initializeMerkleProofs = event.params.initializeMerkleProofs;
@@ -38,11 +38,11 @@ export function handleOperatorAdded(event: OperatorAdded): void {
 }
 
 export function handleOperatorRemoved(event: OperatorRemoved): void {
-  const operator = createOrLoadOperator(event.params.operator.toHexString());
+  let operator = createOrLoadOperator(event.params.operator.toHexString());
 
-  operator.initializeMerkleRoot = Bytes.fromI32(0);
+  operator.initializeMerkleRoot = EMPTY_BYTES;
   operator.initializeMerkleProofs = "";
-  operator.finalizeMerkleRoot = Bytes.fromI32(0);
+  operator.finalizeMerkleRoot = EMPTY_BYTES;
   operator.finalizeMerkleProofs = "";
   operator.save();
 
@@ -53,18 +53,18 @@ export function handleOperatorRemoved(event: OperatorRemoved): void {
 }
 
 export function handleOperatorSlashed(event: OperatorSlashed): void {
-  const operator = createOrLoadOperator(event.params.operator.toHexString());
-  const refundedAmount = event.params.refundedAmount.toBigDecimal();
+  let operator = createOrLoadOperator(event.params.operator.toHexString());
+  let refundedAmount = event.params.refundedAmount.toBigDecimal();
 
-  operator.initializeMerkleRoot = Bytes.fromI32(0);
+  operator.initializeMerkleRoot = EMPTY_BYTES;
   operator.initializeMerkleProofs = "";
-  operator.finalizeMerkleRoot = Bytes.fromI32(0);
+  operator.finalizeMerkleRoot = EMPTY_BYTES;
   operator.finalizeMerkleProofs = "";
   operator.collateral = operator.collateral.minus(refundedAmount);
   operator.save();
 
-  const validator = createOrLoadValidator(event.params.publicKey.toHexString());
-  validator.registrationStatus = RegistrationStatus.Failed;
+  let validator = createOrLoadValidator(event.params.publicKey.toHexString());
+  validator.registrationStatus = "Failed";
   validator.save();
 
   log.info(
@@ -74,8 +74,8 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
 }
 
 export function handleCollateralDeposited(event: CollateralDeposited): void {
-  const operator = createOrLoadOperator(event.params.operator.toHexString());
-  const collateral = event.params.collateral.toBigDecimal();
+  let operator = createOrLoadOperator(event.params.operator.toHexString());
+  let collateral = event.params.collateral.toBigDecimal();
 
   operator.collateral = operator.collateral.plus(collateral);
   operator.save();
@@ -87,8 +87,8 @@ export function handleCollateralDeposited(event: CollateralDeposited): void {
 }
 
 export function handleCollateralWithdrawn(event: CollateralWithdrawn): void {
-  const operator = createOrLoadOperator(event.params.operator.toHexString());
-  const collateral = event.params.collateral.toBigDecimal();
+  let operator = createOrLoadOperator(event.params.operator.toHexString());
+  let collateral = event.params.collateral.toBigDecimal();
 
   operator.collateral = operator.collateral.minus(collateral);
   operator.save();
@@ -104,7 +104,7 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawn): void {
 }
 
 export function handlePaused(event: Paused): void {
-  const settings = createOrLoadSettings();
+  let settings = createOrLoadSettings();
 
   settings.poolValidatorsPaused = true;
   settings.save();
@@ -115,7 +115,7 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  const settings = createOrLoadSettings();
+  let settings = createOrLoadSettings();
 
   settings.poolValidatorsPaused = false;
   settings.save();
