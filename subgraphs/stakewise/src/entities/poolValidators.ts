@@ -1,6 +1,5 @@
-import { BigDecimal, Bytes } from "@graphprotocol/graph-ts";
-
 import { Operator, Validator } from "../../generated/schema";
+import { EMPTY_BIG_DECIMAL, EMPTY_BYTES } from "../constants";
 
 export function createOrLoadOperator(operatorAddress: string): Operator {
   let operator = Operator.load(operatorAddress);
@@ -8,11 +7,11 @@ export function createOrLoadOperator(operatorAddress: string): Operator {
   if (!operator) {
     operator = new Operator(operatorAddress);
 
-    operator.initializeMerkleRoot = Bytes.fromI32(0) as Bytes;
+    operator.initializeMerkleRoot = EMPTY_BYTES;
     operator.initializeMerkleProofs = "";
-    operator.finalizeMerkleRoot = Bytes.fromI32(0) as Bytes;
+    operator.finalizeMerkleRoot = EMPTY_BYTES;
     operator.finalizeMerkleProofs = "";
-    operator.collateral = BigDecimal.fromString("0");
+    operator.collateral = EMPTY_BIG_DECIMAL;
     operator.save();
   }
   return operator as Operator;

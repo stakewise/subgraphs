@@ -1,4 +1,4 @@
-import { Bytes, log } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
 
 import {
   createOrLoadOperator,
@@ -14,6 +14,7 @@ import {
   Paused,
   Unpaused,
 } from "../../generated/PoolValidators/PoolValidators";
+import { EMPTY_BYTES } from "../constants";
 
 export function handleOperatorAdded(event: OperatorAdded): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
@@ -39,9 +40,9 @@ export function handleOperatorAdded(event: OperatorAdded): void {
 export function handleOperatorRemoved(event: OperatorRemoved): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
 
-  operator.initializeMerkleRoot = Bytes.fromI32(0) as Bytes;
+  operator.initializeMerkleRoot = EMPTY_BYTES;
   operator.initializeMerkleProofs = "";
-  operator.finalizeMerkleRoot = Bytes.fromI32(0) as Bytes;
+  operator.finalizeMerkleRoot = EMPTY_BYTES;
   operator.finalizeMerkleProofs = "";
   operator.save();
 
@@ -55,9 +56,9 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
   let refundedAmount = event.params.refundedAmount.toBigDecimal();
 
-  operator.initializeMerkleRoot = Bytes.fromI32(0) as Bytes;
+  operator.initializeMerkleRoot = EMPTY_BYTES;
   operator.initializeMerkleProofs = "";
-  operator.finalizeMerkleRoot = Bytes.fromI32(0) as Bytes;
+  operator.finalizeMerkleRoot = EMPTY_BYTES;
   operator.finalizeMerkleProofs = "";
   operator.collateral = operator.collateral.minus(refundedAmount);
   operator.save();
