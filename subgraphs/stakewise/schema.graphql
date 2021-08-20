@@ -30,6 +30,9 @@ type Settings @entity {
 
     "Defines whether the PoolValidators contract is paused"
     poolValidatorsPaused: Boolean!
+
+    "Defines whether the MerkleDistributor contract is paused"
+    merkleDistributorPaused: Boolean!
 }
 
 """
@@ -96,4 +99,73 @@ type Validator @entity {
 
     "The validator registration status"
     registrationStatus: RegistrationStatus!
+}
+
+"""
+Merkle Distributor settings
+"""
+type MerkleDistributor @entity {
+    "MerkleDistributor contract address"
+    id: ID!
+
+    "The current merkle root"
+    merkleRoot: Bytes!
+
+    "The current merkle root proofs location"
+    merkleProofs: Bytes!
+
+    "The current merkle root update block number"
+    updatedAtBlock: Int!
+
+    "The current merkle root update timestamp"
+    updatedAtTimestamp: Int!
+}
+
+"""
+Tokens distribution of the Merkle Distributor
+"""
+type TokenDistribution @entity {
+    "Set to `transaction hash-log index`"
+    id: ID!
+
+    "The address of the token to distribute"
+    token: Bytes!
+
+    "The address of the beneficiary"
+    beneficiary: Bytes!
+
+    "The amount to distribute"
+    amount: BigDecimal!
+
+    "The distribution start block number"
+    startedAtBlock: Int!
+
+    "The distribution start timestamp"
+    startedAtTimestamp: Int!
+
+    "The distribution end block number"
+    endedAtBlock: Int!
+
+    "The distribution end timestamp"
+    endedAtTimestamp: Int!
+}
+
+"""
+Tokens claim from the Merkle Distributor
+"""
+type MerkleDistributorClaim @entity {
+    "Set to `account address - merkle root`"
+    id: ID!
+
+    "The merkle root of the claim"
+    merkleRoot: Bytes!
+
+    "The address of the beneficiary"
+    account: Bytes!
+
+    "An array of tokens' addresses"
+    tokens: [Bytes]!
+
+    "An array of tokens' amounts received"
+    amounts: [BigDecimal]!
 }
