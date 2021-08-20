@@ -112,7 +112,7 @@ type MerkleDistributor @entity {
     merkleRoot: Bytes!
 
     "The current merkle root proofs location"
-    merkleProofs: Bytes!
+    merkleProofs: String!
 
     "The current merkle root update block number"
     updatedAtBlock: Int!
@@ -145,9 +145,6 @@ type TokenDistribution @entity {
 
     "The distribution end block number"
     endedAtBlock: Int!
-
-    "The distribution end timestamp"
-    endedAtTimestamp: Int!
 }
 
 """
@@ -157,15 +154,12 @@ type MerkleDistributorClaim @entity {
     "Set to `account address - merkle root`"
     id: ID!
 
-    "The merkle root of the claim"
-    merkleRoot: Bytes!
-
     "The address of the beneficiary"
     account: Bytes!
 
-    "An array of tokens' addresses"
-    tokens: [Bytes]!
+    "The merkle root of the claim"
+    merkleRoot: Bytes!
 
-    "An array of tokens' amounts received"
-    amounts: [BigDecimal]!
+    "The proofs of the merkle root"
+    merkleProofs: String!
 }

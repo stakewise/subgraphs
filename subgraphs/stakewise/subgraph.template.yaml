@@ -60,6 +60,7 @@ dataSources:
       entities:
         - Operator
         - Validator
+        - Settings
       abis:
         - name: PoolValidators
           file: ./packages/abis/PoolValidators.json
@@ -74,6 +75,38 @@ dataSources:
           handler: handleCollateralDeposited
         - event: CollateralWithdrawn(indexed address,indexed address,uint256)
           handler: handleCollateralWithdrawn
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: MerkleDistributor
+    network: {{ network }}
+    source:
+      address: '{{ merkleDistributor.address }}'
+      abi: MerkleDistributor
+      startBlock: {{ merkleDistributor.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/merkleDistributor.ts
+      entities:
+        - MerkleDistributor
+        - MerkleDistributorClaim
+        - TokenDistribution
+        - Settings
+      abis:
+        - name: MerkleDistributor
+          file: ./packages/abis/MerkleDistributor.json
+      eventHandlers:
+        - event: MerkleRootUpdated(indexed address,indexed bytes32,string)
+          handler: handleMerkleRootUpdated
+        - event: DistributionAdded(indexed address,indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleDistributionAdded
+        - event: Claimed(indexed address,uint256,address[],uint256[])
+          handler: handleClaimed
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
