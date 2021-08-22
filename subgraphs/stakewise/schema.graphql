@@ -19,7 +19,7 @@ type Pool @entity {
 }
 
 """
-Contracts' Settings
+Global Settings
 """
 type Settings @entity {
     "Set to 1"
@@ -36,6 +36,9 @@ type Settings @entity {
 
     "Defines whether the VestingEscrowFactory contract is paused"
     vestingEscrowFactoryPaused: Boolean!
+
+    "Defines whether the Oracles contract is paused"
+    oraclesPaused: Boolean!
 }
 
 """
@@ -79,6 +82,17 @@ type Operator @entity {
 
     "The operator validators"
     validators: [Validator!] @derivedFrom(field: "operator")
+}
+
+"""
+StakeWise Oracle
+"""
+type Oracle @entity {
+    "The oracle address"
+    id: ID!
+
+    "The oracle votes source"
+    votesSource: String!
 }
 
 """
