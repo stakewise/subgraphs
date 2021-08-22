@@ -113,6 +113,34 @@ dataSources:
           handler: handleUnpaused
 
   - kind: ethereum/contract
+    name: Oracles
+    network: {{ network }}
+    source:
+      address: '{{ oracles.address }}'
+      abi: Oracles
+      startBlock: {{ oracles.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/oracles.ts
+      entities:
+        - Oracle
+        - Settings
+      abis:
+        - name: Oracles
+          file: ./packages/abis/Oracles.json
+      eventHandlers:
+        - event: OracleAdded(indexed address,string)
+          handler: handleOracleAdded
+        - event: OracleRemoved(indexed address)
+          handler: handleOracleRemoved
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+
+  - kind: ethereum/contract
     name: VestingEscrowFactory
     network: {{ network }}
     source:
