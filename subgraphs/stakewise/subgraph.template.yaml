@@ -111,3 +111,54 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: VestingEscrowFactory
+    network: {{ network }}
+    source:
+      address: '{{ vestingEscrowFactory.address }}'
+      abi: VestingEscrowFactory
+      startBlock: {{ vestingEscrowFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/vestingEscrowFactory.ts
+      entities:
+        - VestingEscrow
+        - Settings
+      abis:
+        - name: VestingEscrowFactory
+          file: ./packages/abis/VestingEscrowFactory.json
+      eventHandlers:
+        - event: VestingEscrowCreated(indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256,uint256)
+          handler: handleVestingEscrowCreated
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+templates:
+  - kind: ethereum/contract
+    name: VestingEscrow
+    network: {{ network }}
+    source:
+      abi: VestingEscrow
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/vestingEscrow.ts
+      entities:
+        - VestingEscrow
+      abis:
+        - name: VestingEscrow
+          file: ./packages/abis/VestingEscrow.json
+      eventHandlers:
+        - event: Stopped(indexed address,indexed address,uint256)
+          handler: handleStopped
+        - event: Claimed(indexed address,indexed address,uint256)
+          handler: handleClaimed
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
