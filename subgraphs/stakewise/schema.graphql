@@ -33,6 +33,9 @@ type Settings @entity {
 
     "Defines whether the MerkleDistributor contract is paused"
     merkleDistributorPaused: Boolean!
+
+    "Defines whether the VestingEscrowFactory contract is paused"
+    vestingEscrowFactoryPaused: Boolean!
 }
 
 """
@@ -162,4 +165,42 @@ type MerkleDistributorClaim @entity {
 
     "The proofs of the merkle root"
     merkleProofs: String!
+}
+
+"""
+The vesting escrow
+"""
+type VestingEscrow @entity {
+    "The address of the vesting escrow contract"
+    id: ID!
+
+    "The address of the escrow admin"
+    admin: Bytes!
+
+    "The address of the distributed token"
+    token: Bytes!
+
+    "The address of the tokens claimer"
+    claimer: Bytes!
+
+    "The address of the tokens beneficiary"
+    beneficiary: Bytes!
+
+    "The total amount of tokens locked"
+    totalAmount: BigDecimal!
+
+    "The total amount of tokens claimed"
+    totalClaimed: BigDecimal!
+
+    "The vesting start timestamp"
+    startTimestamp: Int!
+
+    "The vesting end timestamp"
+    endTimestamp: Int!
+
+    "The cliff length"
+    cliffLength: Int!
+
+    "Defines whether the contract is paused"
+    isPaused: Boolean!
 }
