@@ -239,6 +239,80 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: StakeWiseToken
+    network: {{ network }}
+    source:
+      address: '{{ stakeWiseToken.address }}'
+      abi: StakeWiseToken
+      startBlock: {{ stakeWiseToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/stakeWiseToken.ts
+      entities:
+        - StakeWiseTokenHolder
+        - Settings
+      abis:
+        - name: StakeWiseToken
+          file: ./packages/abis/StakeWiseToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: StakedEthToken
+    network: {{ network }}
+    source:
+      address: '{{ stakedEthToken.address }}'
+      abi: StakedEthToken
+      startBlock: {{ stakedEthToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/stakedEthToken.ts
+      entities:
+        - Settings
+      abis:
+        - name: StakedEthToken
+          file: ./packages/abis/StakedEthToken.json
+      eventHandlers:
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: RewardEthToken
+    network: {{ network }}
+    source:
+      address: '{{ rewardEthToken.address }}'
+      abi: RewardEthToken
+      startBlock: {{ rewardEthToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/rewardEthToken.ts
+      entities:
+        - Settings
+      abis:
+        - name: RewardEthToken
+          file: ./packages/abis/RewardEthToken.json
+      eventHandlers:
+        - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
+          handler: handleRewardsUpdated
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
 templates:
   - kind: ethereum/contract
     name: VestingEscrow
