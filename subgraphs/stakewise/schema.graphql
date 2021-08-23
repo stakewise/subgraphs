@@ -45,6 +45,18 @@ type Settings @entity {
 
     "Defines whether the Partners' Revenue Sharing contract is paused"
     partnersRevenueSharingPaused: Boolean!
+
+    "Defines whether the StakeWise Token is paused"
+    stakeWiseTokenPaused: Boolean!
+
+    "Defines whether the Staked ETH Token is paused"
+    stakedEthTokenPaused: Boolean!
+
+    "Defines whether the Reward ETH Token is paused"
+    rewardEthTokenPaused: Boolean!
+
+    "The last rewards update timestamp"
+    rewardsUpdatedAtTimestamp: BigInt!
 }
 
 """
@@ -316,4 +328,21 @@ type PartnerRevenueSharingAccount implements RevenueSharingAccount @entity {
 
     "The address of the partners' revenue sharing contract"
     contract: PartnersRevenueSharing!
+}
+
+"""
+StakeWise token holder
+"""
+type StakeWiseTokenHolder @entity {
+    "The address of the StakeWise token holder"
+    id: ID!
+
+    "The holder's balance"
+    balance: BigDecimal!
+
+    "The points are calculated based on the balance and the time passed since the last balance update"
+    holdingPoints: BigDecimal!
+
+    "The last balance update timestamp"
+    updatedAtTimestamp: BigInt!
 }
