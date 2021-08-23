@@ -9,13 +9,13 @@ type Pool @entity {
     minActivatingDeposit: BigDecimal!
 
     "The pending validators limit percentage. When it's exceeded, the deposits will be set for the activation"
-    pendingValidatorsLimit: Int!
+    pendingValidatorsLimit: BigInt!
 
     "The total amount of pending validators"
-    pendingValidators: Int!
+    pendingValidators: BigInt!
 
     "The total amount of activated validators"
-    activatedValidators: Int!
+    activatedValidators: BigInt!
 }
 
 """
@@ -58,7 +58,7 @@ type DepositActivation @entity {
     account: Bytes!
 
     "The validator index that is handling the deposit"
-    validatorIndex: Int!
+    validatorIndex: BigInt!
 
     "The amount that will be activated"
     amount: BigDecimal!
@@ -138,10 +138,10 @@ type MerkleDistributor @entity {
     merkleProofs: String!
 
     "The current merkle root update block number"
-    updatedAtBlock: Int!
+    updatedAtBlock: BigInt!
 
     "The current merkle root update timestamp"
-    updatedAtTimestamp: Int!
+    updatedAtTimestamp: BigInt!
 }
 
 """
@@ -161,13 +161,13 @@ type TokenDistribution @entity {
     amount: BigDecimal!
 
     "The distribution start block number"
-    startedAtBlock: Int!
+    startedAtBlock: BigInt!
 
     "The distribution start timestamp"
-    startedAtTimestamp: Int!
+    startedAtTimestamp: BigInt!
 
     "The distribution end block number"
-    endedAtBlock: Int!
+    endedAtBlock: BigInt!
 }
 
 """
@@ -213,13 +213,13 @@ type VestingEscrow @entity {
     totalClaimed: BigDecimal!
 
     "The vesting start timestamp"
-    startTimestamp: Int!
+    startTimestamp: BigInt!
 
     "The vesting end timestamp"
-    endTimestamp: Int!
+    endTimestamp: BigInt!
 
     "The cliff length"
-    cliffLength: Int!
+    cliffLength: BigInt!
 
     "Defines whether the contract is paused"
     isPaused: Boolean!

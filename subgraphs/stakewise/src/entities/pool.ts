@@ -1,7 +1,7 @@
 import { Address, BigInt, dataSource } from "@graphprotocol/graph-ts";
 
 import { DepositActivation, Pool } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL } from "../constants";
+import { EMPTY_BIG_DECIMAL, EMPTY_BIG_INT } from "../constants";
 
 export function createOrLoadPool(): Pool {
   let poolAddress = dataSource.address().toHexString();
@@ -11,9 +11,9 @@ export function createOrLoadPool(): Pool {
     pool = new Pool(poolAddress);
 
     pool.minActivatingDeposit = EMPTY_BIG_DECIMAL;
-    pool.pendingValidatorsLimit = 0;
-    pool.pendingValidators = 0;
-    pool.activatedValidators = 0;
+    pool.pendingValidatorsLimit = EMPTY_BIG_INT;
+    pool.pendingValidators = EMPTY_BIG_INT;
+    pool.activatedValidators = EMPTY_BIG_INT;
     pool.save();
   }
   return pool as Pool;
@@ -37,7 +37,7 @@ export function createOrLoadDepositActivation(
     activation = new DepositActivation(activationId);
 
     activation.account = account;
-    activation.validatorIndex = validatorIndex.toI32();
+    activation.validatorIndex = validatorIndex;
     activation.amount = EMPTY_BIG_DECIMAL;
     activation.save();
   }

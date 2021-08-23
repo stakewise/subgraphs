@@ -18,9 +18,9 @@ export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
   escrow.beneficiary = event.params.beneficiary;
   escrow.totalAmount = event.params.totalAmount.divDecimal(BIG_DECIMAL_1E18);
   escrow.totalClaimed = EMPTY_BIG_DECIMAL;
-  escrow.startTimestamp = event.params.startTime.toI32();
-  escrow.endTimestamp = event.params.endTime.toI32();
-  escrow.cliffLength = event.params.cliffLength.toI32();
+  escrow.startTimestamp = event.params.startTime;
+  escrow.endTimestamp = event.params.endTime;
+  escrow.cliffLength = event.params.cliffLength;
   escrow.isPaused = false;
   escrow.save();
 

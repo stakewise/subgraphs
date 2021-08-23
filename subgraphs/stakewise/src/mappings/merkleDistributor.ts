@@ -22,8 +22,8 @@ export function handleMerkleRootUpdated(event: MerkleRootUpdated): void {
 
   distributor.merkleRoot = event.params.merkleRoot;
   distributor.merkleProofs = event.params.merkleProofs;
-  distributor.updatedAtBlock = event.block.number.toI32();
-  distributor.updatedAtTimestamp = event.block.timestamp.toI32();
+  distributor.updatedAtBlock = event.block.number;
+  distributor.updatedAtTimestamp = event.block.timestamp;
   distributor.save();
 
   log.info(
@@ -49,9 +49,9 @@ export function handleDistributionAdded(event: DistributionAdded): void {
 
   // XXX: could be incorrect in case token has different from 18 decimals
   distribution.amount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
-  distribution.startedAtBlock = event.block.number.toI32();
-  distribution.startedAtTimestamp = event.block.timestamp.toI32();
-  distribution.endedAtBlock = event.params.endBlock.toI32();
+  distribution.startedAtBlock = event.block.number;
+  distribution.startedAtTimestamp = event.block.timestamp;
+  distribution.endedAtBlock = event.params.endBlock;
   distribution.save();
 
   log.info(
