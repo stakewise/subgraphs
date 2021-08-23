@@ -7,6 +7,7 @@ import {
   Claimed,
 } from "../../generated/templates/VestingEscrow/VestingEscrow";
 import { VestingEscrow } from "../../generated/schema";
+import { BIG_DECIMAL_1E18 } from "../constants";
 
 export function handleStopped(event: Stopped): void {
   let escrow = VestingEscrow.load(event.address.toHexString());
@@ -15,7 +16,7 @@ export function handleStopped(event: Stopped): void {
     return;
   }
 
-  let pulledAmount = event.params.amount.toBigDecimal();
+  let pulledAmount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
   escrow.totalClaimed = escrow.totalClaimed.plus(pulledAmount);
   escrow.save();
 
@@ -37,7 +38,7 @@ export function handleClaimed(event: Claimed): void {
     return;
   }
 
-  let pulledAmount = event.params.amount.toBigDecimal();
+  let pulledAmount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
   escrow.totalClaimed = escrow.totalClaimed.plus(pulledAmount);
   escrow.save();
 

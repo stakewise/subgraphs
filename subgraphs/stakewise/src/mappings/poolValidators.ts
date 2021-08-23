@@ -14,7 +14,7 @@ import {
   Paused,
   Unpaused,
 } from "../../generated/PoolValidators/PoolValidators";
-import { EMPTY_BYTES } from "../constants";
+import { BIG_DECIMAL_1E18, EMPTY_BYTES } from "../constants";
 
 export function handleOperatorAdded(event: OperatorAdded): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
@@ -54,7 +54,7 @@ export function handleOperatorRemoved(event: OperatorRemoved): void {
 
 export function handleOperatorSlashed(event: OperatorSlashed): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
-  let refundedAmount = event.params.refundedAmount.toBigDecimal();
+  let refundedAmount = event.params.refundedAmount.divDecimal(BIG_DECIMAL_1E18);
 
   operator.initializeMerkleRoot = EMPTY_BYTES;
   operator.initializeMerkleProofs = "";
@@ -75,7 +75,7 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
 
 export function handleCollateralDeposited(event: CollateralDeposited): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
-  let collateral = event.params.collateral.toBigDecimal();
+  let collateral = event.params.collateral.divDecimal(BIG_DECIMAL_1E18);
 
   operator.collateral = operator.collateral.plus(collateral);
   operator.save();
@@ -88,7 +88,7 @@ export function handleCollateralDeposited(event: CollateralDeposited): void {
 
 export function handleCollateralWithdrawn(event: CollateralWithdrawn): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
-  let collateral = event.params.collateral.toBigDecimal();
+  let collateral = event.params.collateral.divDecimal(BIG_DECIMAL_1E18);
 
   operator.collateral = operator.collateral.minus(collateral);
   operator.save();

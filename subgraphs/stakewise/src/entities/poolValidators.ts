@@ -4,7 +4,7 @@ import { EMPTY_BIG_DECIMAL, EMPTY_BYTES } from "../constants";
 export function createOrLoadOperator(operatorAddress: string): Operator {
   let operator = Operator.load(operatorAddress);
 
-  if (!operator) {
+  if (operator == null) {
     operator = new Operator(operatorAddress);
 
     operator.initializeMerkleRoot = EMPTY_BYTES;
@@ -20,7 +20,7 @@ export function createOrLoadOperator(operatorAddress: string): Operator {
 export function createOrLoadValidator(publicKey: string): Validator {
   let validator = Validator.load(publicKey);
 
-  if (!validator) {
+  if (validator == null) {
     validator = new Validator(publicKey);
 
     validator.operator = "";

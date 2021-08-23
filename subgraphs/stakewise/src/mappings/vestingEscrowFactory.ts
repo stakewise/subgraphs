@@ -6,7 +6,7 @@ import {
 } from "../../generated/VestingEscrowFactory/VestingEscrowFactory";
 import { VestingEscrow } from "../../generated/schema";
 import { VestingEscrow as VestingEscrowTemplate } from "../../generated/templates";
-import { EMPTY_BIG_DECIMAL } from "../constants";
+import { BIG_DECIMAL_1E18, EMPTY_BIG_DECIMAL } from "../constants";
 import { createOrLoadSettings } from "../entities";
 
 export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
@@ -16,7 +16,7 @@ export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
   escrow.token = event.params.token as Bytes;
   escrow.claimer = event.params.recipient as Bytes;
   escrow.beneficiary = event.params.beneficiary as Bytes;
-  escrow.totalAmount = event.params.totalAmount.toBigDecimal();
+  escrow.totalAmount = event.params.totalAmount.divDecimal(BIG_DECIMAL_1E18);
   escrow.totalClaimed = EMPTY_BIG_DECIMAL;
   escrow.startTimestamp = event.params.startTime.toI32();
   escrow.endTimestamp = event.params.endTime.toI32();

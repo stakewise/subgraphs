@@ -7,7 +7,7 @@ export function createOrLoadMerkleDistributor(): MerkleDistributor {
   let distributorAddress = dataSource.address().toHexString();
   let distributor = MerkleDistributor.load(distributorAddress);
 
-  if (!distributor) {
+  if (distributor == null) {
     distributor = new MerkleDistributor(distributorAddress);
 
     distributor.merkleRoot = EMPTY_BYTES;

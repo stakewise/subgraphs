@@ -20,13 +20,15 @@ import {
   createOrLoadSettings,
 } from "../entities";
 import { DepositActivation } from "../../generated/schema";
+import { BIG_DECIMAL_1E18 } from "../constants";
 
 export function handleMinActivatingDepositUpdated(
   event: MinActivatingDepositUpdated
 ): void {
   let pool = createOrLoadPool();
 
-  pool.minActivatingDeposit = event.params.minActivatingDeposit.toBigDecimal();
+  pool.minActivatingDeposit =
+    event.params.minActivatingDeposit.divDecimal(BIG_DECIMAL_1E18);
   pool.save();
 
   log.info(
@@ -79,7 +81,7 @@ export function handleActivationScheduled(event: ActivationScheduled): void {
   );
   activation.save();
 
-  let addedAmount = event.params.value.toBigDecimal();
+  let addedAmount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
   activation.amount = activation.amount.plus(addedAmount);
 
   log.info("[Pool] ActivationScheduled sender={} validatorIndex={} amount={}", [
@@ -103,7 +105,7 @@ export function handleActivated(event: Activated): void {
   log.info("[Pool] Activated account={} validatorIndex={} value={} sender={}", [
     event.params.account.toHexString(),
     event.params.validatorIndex.toString(),
-    event.params.value.toBigDecimal().toString(),
+    event.params.value.divDecimal(BIG_DECIMAL_1E18).toString(),
     event.params.sender.toHexString(),
   ]);
 }

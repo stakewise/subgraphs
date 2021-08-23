@@ -15,6 +15,7 @@ import {
   MerkleDistributorClaim,
   TokenDistribution,
 } from "../../generated/schema";
+import { BIG_DECIMAL_1E18 } from "../constants";
 
 export function handleMerkleRootUpdated(event: MerkleRootUpdated): void {
   let distributor = createOrLoadMerkleDistributor();
@@ -45,7 +46,9 @@ export function handleDistributionAdded(event: DistributionAdded): void {
 
   distribution.token = event.params.token;
   distribution.beneficiary = event.params.beneficiary;
-  distribution.amount = event.params.amount.toBigDecimal();
+
+  // XXX: could be incorrect in case token has different from 18 decimals
+  distribution.amount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
   distribution.startedAtBlock = event.block.number.toI32();
   distribution.startedAtTimestamp = event.block.timestamp.toI32();
   distribution.endedAtBlock = event.params.endBlock.toI32();
