@@ -165,6 +165,43 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: OperatorsRevenueSharing
+    network: {{ network }}
+    source:
+      address: '{{ operatorsRevenueSharing.address }}'
+      abi: RevenueSharing
+      startBlock: {{ operatorsRevenueSharing.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/operatorsRevenueSharing.ts
+      entities:
+        - OperatorsRevenueSharing
+        - OperatorRevenueSharingAccount
+        - Settings
+      abis:
+        - name: RevenueSharing
+          file: ./packages/abis/RevenueSharing.json
+      eventHandlers:
+        - event: RewardsUpdated(indexed address,uint256,uint256)
+          handler: handleRewardsUpdated
+        - event: AccountAdded(indexed address,indexed uint128)
+          handler: handleAccountAdded
+        - event: AccountRemoved(indexed address,uint256)
+          handler: handleAccountRemoved
+        - event: AmountIncreased(indexed address,uint256,uint256)
+          handler: handleAmountIncreased
+        - event: RevenueShareUpdated(indexed address,indexed uint256,uint256)
+          handler: handleRevenueShareUpdated
+        - event: RewardCollected(indexed address,indexed address,uint256)
+          handler: handleRewardCollected
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
 templates:
   - kind: ethereum/contract
     name: VestingEscrow
