@@ -12,6 +12,7 @@ export function createOrLoadSettings(): Settings {
     settings.vestingEscrowFactoryPaused = false;
     settings.operatorsRevenueSharingPaused = false;
     settings.partnersRevenueSharingPaused = false;
+    settings.oraclesPaused = false;
     settings.save();
   }
   return settings as Settings;

@@ -12,10 +12,10 @@ import { createOrLoadSettings } from "../entities";
 export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
   let escrow = new VestingEscrow(event.params.escrow.toHexString());
 
-  escrow.admin = event.params.admin as Bytes;
-  escrow.token = event.params.token as Bytes;
-  escrow.claimer = event.params.recipient as Bytes;
-  escrow.beneficiary = event.params.beneficiary as Bytes;
+  escrow.admin = event.params.admin;
+  escrow.token = event.params.token;
+  escrow.claimer = event.params.recipient;
+  escrow.beneficiary = event.params.beneficiary;
   escrow.totalAmount = event.params.totalAmount.divDecimal(BIG_DECIMAL_1E18);
   escrow.totalClaimed = EMPTY_BIG_DECIMAL;
   escrow.startTimestamp = event.params.startTime.toI32();

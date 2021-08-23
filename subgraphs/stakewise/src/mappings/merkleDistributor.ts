@@ -77,6 +77,7 @@ export function handleClaimed(event: Claimed): void {
     .concat(distributor.merkleRoot.toHexString());
 
   let claim = new MerkleDistributorClaim(claimId);
+  claim.account = event.params.account;
   claim.merkleRoot = distributor.merkleRoot;
   claim.merkleProofs = distributor.merkleProofs;
   claim.save();
