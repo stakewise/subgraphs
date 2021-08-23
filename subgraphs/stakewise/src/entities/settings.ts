@@ -11,6 +11,7 @@ export function createOrLoadSettings(): Settings {
     settings.merkleDistributorPaused = false;
     settings.vestingEscrowFactoryPaused = false;
     settings.operatorsRevenueSharingPaused = false;
+    settings.partnersRevenueSharingPaused = false;
     settings.save();
   }
   return settings as Settings;

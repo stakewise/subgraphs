@@ -8,10 +8,10 @@ import {
   RewardsUpdated,
   Paused,
   Unpaused,
-} from "../../generated/OperatorsRevenueSharing/RevenueSharing";
-import { OperatorRevenueSharingAccount } from "../../generated/schema";
+} from "../../generated/PartnersRevenueSharing/RevenueSharing";
+import { PartnerRevenueSharingAccount } from "../../generated/schema";
 import {
-  createOrLoadOperatorsRevenueSharing,
+  createOrLoadPartnersRevenueSharing,
   createOrLoadSettings,
 } from "../entities";
 import {
@@ -22,7 +22,7 @@ import {
 } from "../constants";
 
 export function handleRewardsUpdated(event: RewardsUpdated): void {
-  let revenueSharing = createOrLoadOperatorsRevenueSharing();
+  let revenueSharing = createOrLoadPartnersRevenueSharing();
   let periodReward = event.params.periodReward.divDecimal(BIG_DECIMAL_1E18);
 
   revenueSharing.rewardPerPoint =
@@ -31,7 +31,7 @@ export function handleRewardsUpdated(event: RewardsUpdated): void {
   revenueSharing.save();
 
   log.info(
-    "[OperatorsRevenueSharing] RewardsUpdated sender={} periodReward={} rewardPerPoint={}",
+    "[PartnersRevenueSharing] RewardsUpdated sender={} periodReward={} rewardPerPoint={}",
     [
       event.params.sender.toHexString(),
       periodReward.toString(),
@@ -41,8 +41,8 @@ export function handleRewardsUpdated(event: RewardsUpdated): void {
 }
 
 export function handleAccountAdded(event: AccountAdded): void {
-  let revenueSharing = createOrLoadOperatorsRevenueSharing();
-  let account = new OperatorRevenueSharingAccount(
+  let revenueSharing = createOrLoadPartnersRevenueSharing();
+  let account = new PartnerRevenueSharingAccount(
     event.params.beneficiary.toHexString()
   );
 
@@ -54,7 +54,7 @@ export function handleAccountAdded(event: AccountAdded): void {
   account.save();
 
   log.info(
-    "[OperatorsRevenueSharing] AccountAdded sender={} beneficiary={} revenueShare={}",
+    "[PartnersRevenueSharing] AccountAdded sender={} beneficiary={} revenueShare={}",
     [
       event.transaction.from.toHexString(),
       account.id,
@@ -64,9 +64,9 @@ export function handleAccountAdded(event: AccountAdded): void {
 }
 
 export function handleAccountRemoved(event: AccountRemoved): void {
-  let revenueSharing = createOrLoadOperatorsRevenueSharing();
+  let revenueSharing = createOrLoadPartnersRevenueSharing();
 
-  let account = OperatorRevenueSharingAccount.load(
+  let account = PartnerRevenueSharingAccount.load(
     event.params.beneficiary.toHexString()
   );
   let reward = event.params.reward.divDecimal(BIG_DECIMAL_1E18);
@@ -76,11 +76,11 @@ export function handleAccountRemoved(event: AccountRemoved): void {
     revenueSharing.totalPoints = revenueSharing.totalPoints.minus(points);
     revenueSharing.totalReward = revenueSharing.totalReward.minus(reward);
     revenueSharing.save();
-    store.remove("OperatorRevenueSharingAccount", account.id);
+    store.remove("PartnerRevenueSharingAccount", account.id);
   }
 
   log.info(
-    "[OperatorsRevenueSharing] AccountRemoved sender={} beneficiary={} reward={}",
+    "[PartnersRevenueSharing] AccountRemoved sender={} beneficiary={} reward={}",
     [
       event.transaction.from.toHexString(),
       event.params.beneficiary.toHexString(),
@@ -90,7 +90,7 @@ export function handleAccountRemoved(event: AccountRemoved): void {
 }
 
 export function handleAmountIncreased(event: AmountIncreased): void {
-  let account = OperatorRevenueSharingAccount.load(
+  let account = PartnerRevenueSharingAccount.load(
     event.params.beneficiary.toHexString()
   );
   if (account == null) {
@@ -101,7 +101,7 @@ export function handleAmountIncreased(event: AmountIncreased): void {
   let prevPoints = account.amount.times(account.revenueShare);
   let newPoints = account.amount.plus(addedAmount).times(account.revenueShare);
 
-  let revenueSharing = createOrLoadOperatorsRevenueSharing();
+  let revenueSharing = createOrLoadPartnersRevenueSharing();
   revenueSharing.totalPoints = revenueSharing.totalPoints
     .minus(prevPoints)
     .plus(newPoints);
@@ -114,7 +114,7 @@ export function handleAmountIncreased(event: AmountIncreased): void {
   account.save();
 
   log.info(
-    "[OperatorsRevenueSharing] AmountIncreased sender={} beneficiary={} unclaimedReward={} addedAmount={}",
+    "[PartnersRevenueSharing] AmountIncreased sender={} beneficiary={} unclaimedReward={} addedAmount={}",
     [
       event.transaction.from.toHexString(),
       event.params.beneficiary.toHexString(),
@@ -125,7 +125,7 @@ export function handleAmountIncreased(event: AmountIncreased): void {
 }
 
 export function handleRevenueShareUpdated(event: RevenueShareUpdated): void {
-  let account = OperatorRevenueSharingAccount.load(
+  let account = PartnerRevenueSharingAccount.load(
     event.params.beneficiary.toHexString()
   );
   if (account == null) {
@@ -135,7 +135,7 @@ export function handleRevenueShareUpdated(event: RevenueShareUpdated): void {
   let prevRevenueShare = account.revenueShare;
   let newRevenueShare = event.params.revenueShare.divDecimal(BIG_DECIMAL_1E4);
 
-  let revenueSharing = createOrLoadOperatorsRevenueSharing();
+  let revenueSharing = createOrLoadPartnersRevenueSharing();
   revenueSharing.totalPoints = revenueSharing.totalPoints
     .minus(account.amount.times(prevRevenueShare))
     .plus(account.amount.times(newRevenueShare));
@@ -148,7 +148,7 @@ export function handleRevenueShareUpdated(event: RevenueShareUpdated): void {
   account.save();
 
   log.info(
-    "[OperatorsRevenueSharing] RevenueShareUpdated sender={} beneficiary={} unclaimedReward={} revenueShare={}",
+    "[PartnersRevenueSharing] RevenueShareUpdated sender={} beneficiary={} unclaimedReward={} revenueShare={}",
     [
       event.transaction.from.toHexString(),
       event.params.beneficiary.toHexString(),
@@ -159,20 +159,20 @@ export function handleRevenueShareUpdated(event: RevenueShareUpdated): void {
 }
 
 export function handleRewardCollected(event: RewardCollected): void {
-  let account = OperatorRevenueSharingAccount.load(
+  let account = PartnerRevenueSharingAccount.load(
     event.params.beneficiary.toHexString()
   );
   if (account == null) {
     return;
   }
 
-  let revenueSharing = createOrLoadOperatorsRevenueSharing();
+  let revenueSharing = createOrLoadPartnersRevenueSharing();
   account.unclaimedReward = EMPTY_BIG_DECIMAL;
   account.rewardPerPoint = revenueSharing.rewardPerPoint;
   account.save();
 
   log.info(
-    "[OperatorsRevenueSharing] RewardCollected sender={} beneficiary={} unclaimedReward={}",
+    "[PartnersRevenueSharing] RewardCollected sender={} beneficiary={} unclaimedReward={}",
     [
       event.params.sender.toHexString(),
       event.params.beneficiary.toHexString(),
@@ -184,10 +184,10 @@ export function handleRewardCollected(event: RewardCollected): void {
 export function handlePaused(event: Paused): void {
   let settings = createOrLoadSettings();
 
-  settings.operatorsRevenueSharingPaused = true;
+  settings.partnersRevenueSharingPaused = true;
   settings.save();
 
-  log.info("[OperatorsRevenueSharing] Paused account={}", [
+  log.info("[PartnersRevenueSharing] Paused account={}", [
     event.params.account.toHexString(),
   ]);
 }
@@ -195,10 +195,10 @@ export function handlePaused(event: Paused): void {
 export function handleUnpaused(event: Unpaused): void {
   let settings = createOrLoadSettings();
 
-  settings.operatorsRevenueSharingPaused = false;
+  settings.partnersRevenueSharingPaused = false;
   settings.save();
 
-  log.info("[OperatorsRevenueSharing] Unpaused account={}", [
+  log.info("[PartnersRevenueSharing] Unpaused account={}", [
     event.params.account.toHexString(),
   ]);
 }
