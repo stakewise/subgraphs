@@ -19,7 +19,7 @@ type Pool @entity {
 }
 
 """
-Contracts' Settings
+Global Settings
 """
 type Settings @entity {
     "Set to 1"
@@ -33,6 +33,18 @@ type Settings @entity {
 
     "Defines whether the MerkleDistributor contract is paused"
     merkleDistributorPaused: Boolean!
+
+    "Defines whether the VestingEscrowFactory contract is paused"
+    vestingEscrowFactoryPaused: Boolean!
+
+    "Defines whether the Oracles contract is paused"
+    oraclesPaused: Boolean!
+
+    "Defines whether the Operators' Revenue Sharing contract is paused"
+    operatorsRevenueSharingPaused: Boolean!
+
+    "Defines whether the Partners' Revenue Sharing contract is paused"
+    partnersRevenueSharingPaused: Boolean!
 }
 
 """
@@ -75,7 +87,18 @@ type Operator @entity {
     collateral: BigDecimal!
 
     "The operator validators"
-    validators: [Validator!] @derivedFrom(field: "operator")
+    validators: [Validator!]! @derivedFrom(field: "operator")
+}
+
+"""
+StakeWise Oracle
+"""
+type Oracle @entity {
+    "The oracle address"
+    id: ID!
+
+    "The oracle votes source"
+    votesSource: String!
 }
 
 """
@@ -162,4 +185,135 @@ type MerkleDistributorClaim @entity {
 
     "The proofs of the merkle root"
     merkleProofs: String!
+}
+
+"""
+The vesting escrow
+"""
+type VestingEscrow @entity {
+    "The address of the vesting escrow contract"
+    id: ID!
+
+    "The address of the escrow admin"
+    admin: Bytes!
+
+    "The address of the distributed token"
+    token: Bytes!
+
+    "The address of the tokens claimer"
+    claimer: Bytes!
+
+    "The address of the tokens beneficiary"
+    beneficiary: Bytes!
+
+    "The total amount of tokens locked"
+    totalAmount: BigDecimal!
+
+    "The total amount of tokens claimed"
+    totalClaimed: BigDecimal!
+
+    "The vesting start timestamp"
+    startTimestamp: Int!
+
+    "The vesting end timestamp"
+    endTimestamp: Int!
+
+    "The cliff length"
+    cliffLength: Int!
+
+    "Defines whether the contract is paused"
+    isPaused: Boolean!
+}
+
+"""
+Generic revenue sharing contract
+"""
+interface RevenueSharing {
+    "The address of the revenue sharing contract"
+    id: ID!
+
+    "The total number of revenue points"
+    totalPoints: BigDecimal!
+
+    "The total rETH2 reward accumulated"
+    totalReward: BigDecimal!
+
+    "The reward ETH per point used for every account's reward calculation"
+    rewardPerPoint: BigDecimal!
+}
+
+"""
+Generic revenue sharing account
+"""
+interface RevenueSharingAccount {
+    "The address of the beneficiary"
+    id: ID!
+
+    "The total amount of ETH contributed"
+    amount: BigDecimal!
+
+    "The revenue share configured - up to 10000 (100.00%)"
+    revenueShare: BigDecimal!,
+
+    "The total unclaimed rewards amount in last checkpoint"
+    unclaimedReward: BigDecimal!,
+
+    "The reward per point in last checkpoint"
+    rewardPerPoint:  BigDecimal!
+}
+
+"""
+Operators revenue sharing settings
+"""
+type OperatorsRevenueSharing implements RevenueSharing @entity {
+    id: ID!
+    totalPoints: BigDecimal!
+    totalReward: BigDecimal!
+    rewardPerPoint: BigDecimal!
+
+    "The array of revenue sharing accounts"
+    accounts: [OperatorRevenueSharingAccount!]! @derivedFrom(field: "contract")
+}
+
+
+"""
+Operator revenue sharing account
+"""
+type OperatorRevenueSharingAccount implements RevenueSharingAccount @entity {
+    id: ID!
+    amount: BigDecimal!
+    revenueShare: BigDecimal!,
+    unclaimedReward: BigDecimal!,
+    rewardPerPoint:  BigDecimal!
+
+    "The address of the operators' revenue sharing contract"
+    contract: OperatorsRevenueSharing!
+}
+
+"""
+Partners revenue sharing settings
+"""
+type PartnersRevenueSharing implements RevenueSharing @entity {
+    id: ID!
+    totalPoints: BigDecimal!
+    totalReward: BigDecimal!
+    rewardPerPoint: BigDecimal!
+
+    "The array of revenue sharing accounts"
+    accounts: [PartnerRevenueSharingAccount!]! @derivedFrom(field: "contract")
+}
+
+
+"""
+Partner revenue sharing account
+"""
+type PartnerRevenueSharingAccount implements RevenueSharingAccount @entity {
+    id: ID!
+    amount: BigDecimal!
+    revenueShare: BigDecimal!,
+    unclaimedReward: BigDecimal!,
+    rewardPerPoint:  BigDecimal!
+
+    "The address of the partners' revenue sharing contract"
+    contract: PartnersRevenueSharing!
 }

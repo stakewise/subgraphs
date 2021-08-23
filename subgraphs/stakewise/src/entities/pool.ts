@@ -7,7 +7,7 @@ export function createOrLoadPool(): Pool {
   let poolAddress = dataSource.address().toHexString();
   let pool = Pool.load(poolAddress);
 
-  if (!pool) {
+  if (pool == null) {
     pool = new Pool(poolAddress);
 
     pool.minActivatingDeposit = EMPTY_BIG_DECIMAL;
@@ -33,7 +33,7 @@ export function createOrLoadDepositActivation(
   let activationId = getDepositActivationId(account, validatorIndex);
   let activation = DepositActivation.load(activationId);
 
-  if (!activation) {
+  if (activation == null) {
     activation = new DepositActivation(activationId);
 
     activation.account = account;
