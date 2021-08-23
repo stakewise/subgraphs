@@ -39,6 +39,12 @@ type Settings @entity {
 
     "Defines whether the Oracles contract is paused"
     oraclesPaused: Boolean!
+
+    "Defines whether the Operators' Revenue Sharing contract is paused"
+    operatorsRevenueSharingPaused: Boolean!
+
+    "Defines whether the Partners' Revenue Sharing contract is paused"
+    partnersRevenueSharingPaused: Boolean!
 }
 
 """
@@ -81,7 +87,7 @@ type Operator @entity {
     collateral: BigDecimal!
 
     "The operator validators"
-    validators: [Validator!] @derivedFrom(field: "operator")
+    validators: [Validator!]! @derivedFrom(field: "operator")
 }
 
 """
@@ -217,4 +223,97 @@ type VestingEscrow @entity {
 
     "Defines whether the contract is paused"
     isPaused: Boolean!
+}
+
+"""
+Generic revenue sharing contract
+"""
+interface RevenueSharing {
+    "The address of the revenue sharing contract"
+    id: ID!
+
+    "The total number of revenue points"
+    totalPoints: BigDecimal!
+
+    "The total rETH2 reward accumulated"
+    totalReward: BigDecimal!
+
+    "The reward ETH per point used for every account's reward calculation"
+    rewardPerPoint: BigDecimal!
+}
+
+"""
+Generic revenue sharing account
+"""
+interface RevenueSharingAccount {
+    "The address of the beneficiary"
+    id: ID!
+
+    "The total amount of ETH contributed"
+    amount: BigDecimal!
+
+    "The revenue share configured - up to 10000 (100.00%)"
+    revenueShare: BigDecimal!,
+
+    "The total unclaimed rewards amount in last checkpoint"
+    unclaimedReward: BigDecimal!,
+
+    "The reward per point in last checkpoint"
+    rewardPerPoint:  BigDecimal!
+}
+
+"""
+Operators revenue sharing settings
+"""
+type OperatorsRevenueSharing implements RevenueSharing @entity {
+    id: ID!
+    totalPoints: BigDecimal!
+    totalReward: BigDecimal!
+    rewardPerPoint: BigDecimal!
+
+    "The array of revenue sharing accounts"
+    accounts: [OperatorRevenueSharingAccount!]! @derivedFrom(field: "contract")
+}
+
+
+"""
+Operator revenue sharing account
+"""
+type OperatorRevenueSharingAccount implements RevenueSharingAccount @entity {
+    id: ID!
+    amount: BigDecimal!
+    revenueShare: BigDecimal!,
+    unclaimedReward: BigDecimal!,
+    rewardPerPoint:  BigDecimal!
+
+    "The address of the operators' revenue sharing contract"
+    contract: OperatorsRevenueSharing!
+}
+
+"""
+Partners revenue sharing settings
+"""
+type PartnersRevenueSharing implements RevenueSharing @entity {
+    id: ID!
+    totalPoints: BigDecimal!
+    totalReward: BigDecimal!
+    rewardPerPoint: BigDecimal!
+
+    "The array of revenue sharing accounts"
+    accounts: [PartnerRevenueSharingAccount!]! @derivedFrom(field: "contract")
+}
+
+
+"""
+Partner revenue sharing account
+"""
+type PartnerRevenueSharingAccount implements RevenueSharingAccount @entity {
+    id: ID!
+    amount: BigDecimal!
+    revenueShare: BigDecimal!,
+    unclaimedReward: BigDecimal!,
+    rewardPerPoint:  BigDecimal!
+
+    "The address of the partners' revenue sharing contract"
+    contract: PartnersRevenueSharing!
 }
