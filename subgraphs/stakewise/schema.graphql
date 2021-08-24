@@ -57,6 +57,9 @@ type Settings @entity {
 
     "The last rewards update timestamp"
     rewardsUpdatedAtTimestamp: BigInt!
+
+    "The current reward per staked ETH token"
+    rewardPerStakedEthToken: BigDecimal!
 }
 
 """
@@ -348,4 +351,29 @@ type StakeWiseTokenHolder @entity {
 
     "The last balance update timestamp"
     updatedAtTimestamp: BigInt!
+}
+
+"""
+Staked ETH token holder
+"""
+type StakedEthTokenHolder @entity {
+    "The address of the Staked ETH token holder"
+    id: ID!
+
+    "The holder's balance"
+    balance: BigDecimal!
+}
+
+"""
+Reward ETH token holder
+"""
+type RewardEthTokenHolder @entity {
+    "The address of the Reward ETH token holder"
+    id: ID!
+
+    "The last checkpoint's balance"
+    checkpointBalance: BigDecimal!
+
+    "The last checkpoint's reward per Staked ETH token"
+    rewardPerStakedEthToken: BigDecimal!
 }
