@@ -109,7 +109,7 @@
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "bytes",
         "name": "publicKey",
         "type": "bytes"

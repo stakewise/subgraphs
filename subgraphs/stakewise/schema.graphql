@@ -109,8 +109,11 @@ type Oracle @entity {
     "The oracle address"
     id: ID!
 
-    "The oracle votes source"
-    votesSource: String!
+    "The oracle rewards votes source"
+    rewardVotesSource: String!
+
+    "The oracle validators votes source"
+    validatorVotesSource: String!
 }
 
 """
