@@ -1,10 +1,50 @@
 import { log } from "@graphprotocol/graph-ts";
 
-import { createOrLoadSettings } from "../entities";
 import {
   Paused,
+  Transfer,
   Unpaused,
 } from "../../generated/StakedEthToken/StakedEthToken";
+import {
+  createOrLoadSettings,
+  createOrLoadStakedEthTokenHolder,
+  updateRewardEthTokenHolderBalance,
+} from "../entities";
+import { BIG_DECIMAL_1E18, EMPTY_BYTES } from "../constants";
+
+export function handleTransfer(event: Transfer): void {
+  let settings = createOrLoadSettings();
+  let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
+
+  let fromId = event.params.from.toHexString();
+  if (event.params.from.notEqual(EMPTY_BYTES)) {
+    let fromHolder = createOrLoadStakedEthTokenHolder(fromId);
+    updateRewardEthTokenHolderBalance(
+      fromHolder,
+      settings.rewardPerStakedEthToken
+    );
+    fromHolder.balance = fromHolder.balance.minus(amount);
+    fromHolder.save();
+  }
+
+  let toId = event.params.to.toHexString();
+  if (event.params.to.notEqual(EMPTY_BYTES)) {
+    let toHolder = createOrLoadStakedEthTokenHolder(toId);
+    updateRewardEthTokenHolderBalance(
+      toHolder,
+      settings.rewardPerStakedEthToken
+    );
+
+    toHolder.balance = toHolder.balance.plus(amount);
+    toHolder.save();
+  }
+
+  log.info("[StakedEthToken] Transfer from={} to={} amount={}", [
+    fromId,
+    toId,
+    amount.toString(),
+  ]);
+}
 
 export function handlePaused(event: Paused): void {
   let settings = createOrLoadSettings();
