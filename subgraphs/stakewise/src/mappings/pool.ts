@@ -1,4 +1,4 @@
-import { log, store } from "@graphprotocol/graph-ts";
+import { BigInt, log, store } from "@graphprotocol/graph-ts";
 
 import {
   Activated,
@@ -42,7 +42,7 @@ export function handlePendingValidatorsLimitUpdated(
 ): void {
   let pool = createOrLoadPool();
 
-  pool.pendingValidatorsLimit = event.params.pendingValidatorsLimit.toI32();
+  pool.pendingValidatorsLimit = event.params.pendingValidatorsLimit;
   pool.save();
 
   log.info(
@@ -58,10 +58,12 @@ export function handleActivatedValidatorsUpdated(
   event: ActivatedValidatorsUpdated
 ): void {
   let pool = createOrLoadPool();
-  let newActivatedValidators = event.params.activatedValidators.toI32();
-  let activatedValidators = newActivatedValidators - pool.activatedValidators;
+  let newActivatedValidators = event.params.activatedValidators;
+  let activatedValidators = newActivatedValidators.minus(
+    pool.activatedValidators
+  );
 
-  pool.pendingValidators = pool.pendingValidators - activatedValidators;
+  pool.pendingValidators = pool.pendingValidators.minus(activatedValidators);
   pool.activatedValidators = newActivatedValidators;
   pool.save();
 
@@ -133,7 +135,7 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
   validator.save();
 
   let pool = createOrLoadPool();
-  pool.pendingValidators += 1;
+  pool.pendingValidators = pool.pendingValidators.plus(BigInt.fromString("1"));
   pool.save();
 
   log.info("[Pool] ValidatorRegistered publicKey={} operator={}", [
