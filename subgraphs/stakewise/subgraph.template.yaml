@@ -279,11 +279,15 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/stakedEthToken.ts
       entities:
+        - StakedEthTokenHolder
+        - RewardEthTokenHolder
         - Settings
       abis:
         - name: StakedEthToken
           file: ./packages/abis/StakedEthToken.json
       eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
@@ -302,6 +306,8 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/rewardEthToken.ts
       entities:
+        - StakedEthTokenHolder
+        - RewardEthTokenHolder
         - Settings
       abis:
         - name: RewardEthToken
@@ -309,6 +315,8 @@ dataSources:
       eventHandlers:
         - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
           handler: handleRewardsUpdated
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
