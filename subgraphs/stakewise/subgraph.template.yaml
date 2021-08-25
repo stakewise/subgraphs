@@ -69,7 +69,7 @@ dataSources:
           handler: handleOperatorAdded
         - event: OperatorRemoved(indexed address,indexed address)
           handler: handleOperatorRemoved
-        - event: OperatorSlashed(indexed address,indexed bytes,uint256)
+        - event: OperatorSlashed(indexed address,bytes,uint256)
           handler: handleOperatorSlashed
         - event: CollateralDeposited(indexed address,uint256)
           handler: handleCollateralDeposited
@@ -131,7 +131,7 @@ dataSources:
         - name: Oracles
           file: ./packages/abis/Oracles.json
       eventHandlers:
-        - event: OracleAdded(indexed address,string)
+        - event: OracleAdded(indexed address,string,string)
           handler: handleOracleAdded
         - event: OracleRemoved(indexed address)
           handler: handleOracleRemoved
@@ -279,11 +279,15 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/stakedEthToken.ts
       entities:
+        - StakedEthTokenHolder
+        - RewardEthTokenHolder
         - Settings
       abis:
         - name: StakedEthToken
           file: ./packages/abis/StakedEthToken.json
       eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
@@ -302,6 +306,8 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/rewardEthToken.ts
       entities:
+        - StakedEthTokenHolder
+        - RewardEthTokenHolder
         - Settings
       abis:
         - name: RewardEthToken
@@ -309,6 +315,8 @@ dataSources:
       eventHandlers:
         - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
           handler: handleRewardsUpdated
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)

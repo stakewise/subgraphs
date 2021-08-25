@@ -6,7 +6,8 @@ export function createOrLoadOracle(oracleAddress: string): Oracle {
   if (oracle == null) {
     oracle = new Oracle(oracleAddress);
 
-    oracle.votesSource = "";
+    oracle.rewardVotesSource = "";
+    oracle.validatorVotesSource = "";
     oracle.save();
   }
   return oracle as Oracle;

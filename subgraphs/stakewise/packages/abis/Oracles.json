@@ -122,7 +122,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "votesSource",
+        "name": "rewardVotesSource",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "validatorVotesSource",
         "type": "string"
       }
     ],

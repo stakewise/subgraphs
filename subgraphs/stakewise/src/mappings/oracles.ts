@@ -13,14 +13,19 @@ import { Oracle } from "../../generated/schema";
 export function handleOracleAdded(event: OracleAdded): void {
   let oracle = createOrLoadOracle(event.params.oracle.toHexString());
 
-  oracle.votesSource = event.params.votesSource;
+  oracle.rewardVotesSource = event.params.rewardVotesSource;
+  oracle.validatorVotesSource = event.params.validatorVotesSource;
   oracle.save();
 
-  log.info("[Oracles] OracleAdded oracle={} votesSource={} sender={}", [
-    oracle.id,
-    event.params.votesSource,
-    event.transaction.from.toHexString(),
-  ]);
+  log.info(
+    "[Oracles] OracleAdded oracle={} rewardVotesSource={} validatorVotesSource={} sender={}",
+    [
+      oracle.id,
+      event.params.rewardVotesSource,
+      event.params.validatorVotesSource,
+      event.transaction.from.toHexString(),
+    ]
+  );
 }
 
 export function handleOracleRemoved(event: OracleRemoved): void {

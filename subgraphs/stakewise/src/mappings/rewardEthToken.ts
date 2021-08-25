@@ -1,20 +1,87 @@
 import { log } from "@graphprotocol/graph-ts";
 
-import { createOrLoadSettings } from "../entities";
+import {
+  createOrLoadSettings,
+  createOrLoadRewardEthTokenHolder,
+  createOrLoadStakedEthTokenHolder,
+  calculateRewardEthTokenHolderBalance,
+} from "../entities";
 import {
   Paused,
   Unpaused,
   RewardsUpdated,
+  Transfer,
 } from "../../generated/RewardEthToken/RewardEthToken";
+import { BIG_DECIMAL_1E18, EMPTY_BYTES } from "../constants";
 
 export function handleRewardsUpdated(event: RewardsUpdated): void {
   let settings = createOrLoadSettings();
 
+  settings.rewardPerStakedEthToken =
+    event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
   settings.rewardsUpdatedAtTimestamp = event.block.timestamp;
   settings.save();
 
-  log.info("[RewardEthToken] RewardsUpdated timestamp={}", [
+  log.info("[RewardEthToken] RewardsUpdated timestamp={} rewardPerToken={}", [
     event.block.timestamp.toString(),
+    settings.rewardPerStakedEthToken.toString(),
+  ]);
+}
+
+export function handleTransfer(event: Transfer): void {
+  let settings = createOrLoadSettings();
+  let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
+
+  let fromId = event.params.from.toHexString();
+  if (event.params.from.notEqual(EMPTY_BYTES)) {
+    let rewardEthHolder = createOrLoadRewardEthTokenHolder(
+      fromId,
+      settings.rewardPerStakedEthToken
+    );
+    if (
+      settings.rewardPerStakedEthToken.gt(
+        rewardEthHolder.rewardPerStakedEthToken
+      )
+    ) {
+      rewardEthHolder.checkpointBalance = calculateRewardEthTokenHolderBalance(
+        rewardEthHolder,
+        createOrLoadStakedEthTokenHolder(fromId),
+        settings.rewardPerStakedEthToken
+      );
+    }
+
+    rewardEthHolder.checkpointBalance =
+      rewardEthHolder.checkpointBalance.minus(amount);
+    rewardEthHolder.save();
+  }
+
+  let toId = event.params.to.toHexString();
+  if (event.params.from.notEqual(EMPTY_BYTES)) {
+    let rewardEthHolder = createOrLoadRewardEthTokenHolder(
+      toId,
+      settings.rewardPerStakedEthToken
+    );
+    if (
+      settings.rewardPerStakedEthToken.gt(
+        rewardEthHolder.rewardPerStakedEthToken
+      )
+    ) {
+      rewardEthHolder.checkpointBalance = calculateRewardEthTokenHolderBalance(
+        rewardEthHolder,
+        createOrLoadStakedEthTokenHolder(toId),
+        settings.rewardPerStakedEthToken
+      );
+    }
+
+    rewardEthHolder.checkpointBalance =
+      rewardEthHolder.checkpointBalance.plus(amount);
+    rewardEthHolder.save();
+  }
+
+  log.info("[RewardEthToken] Transfer from={} to={} amount={}", [
+    fromId,
+    toId,
+    amount.toString(),
   ]);
 }
 
