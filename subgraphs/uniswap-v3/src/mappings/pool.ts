@@ -38,7 +38,7 @@ export function handleMint(event: Mint): void {
   let tickLower = BigInt.fromI32(event.params.tickLower);
   let tickUpper = BigInt.fromI32(event.params.tickUpper);
   if (
-    pool.tick !== null &&
+    pool.tick != null &&
     tickLower.le(pool.tick as BigInt) &&
     tickUpper.gt(pool.tick as BigInt)
   ) {
@@ -46,7 +46,7 @@ export function handleMint(event: Mint): void {
     pool.save();
   }
 
-  log.info("[Pool] Mint pool={} tickLower={} tickUpper={} liquidity={}", [
+  log.info("[Pool] Mint pool={} tickLower={} tickUpper={} amount={}", [
     pool.id,
     tickLower.toString(),
     tickUpper.toString(),
@@ -66,7 +66,7 @@ export function handleBurn(event: Burn): void {
   let tickLower = BigInt.fromI32(event.params.tickLower);
   let tickUpper = BigInt.fromI32(event.params.tickUpper);
   if (
-    pool.tick !== null &&
+    pool.tick != null &&
     tickLower.le(pool.tick as BigInt) &&
     tickUpper.gt(pool.tick as BigInt)
   ) {
@@ -74,7 +74,7 @@ export function handleBurn(event: Burn): void {
     pool.save();
   }
 
-  log.info("[Pool] Burn pool={} tickLower={} tickUpper={} liquidity={}", [
+  log.info("[Pool] Burn pool={} tickLower={} tickUpper={} amount={}", [
     pool.id,
     tickLower.toString(),
     tickUpper.toString(),

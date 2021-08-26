@@ -6,12 +6,10 @@ import { Pool } from "../../generated/schema";
 import { isSupportedToken } from "../entities";
 
 export function handlePoolCreated(event: PoolCreated): void {
-  if (
-    !(
-      isSupportedToken(event.params.token0) ||
-      isSupportedToken(event.params.token1)
-    )
-  ) {
+  let hasSupportedToken =
+    isSupportedToken(event.params.token0) ||
+    isSupportedToken(event.params.token1);
+  if (!hasSupportedToken) {
     return;
   }
 

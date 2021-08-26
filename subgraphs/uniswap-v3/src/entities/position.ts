@@ -16,23 +16,20 @@ export function createOrLoadPosition(tokenId: BigInt): Position | null {
   }
 
   let positionResult = positionCall.value;
-  if (
-    !(
-      isSupportedToken(positionResult.value2) ||
-      isSupportedToken(positionResult.value3)
-    )
-  ) {
+  let token0 = positionResult.value2;
+  let token1 = positionResult.value3;
+
+  let hasSupportedToken = isSupportedToken(token0) || isSupportedToken(token1);
+  if (!hasSupportedToken) {
     return null;
   }
 
   let position = Position.load(tokenId.toString());
   if (position == null) {
     let factoryContract = FactoryContract.bind(UNISWAP_V3_FACTORY_ADDRESS);
-    let poolAddress = factoryContract.getPool(
-      positionResult.value2,
-      positionResult.value3,
-      positionResult.value4
-    );
+    let fee = positionResult.value4;
+    let poolAddress = factoryContract.getPool(token0, token1, fee);
+
     position = new Position(tokenId.toString());
     position.owner = ADDRESS_ZERO;
     position.pool = poolAddress.toHexString();
