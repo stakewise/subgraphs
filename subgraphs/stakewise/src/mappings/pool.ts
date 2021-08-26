@@ -1,4 +1,4 @@
-import { BigInt, log, store } from "@graphprotocol/graph-ts";
+import { BigInt, ethereum, log, store } from "@graphprotocol/graph-ts";
 
 import { BIG_DECIMAL_1E18 } from "const";
 import {
@@ -20,7 +20,7 @@ import {
   getDepositActivationId,
   createOrLoadSettings,
 } from "../entities";
-import { DepositActivation } from "../../generated/schema";
+import { Block, DepositActivation } from "../../generated/schema";
 
 export function handleMinActivatingDepositUpdated(
   event: MinActivatingDepositUpdated
@@ -160,4 +160,11 @@ export function handleUnpaused(event: Unpaused): void {
   settings.save();
 
   log.info("[Pool] Unpaused account={}", [event.params.account.toHexString()]);
+}
+
+export function handleBlock(block: ethereum.Block): void {
+  let id = block.number.toString();
+  let blockEntity = new Block(id);
+  blockEntity.timestamp = block.timestamp;
+  blockEntity.save();
 }
