@@ -1,5 +1,6 @@
 import { BigInt, log, store } from "@graphprotocol/graph-ts";
 
+import { BIG_DECIMAL_1E18 } from "const";
 import {
   Activated,
   ActivatedValidatorsUpdated,
@@ -20,7 +21,6 @@ import {
   createOrLoadSettings,
 } from "../entities";
 import { DepositActivation } from "../../generated/schema";
-import { BIG_DECIMAL_1E18 } from "../constants";
 
 export function handleMinActivatingDepositUpdated(
   event: MinActivatingDepositUpdated

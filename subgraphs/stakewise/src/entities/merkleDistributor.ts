@@ -1,7 +1,7 @@
 import { dataSource } from "@graphprotocol/graph-ts";
 
+import { BYTES_ZERO, BIG_INT_ZERO } from "const";
 import { MerkleDistributor } from "../../generated/schema";
-import { EMPTY_BYTES, EMPTY_BIG_INT } from "../constants";
 
 export function createOrLoadMerkleDistributor(): MerkleDistributor {
   let distributorAddress = dataSource.address().toHexString();
@@ -10,10 +10,10 @@ export function createOrLoadMerkleDistributor(): MerkleDistributor {
   if (distributor == null) {
     distributor = new MerkleDistributor(distributorAddress);
 
-    distributor.merkleRoot = EMPTY_BYTES;
+    distributor.merkleRoot = BYTES_ZERO;
     distributor.merkleProofs = "";
-    distributor.updatedAtBlock = EMPTY_BIG_INT;
-    distributor.updatedAtTimestamp = EMPTY_BIG_INT;
+    distributor.updatedAtBlock = BIG_INT_ZERO;
+    distributor.updatedAtTimestamp = BIG_INT_ZERO;
     distributor.save();
   }
   return distributor as MerkleDistributor;

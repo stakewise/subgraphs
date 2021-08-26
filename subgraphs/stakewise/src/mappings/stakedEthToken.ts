@@ -1,5 +1,5 @@
 import { log } from "@graphprotocol/graph-ts";
-
+import { BIG_DECIMAL_1E18, BYTES_ZERO } from "const";
 import {
   Paused,
   Transfer,
@@ -10,14 +10,13 @@ import {
   createOrLoadStakedEthTokenHolder,
   updateRewardEthTokenHolderBalance,
 } from "../entities";
-import { BIG_DECIMAL_1E18, EMPTY_BYTES } from "../constants";
 
 export function handleTransfer(event: Transfer): void {
   let settings = createOrLoadSettings();
   let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
   let fromId = event.params.from.toHexString();
-  if (event.params.from.notEqual(EMPTY_BYTES)) {
+  if (event.params.from.notEqual(BYTES_ZERO)) {
     let fromHolder = createOrLoadStakedEthTokenHolder(fromId);
     updateRewardEthTokenHolderBalance(
       fromHolder,
@@ -28,7 +27,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   let toId = event.params.to.toHexString();
-  if (event.params.to.notEqual(EMPTY_BYTES)) {
+  if (event.params.to.notEqual(BYTES_ZERO)) {
     let toHolder = createOrLoadStakedEthTokenHolder(toId);
     updateRewardEthTokenHolderBalance(
       toHolder,

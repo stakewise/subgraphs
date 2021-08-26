@@ -1,5 +1,6 @@
 import { log } from "@graphprotocol/graph-ts";
 
+import { BIG_DECIMAL_1E18 } from "const";
 import {
   createOrLoadMerkleDistributor,
   createOrLoadSettings,
@@ -15,7 +16,6 @@ import {
   MerkleDistributorClaim,
   TokenDistribution,
 } from "../../generated/schema";
-import { BIG_DECIMAL_1E18 } from "../constants";
 
 export function handleMerkleRootUpdated(event: MerkleRootUpdated): void {
   let distributor = createOrLoadMerkleDistributor();

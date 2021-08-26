@@ -1,0 +1,16 @@
+{
+  "name": "const",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "main": "index.ts",
+  "scripts": {
+    "codegen": "true",
+    "build": "true",
+    "deploy": "true",
+    "create-local": "true",
+    "remove-local": "true",
+    "deploy-local": "true",
+    "prepare:goerli": "mustache ../../config/goerli.json index.template.ts > index.ts",
+    "prepare:mainnet": "mustache ../../config/mainnet.json index.template.ts > index.ts"
+  }
+}

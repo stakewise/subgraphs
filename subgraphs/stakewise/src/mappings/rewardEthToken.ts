@@ -1,5 +1,5 @@
 import { log } from "@graphprotocol/graph-ts";
-
+import { BIG_DECIMAL_1E18, BYTES_ZERO } from "const";
 import {
   createOrLoadSettings,
   createOrLoadRewardEthTokenHolder,
@@ -12,7 +12,6 @@ import {
   RewardsUpdated,
   Transfer,
 } from "../../generated/RewardEthToken/RewardEthToken";
-import { BIG_DECIMAL_1E18, EMPTY_BYTES } from "../constants";
 
 export function handleRewardsUpdated(event: RewardsUpdated): void {
   let settings = createOrLoadSettings();
@@ -33,7 +32,7 @@ export function handleTransfer(event: Transfer): void {
   let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
   let fromId = event.params.from.toHexString();
-  if (event.params.from.notEqual(EMPTY_BYTES)) {
+  if (event.params.from.notEqual(BYTES_ZERO)) {
     let rewardEthHolder = createOrLoadRewardEthTokenHolder(
       fromId,
       settings.rewardPerStakedEthToken
@@ -56,7 +55,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   let toId = event.params.to.toHexString();
-  if (event.params.from.notEqual(EMPTY_BYTES)) {
+  if (event.params.from.notEqual(BYTES_ZERO)) {
     let rewardEthHolder = createOrLoadRewardEthTokenHolder(
       toId,
       settings.rewardPerStakedEthToken
