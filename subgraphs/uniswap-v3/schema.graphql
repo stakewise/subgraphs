@@ -1,0 +1,65 @@
+"Uniswap V3 pool data"
+type Pool @entity {
+  "The address of the pool"
+  id: ID!
+
+  "The address of token0"
+  token0: Bytes!
+
+  "The address of token1"
+  token1: Bytes!
+
+  "Fee tier"
+  feeTier: BigInt!
+
+  "The in range liquidity"
+  liquidity: BigInt!
+
+  "The current price tracked"
+  sqrtPrice: BigInt!
+
+  "The tracker for the global fees growth of token0"
+  feeGrowthGlobal0X128: BigInt!
+
+  "The tracker for the global fees growth of token1"
+  feeGrowthGlobal1X128: BigInt!
+
+  "The current tick"
+  tick: BigInt
+
+  "All time token0 swapped"
+  volumeToken0: BigInt!
+
+  "All time token1 swapped"
+  volumeToken1: BigInt!
+
+  "The pool positions"
+  positions: [Position!]! @derivedFrom(field: "pool")
+}
+
+"Positions created through NonfungiblePositionManager"
+type Position @entity {
+  "NFT Token ID"
+  id: ID!
+
+  "The address of the position owner"
+  owner: Bytes!
+
+  "The address of the pool"
+  pool: Pool!
+
+  "Lower tick of the position"
+  tickLower: BigInt!
+
+  "Upper tick of the position"
+  tickUpper: BigInt!
+
+  "Total liquidity of the position"
+  liquidity: BigInt!
+
+  "The tracker for the position fees growth of token0"
+  feeGrowthInside0LastX128: BigInt!
+
+  "The tracker for the position fees growth of token1"
+  feeGrowthInside1LastX128: BigInt!
+}
