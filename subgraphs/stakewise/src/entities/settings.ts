@@ -1,5 +1,5 @@
+import { BIG_DECIMAL_ZERO, BIG_INT_ZERO } from "const";
 import { Settings } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL, EMPTY_BIG_INT } from "../constants";
 
 export function createOrLoadSettings(): Settings {
   let settings = Settings.load("1");
@@ -17,8 +17,8 @@ export function createOrLoadSettings(): Settings {
     settings.stakeWiseTokenPaused = false;
     settings.stakedEthTokenPaused = false;
     settings.rewardEthTokenPaused = false;
-    settings.rewardsUpdatedAtTimestamp = EMPTY_BIG_INT;
-    settings.rewardPerStakedEthToken = EMPTY_BIG_DECIMAL;
+    settings.rewardsUpdatedAtTimestamp = BIG_INT_ZERO;
+    settings.rewardPerStakedEthToken = BIG_DECIMAL_ZERO;
     settings.save();
   }
   return settings as Settings;

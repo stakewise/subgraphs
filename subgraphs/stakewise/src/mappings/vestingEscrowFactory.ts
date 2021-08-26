@@ -1,4 +1,5 @@
-import { Bytes, log } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
+import { BIG_DECIMAL_1E18, BIG_DECIMAL_ZERO } from "const";
 import {
   VestingEscrowCreated,
   Paused,
@@ -6,7 +7,6 @@ import {
 } from "../../generated/VestingEscrowFactory/VestingEscrowFactory";
 import { VestingEscrow } from "../../generated/schema";
 import { VestingEscrow as VestingEscrowTemplate } from "../../generated/templates";
-import { BIG_DECIMAL_1E18, EMPTY_BIG_DECIMAL } from "../constants";
 import { createOrLoadSettings } from "../entities";
 
 export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
@@ -17,7 +17,7 @@ export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
   escrow.claimer = event.params.recipient;
   escrow.beneficiary = event.params.beneficiary;
   escrow.totalAmount = event.params.totalAmount.divDecimal(BIG_DECIMAL_1E18);
-  escrow.totalClaimed = EMPTY_BIG_DECIMAL;
+  escrow.totalClaimed = BIG_DECIMAL_ZERO;
   escrow.startTimestamp = event.params.startTime;
   escrow.endTimestamp = event.params.endTime;
   escrow.cliffLength = event.params.cliffLength;

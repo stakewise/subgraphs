@@ -1,0 +1,15 @@
+{
+  "name": "uniswap-v3",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "codegen": "graph codegen subgraph.yaml",
+    "build": "graph build subgraph.yaml",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3 subgraph.yaml",
+    "create-local": "graph create --node $GRAPH_NODE_URL stakewise/uniswap-v3",
+    "remove-local": "graph remove --node $GRAPH_NODE_URL stakewise/uniswap-v3",
+    "deploy-local": "graph deploy --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/uniswap-v3",
+    "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml"
+  }
+}

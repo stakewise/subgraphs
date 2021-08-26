@@ -1,7 +1,7 @@
 import { dataSource } from "@graphprotocol/graph-ts";
 
+import { BIG_DECIMAL_ZERO } from "const";
 import { PartnersRevenueSharing } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL } from "../constants";
 
 export function createOrLoadPartnersRevenueSharing(): PartnersRevenueSharing {
   let partnersRevenueSharingAddress = dataSource.address().toHexString();
@@ -14,9 +14,9 @@ export function createOrLoadPartnersRevenueSharing(): PartnersRevenueSharing {
       partnersRevenueSharingAddress
     );
 
-    partnersRevenueSharing.totalPoints = EMPTY_BIG_DECIMAL;
-    partnersRevenueSharing.rewardPerPoint = EMPTY_BIG_DECIMAL;
-    partnersRevenueSharing.totalReward = EMPTY_BIG_DECIMAL;
+    partnersRevenueSharing.totalPoints = BIG_DECIMAL_ZERO;
+    partnersRevenueSharing.rewardPerPoint = BIG_DECIMAL_ZERO;
+    partnersRevenueSharing.totalReward = BIG_DECIMAL_ZERO;
     partnersRevenueSharing.save();
   }
   return partnersRevenueSharing as PartnersRevenueSharing;

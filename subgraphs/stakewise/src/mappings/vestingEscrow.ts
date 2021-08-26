@@ -1,5 +1,5 @@
 import { log } from "@graphprotocol/graph-ts";
-
+import { BIG_DECIMAL_1E18 } from "const";
 import {
   Stopped,
   Paused,
@@ -7,7 +7,6 @@ import {
   Claimed,
 } from "../../generated/templates/VestingEscrow/VestingEscrow";
 import { VestingEscrow } from "../../generated/schema";
-import { BIG_DECIMAL_1E18 } from "../constants";
 
 export function handleStopped(event: Stopped): void {
   let escrow = VestingEscrow.load(event.address.toHexString());

@@ -377,3 +377,14 @@ type RewardEthTokenHolder @entity {
     "The last checkpoint's reward per Staked ETH token"
     rewardPerStakedEthToken: BigDecimal!
 }
+
+"""
+Ethereum block
+"""
+type Block @entity {
+    "Block number"
+    id: ID!
+
+    "Block timestamp"
+    timestamp: BigInt!
+}

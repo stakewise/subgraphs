@@ -1,5 +1,11 @@
 import { log, store } from "@graphprotocol/graph-ts";
 import {
+  BIG_DECIMAL_1E18,
+  BIG_DECIMAL_1E22,
+  BIG_DECIMAL_1E4,
+  BIG_DECIMAL_ZERO,
+} from "const";
+import {
   AccountAdded,
   AccountRemoved,
   AmountIncreased,
@@ -14,12 +20,6 @@ import {
   createOrLoadPartnersRevenueSharing,
   createOrLoadSettings,
 } from "../entities";
-import {
-  BIG_DECIMAL_1E18,
-  BIG_DECIMAL_1E22,
-  BIG_DECIMAL_1E4,
-  EMPTY_BIG_DECIMAL,
-} from "../constants";
 
 export function handleRewardsUpdated(event: RewardsUpdated): void {
   let revenueSharing = createOrLoadPartnersRevenueSharing();
@@ -46,9 +46,9 @@ export function handleAccountAdded(event: AccountAdded): void {
     event.params.beneficiary.toHexString()
   );
 
-  account.amount = EMPTY_BIG_DECIMAL;
+  account.amount = BIG_DECIMAL_ZERO;
   account.rewardPerPoint = revenueSharing.rewardPerPoint;
-  account.unclaimedReward = EMPTY_BIG_DECIMAL;
+  account.unclaimedReward = BIG_DECIMAL_ZERO;
   account.contract = revenueSharing.id;
   account.revenueShare = event.params.revenueShare.divDecimal(BIG_DECIMAL_1E4);
   account.save();
@@ -167,7 +167,7 @@ export function handleRewardCollected(event: RewardCollected): void {
   }
 
   let revenueSharing = createOrLoadPartnersRevenueSharing();
-  account.unclaimedReward = EMPTY_BIG_DECIMAL;
+  account.unclaimedReward = BIG_DECIMAL_ZERO;
   account.rewardPerPoint = revenueSharing.rewardPerPoint;
   account.save();
 

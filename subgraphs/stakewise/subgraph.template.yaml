@@ -22,6 +22,7 @@ dataSources:
         - DepositActivation
         - Operator
         - Validator
+        - Block
       abis:
         - name: Pool
           file: ./packages/abis/Pool.json
@@ -44,6 +45,8 @@ dataSources:
           handler: handleValidatorInitialized
         - event: ValidatorRegistered(bytes,address)
           handler: handleValidatorRegistered
+      blockHandlers:
+        - handler: handleBlock
 
   - kind: ethereum/contract
     name: PoolValidators

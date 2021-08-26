@@ -1,9 +1,9 @@
 import { BigDecimal } from "@graphprotocol/graph-ts";
+import { BIG_DECIMAL_ZERO } from "const";
 import {
   RewardEthTokenHolder,
   StakedEthTokenHolder,
 } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL } from "../constants";
 
 export function createOrLoadRewardEthTokenHolder(
   holderAddress: string,
@@ -14,7 +14,7 @@ export function createOrLoadRewardEthTokenHolder(
   if (holder == null) {
     holder = new RewardEthTokenHolder(holderAddress);
 
-    holder.checkpointBalance = EMPTY_BIG_DECIMAL;
+    holder.checkpointBalance = BIG_DECIMAL_ZERO;
     holder.rewardPerStakedEthToken = rewardPerStakedEthToken;
     holder.save();
   }

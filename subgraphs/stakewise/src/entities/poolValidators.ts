@@ -1,5 +1,5 @@
+import { BIG_DECIMAL_ZERO, BYTES_ZERO } from "const";
 import { Operator, Validator } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL, EMPTY_BYTES } from "../constants";
 
 export function createOrLoadOperator(operatorAddress: string): Operator {
   let operator = Operator.load(operatorAddress);
@@ -7,11 +7,11 @@ export function createOrLoadOperator(operatorAddress: string): Operator {
   if (operator == null) {
     operator = new Operator(operatorAddress);
 
-    operator.initializeMerkleRoot = EMPTY_BYTES;
+    operator.initializeMerkleRoot = BYTES_ZERO;
     operator.initializeMerkleProofs = "";
-    operator.finalizeMerkleRoot = EMPTY_BYTES;
+    operator.finalizeMerkleRoot = BYTES_ZERO;
     operator.finalizeMerkleProofs = "";
-    operator.collateral = EMPTY_BIG_DECIMAL;
+    operator.collateral = BIG_DECIMAL_ZERO;
     operator.save();
   }
   return operator as Operator;

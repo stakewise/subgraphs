@@ -1,7 +1,7 @@
 import { BigDecimal } from "@graphprotocol/graph-ts";
 
+import { BIG_DECIMAL_ZERO } from "const";
 import { StakedEthTokenHolder } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL } from "../constants";
 import {
   calculateRewardEthTokenHolderBalance,
   createOrLoadRewardEthTokenHolder,
@@ -15,7 +15,7 @@ export function createOrLoadStakedEthTokenHolder(
   if (holder == null) {
     holder = new StakedEthTokenHolder(holderAddress);
 
-    holder.balance = EMPTY_BIG_DECIMAL;
+    holder.balance = BIG_DECIMAL_ZERO;
     holder.save();
   }
   return holder as StakedEthTokenHolder;

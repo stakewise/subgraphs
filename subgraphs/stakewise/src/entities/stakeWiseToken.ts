@@ -1,7 +1,7 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 
+import { BIG_DECIMAL_ZERO } from "const";
 import { StakeWiseTokenHolder } from "../../generated/schema";
-import { EMPTY_BIG_DECIMAL } from "../constants";
 
 export function createOrLoadStakeWiseTokenHolder(
   holderAddress: string,
@@ -12,8 +12,8 @@ export function createOrLoadStakeWiseTokenHolder(
   if (holder == null) {
     holder = new StakeWiseTokenHolder(holderAddress);
 
-    holder.balance = EMPTY_BIG_DECIMAL;
-    holder.holdingPoints = EMPTY_BIG_DECIMAL;
+    holder.balance = BIG_DECIMAL_ZERO;
+    holder.holdingPoints = BIG_DECIMAL_ZERO;
     holder.updatedAtTimestamp = timestamp;
     holder.save();
   }
@@ -29,7 +29,7 @@ export function calculateHoldingPoints(
   let prevHoldingPoints = holder.holdingPoints;
   if (rewardsUpdatedAtTimestamp.ge(holder.updatedAtTimestamp)) {
     startTimestamp = rewardsUpdatedAtTimestamp;
-    prevHoldingPoints = EMPTY_BIG_DECIMAL;
+    prevHoldingPoints = BIG_DECIMAL_ZERO;
   }
   return prevHoldingPoints.plus(
     holder.balance.times(currentTimestamp.minus(startTimestamp).toBigDecimal())
