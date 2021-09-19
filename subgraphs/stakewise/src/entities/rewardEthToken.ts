@@ -1,37 +1,20 @@
-import { BigDecimal } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_ZERO } from "const";
-import {
-  RewardEthTokenHolder,
-  StakedEthTokenHolder,
-} from "../../generated/schema";
+import { dataSource } from "@graphprotocol/graph-ts";
+import { BIG_DECIMAL_ZERO, BIG_INT_ZERO } from "const";
+import { RewardEthToken } from "../../generated/schema";
 
-export function createOrLoadRewardEthTokenHolder(
-  holderAddress: string,
-  rewardPerStakedEthToken: BigDecimal
-): RewardEthTokenHolder {
-  let holder = RewardEthTokenHolder.load(holderAddress);
+export function createOrLoadRewardEthToken(): RewardEthToken {
+  let rewardEthTokenAddress = dataSource.address().toHexString();
+  let rewardEthToken = RewardEthToken.load(rewardEthTokenAddress);
 
-  if (holder == null) {
-    holder = new RewardEthTokenHolder(holderAddress);
+  if (rewardEthToken == null) {
+    rewardEthToken = new RewardEthToken(rewardEthTokenAddress);
 
-    holder.checkpointBalance = BIG_DECIMAL_ZERO;
-    holder.rewardPerStakedEthToken = rewardPerStakedEthToken;
-    holder.save();
+    rewardEthToken.rewardPerStakedEthToken = BIG_DECIMAL_ZERO;
+    rewardEthToken.distributorPeriodReward = BIG_DECIMAL_ZERO;
+    rewardEthToken.protocolPeriodReward = BIG_DECIMAL_ZERO;
+    rewardEthToken.updatedAtBlock = BIG_INT_ZERO;
+    rewardEthToken.updatedAtTimestamp = BIG_INT_ZERO;
+    rewardEthToken.save();
   }
-  return holder as RewardEthTokenHolder;
-}
-
-export function calculateRewardEthTokenHolderBalance(
-  rewardEthTokenHolder: RewardEthTokenHolder,
-  stakedEthTokenHolder: StakedEthTokenHolder,
-  latestRewardPerToken: BigDecimal
-): BigDecimal {
-  if (latestRewardPerToken.le(rewardEthTokenHolder.rewardPerStakedEthToken)) {
-    return rewardEthTokenHolder.checkpointBalance;
-  }
-  let earnedRewardEthToken = stakedEthTokenHolder.balance.times(
-    latestRewardPerToken.minus(rewardEthTokenHolder.rewardPerStakedEthToken)
-  );
-
-  return rewardEthTokenHolder.checkpointBalance.plus(earnedRewardEthToken);
+  return rewardEthToken as RewardEthToken;
 }

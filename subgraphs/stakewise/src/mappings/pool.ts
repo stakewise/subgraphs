@@ -1,4 +1,10 @@
-import { BigInt, ethereum, log, store } from "@graphprotocol/graph-ts";
+import {
+  BigDecimal,
+  BigInt,
+  ethereum,
+  log,
+  store,
+} from "@graphprotocol/graph-ts";
 
 import { BIG_DECIMAL_1E18 } from "const";
 import {
@@ -14,11 +20,11 @@ import {
 } from "../../generated/Pool/Pool";
 import {
   createOrLoadDepositActivation,
-  createOrLoadPool,
+  createOrLoadNetwork,
   createOrLoadOperator,
+  createOrLoadPool,
   createOrLoadValidator,
   getDepositActivationId,
-  createOrLoadSettings,
 } from "../entities";
 import { Block, DepositActivation } from "../../generated/schema";
 
@@ -86,6 +92,10 @@ export function handleActivationScheduled(event: ActivationScheduled): void {
   let addedAmount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
   activation.amount = activation.amount.plus(addedAmount);
 
+  let pool = createOrLoadPool();
+  pool.balance = pool.balance.plus(addedAmount);
+  pool.save();
+
   log.info("[Pool] ActivationScheduled sender={} validatorIndex={} amount={}", [
     activation.account.toHexString(),
     event.params.validatorIndex.toString(),
@@ -99,15 +109,20 @@ export function handleActivated(event: Activated): void {
     event.params.validatorIndex
   );
   let activation = DepositActivation.load(activationId);
+  let activatedAmount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
   if (activation != null) {
     store.remove("DepositActivation", activationId);
+    // remove activated amount as it was added during mint and scheduled activation
+    let pool = createOrLoadPool();
+    pool.balance = pool.balance.minus(activatedAmount);
+    pool.save();
   }
 
   log.info("[Pool] Activated account={} validatorIndex={} value={} sender={}", [
     event.params.account.toHexString(),
     event.params.validatorIndex.toString(),
-    event.params.value.divDecimal(BIG_DECIMAL_1E18).toString(),
+    activatedAmount.toString(),
     event.params.sender.toHexString(),
   ]);
 }
@@ -119,6 +134,16 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
   validator.operator = operator.id;
   validator.registrationStatus = "Initialized";
   validator.save();
+
+  operator.validatorsCount = operator.validatorsCount.plus(
+    BigInt.fromString("1")
+  );
+  operator.save();
+
+  // initialization is done with 1 ether deposit to the eth2 contract
+  let pool = createOrLoadPool();
+  pool.balance = pool.balance.minus(BIG_DECIMAL_1E18);
+  pool.save();
 
   log.info("[Pool] ValidatorInitialized publicKey={} operator={}", [
     validator.id,
@@ -136,6 +161,25 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
 
   let pool = createOrLoadPool();
   pool.pendingValidators = pool.pendingValidators.plus(BigInt.fromString("1"));
+
+  if (validator.registrationStatus == "Uninitialized") {
+    // compatibility with v1 contracts
+    pool.balance = pool.balance.minus(
+      BIG_DECIMAL_1E18.times(BigDecimal.fromString("32"))
+    );
+    operator.validatorsCount = operator.validatorsCount.plus(
+      BigInt.fromString("1")
+    );
+  } else {
+    // finalization is done with 31 ether deposit to the eth2 contract
+    pool.balance = pool.balance.minus(
+      BIG_DECIMAL_1E18.times(BigDecimal.fromString("31"))
+    );
+    operator.depositDataIndex = operator.depositDataIndex.plus(
+      BigInt.fromString("1")
+    );
+  }
+  operator.save();
   pool.save();
 
   log.info("[Pool] ValidatorRegistered publicKey={} operator={}", [
@@ -145,26 +189,32 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.poolPaused = true;
-  settings.save();
+  network.poolPaused = true;
+  network.save();
 
   log.info("[Pool] Paused account={}", [event.params.account.toHexString()]);
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.poolPaused = false;
-  settings.save();
+  network.poolPaused = false;
+  network.save();
 
   log.info("[Pool] Unpaused account={}", [event.params.account.toHexString()]);
 }
 
 export function handleBlock(block: ethereum.Block): void {
   let id = block.number.toString();
+
   let blockEntity = new Block(id);
   blockEntity.timestamp = block.timestamp;
   blockEntity.save();
+
+  log.info("[Block] number={} timestamp={}", [
+    blockEntity.id,
+    blockEntity.timestamp.toString(),
+  ]);
 }

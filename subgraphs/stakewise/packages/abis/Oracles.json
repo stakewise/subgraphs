@@ -11,7 +11,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "signer",
+        "name": "oracle",
         "type": "address"
       },
       {
@@ -48,7 +48,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "signer",
+        "name": "oracle",
         "type": "address"
       },
       {
@@ -118,18 +118,6 @@
         "internalType": "address",
         "name": "oracle",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "rewardVotesSource",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "validatorVotesSource",
-        "type": "string"
       }
     ],
     "name": "OracleAdded",
@@ -285,5 +273,18 @@
     ],
     "name": "Unpaused",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "currentRewardsNonce",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]

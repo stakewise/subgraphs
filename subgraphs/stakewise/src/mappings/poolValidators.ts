@@ -1,9 +1,10 @@
 import { log } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_1E18, BYTES_ZERO } from "const";
+import { BIG_DECIMAL_1E18, BIG_INT_ZERO, BYTES_ZERO } from "const";
 import {
   createOrLoadOperator,
-  createOrLoadSettings,
+  createOrLoadNetwork,
   createOrLoadValidator,
+  createOrLoadPool,
 } from "../entities";
 import {
   CollateralDeposited,
@@ -22,6 +23,7 @@ export function handleOperatorAdded(event: OperatorAdded): void {
   operator.initializeMerkleProofs = event.params.initializeMerkleProofs;
   operator.finalizeMerkleRoot = event.params.finalizeMerkleRoot;
   operator.finalizeMerkleProofs = event.params.finalizeMerkleProofs;
+  operator.depositDataIndex = BIG_INT_ZERO;
   operator.save();
 
   log.info(
@@ -43,6 +45,7 @@ export function handleOperatorRemoved(event: OperatorRemoved): void {
   operator.initializeMerkleProofs = "";
   operator.finalizeMerkleRoot = BYTES_ZERO;
   operator.finalizeMerkleProofs = "";
+  operator.depositDataIndex = BIG_INT_ZERO;
   operator.save();
 
   log.info("[PoolValidators] OperatorRemoved operator={} sender={}", [
@@ -59,8 +62,13 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   operator.initializeMerkleProofs = "";
   operator.finalizeMerkleRoot = BYTES_ZERO;
   operator.finalizeMerkleProofs = "";
+  operator.depositDataIndex = BIG_INT_ZERO;
   operator.collateral = operator.collateral.minus(refundedAmount);
   operator.save();
+
+  let pool = createOrLoadPool();
+  pool.balance = pool.balance.plus(refundedAmount);
+  pool.save();
 
   let validator = createOrLoadValidator(event.params.publicKey.toHexString());
   validator.registrationStatus = "Failed";
@@ -103,10 +111,10 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawn): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.poolValidatorsPaused = true;
-  settings.save();
+  network.poolValidatorsPaused = true;
+  network.save();
 
   log.info("[PoolValidators] Paused account={}", [
     event.params.account.toHexString(),
@@ -114,10 +122,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.poolValidatorsPaused = false;
-  settings.save();
+  network.poolValidatorsPaused = false;
+  network.save();
 
   log.info("[PoolValidators] Unpaused account={}", [
     event.params.account.toHexString(),

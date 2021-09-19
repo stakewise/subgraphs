@@ -14,6 +14,7 @@ export function createOrLoadMerkleDistributor(): MerkleDistributor {
     distributor.merkleProofs = "";
     distributor.updatedAtBlock = BIG_INT_ZERO;
     distributor.updatedAtTimestamp = BIG_INT_ZERO;
+    distributor.rewardsUpdatedAtBlock = BIG_INT_ZERO;
     distributor.save();
   }
   return distributor as MerkleDistributor;

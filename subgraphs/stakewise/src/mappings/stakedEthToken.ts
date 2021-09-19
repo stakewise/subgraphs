@@ -1,41 +1,43 @@
 import { log } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_1E18, BYTES_ZERO } from "const";
+import { ADDRESS_ZERO, BIG_DECIMAL_1E18 } from "const";
 import {
   Paused,
   Transfer,
   Unpaused,
 } from "../../generated/StakedEthToken/StakedEthToken";
 import {
-  createOrLoadSettings,
-  createOrLoadStakedEthTokenHolder,
-  updateRewardEthTokenHolderBalance,
+  createOrLoadNetwork,
+  createOrLoadPool,
+  createOrLoadRewardEthToken,
+  createOrLoadStaker,
 } from "../entities";
 
 export function handleTransfer(event: Transfer): void {
-  let settings = createOrLoadSettings();
+  let rewardEthToken = createOrLoadRewardEthToken();
   let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
   let fromId = event.params.from.toHexString();
-  if (event.params.from.notEqual(BYTES_ZERO)) {
-    let fromHolder = createOrLoadStakedEthTokenHolder(fromId);
-    updateRewardEthTokenHolderBalance(
-      fromHolder,
-      settings.rewardPerStakedEthToken
+  if (event.params.from.notEqual(ADDRESS_ZERO)) {
+    let fromStaker = createOrLoadStaker(
+      fromId,
+      rewardEthToken.rewardPerStakedEthToken
     );
-    fromHolder.balance = fromHolder.balance.minus(amount);
-    fromHolder.save();
+    fromStaker.principalBalance = fromStaker.principalBalance.minus(amount);
+    fromStaker.save();
+  } else {
+    let pool = createOrLoadPool();
+    pool.balance = pool.balance.plus(amount);
+    pool.save();
   }
 
   let toId = event.params.to.toHexString();
-  if (event.params.to.notEqual(BYTES_ZERO)) {
-    let toHolder = createOrLoadStakedEthTokenHolder(toId);
-    updateRewardEthTokenHolderBalance(
-      toHolder,
-      settings.rewardPerStakedEthToken
+  if (event.params.to.notEqual(ADDRESS_ZERO)) {
+    let toStaker = createOrLoadStaker(
+      toId,
+      rewardEthToken.rewardPerStakedEthToken
     );
-
-    toHolder.balance = toHolder.balance.plus(amount);
-    toHolder.save();
+    toStaker.principalBalance = toStaker.principalBalance.plus(amount);
+    toStaker.save();
   }
 
   log.info("[StakedEthToken] Transfer from={} to={} amount={}", [
@@ -46,10 +48,10 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.stakedEthTokenPaused = true;
-  settings.save();
+  network.stakedEthTokenPaused = true;
+  network.save();
 
   log.info("[StakedEthToken] Paused account={}", [
     event.params.account.toHexString(),
@@ -57,10 +59,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.stakedEthTokenPaused = false;
-  settings.save();
+  network.stakedEthTokenPaused = false;
+  network.save();
 
   log.info("[StakedEthToken] Unpaused account={}", [
     event.params.account.toHexString(),

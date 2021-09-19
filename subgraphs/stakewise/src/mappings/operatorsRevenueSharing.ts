@@ -18,7 +18,7 @@ import {
 import { OperatorRevenueSharingAccount } from "../../generated/schema";
 import {
   createOrLoadOperatorsRevenueSharing,
-  createOrLoadSettings,
+  createOrLoadNetwork,
 } from "../entities";
 
 export function handleRewardsUpdated(event: RewardsUpdated): void {
@@ -182,10 +182,10 @@ export function handleRewardCollected(event: RewardCollected): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.operatorsRevenueSharingPaused = true;
-  settings.save();
+  network.operatorsRevenueSharingPaused = true;
+  network.save();
 
   log.info("[OperatorsRevenueSharing] Paused account={}", [
     event.params.account.toHexString(),
@@ -193,10 +193,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.operatorsRevenueSharingPaused = false;
-  settings.save();
+  network.operatorsRevenueSharingPaused = false;
+  network.save();
 
   log.info("[OperatorsRevenueSharing] Unpaused account={}", [
     event.params.account.toHexString(),

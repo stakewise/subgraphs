@@ -1,9 +1,10 @@
 import { log } from "@graphprotocol/graph-ts";
 
-import { BIG_DECIMAL_1E18 } from "const";
+import { BIG_DECIMAL_1E18, BIG_DECIMAL_ZERO } from "const";
 import {
   createOrLoadMerkleDistributor,
-  createOrLoadSettings,
+  createOrLoadRewardEthToken,
+  createOrLoadNetwork,
 } from "../entities";
 import {
   Claimed,
@@ -19,12 +20,19 @@ import {
 
 export function handleMerkleRootUpdated(event: MerkleRootUpdated): void {
   let distributor = createOrLoadMerkleDistributor();
+  let rewardEthToken = createOrLoadRewardEthToken();
 
   distributor.merkleRoot = event.params.merkleRoot;
   distributor.merkleProofs = event.params.merkleProofs;
   distributor.updatedAtBlock = event.block.number;
   distributor.updatedAtTimestamp = event.block.timestamp;
+  distributor.rewardsUpdatedAtBlock = rewardEthToken.updatedAtBlock;
   distributor.save();
+
+  // reset the period rewards as merkle rewards were distributed
+  rewardEthToken.distributorPeriodReward = BIG_DECIMAL_ZERO;
+  rewardEthToken.protocolPeriodReward = BIG_DECIMAL_ZERO;
+  rewardEthToken.save();
 
   log.info(
     "[MerkleDistributor] MerkleRootUpdated merkleRoot={} merkleProofs={} sender={}",
@@ -94,10 +102,10 @@ export function handleClaimed(event: Claimed): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.merkleDistributorPaused = true;
-  settings.save();
+  network.merkleDistributorPaused = true;
+  network.save();
 
   log.info("[MerkleDistributor] Paused account={}", [
     event.params.account.toHexString(),
@@ -105,10 +113,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.merkleDistributorPaused = false;
-  settings.save();
+  network.merkleDistributorPaused = false;
+  network.save();
 
   log.info("[MerkleDistributor] Unpaused account={}", [
     event.params.account.toHexString(),

@@ -7,7 +7,7 @@ import {
 } from "../../generated/VestingEscrowFactory/VestingEscrowFactory";
 import { VestingEscrow } from "../../generated/schema";
 import { VestingEscrow as VestingEscrowTemplate } from "../../generated/templates";
-import { createOrLoadSettings } from "../entities";
+import { createOrLoadNetwork } from "../entities";
 
 export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
   let escrow = new VestingEscrow(event.params.escrow.toHexString());
@@ -44,10 +44,10 @@ export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.vestingEscrowFactoryPaused = true;
-  settings.save();
+  network.vestingEscrowFactoryPaused = true;
+  network.save();
 
   log.info("[VestingEscrowFactory] Paused account={}", [
     event.params.account.toHexString(),
@@ -55,10 +55,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.vestingEscrowFactoryPaused = false;
-  settings.save();
+  network.vestingEscrowFactoryPaused = false;
+  network.save();
 
   log.info("[VestingEscrowFactory] Unpaused account={}", [
     event.params.account.toHexString(),

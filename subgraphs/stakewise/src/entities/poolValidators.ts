@@ -1,4 +1,4 @@
-import { BIG_DECIMAL_ZERO, BYTES_ZERO } from "const";
+import { BIG_DECIMAL_ZERO, BIG_INT_ZERO, BYTES_ZERO } from "const";
 import { Operator, Validator } from "../../generated/schema";
 
 export function createOrLoadOperator(operatorAddress: string): Operator {
@@ -12,6 +12,8 @@ export function createOrLoadOperator(operatorAddress: string): Operator {
     operator.finalizeMerkleRoot = BYTES_ZERO;
     operator.finalizeMerkleProofs = "";
     operator.collateral = BIG_DECIMAL_ZERO;
+    operator.validatorsCount = BIG_INT_ZERO;
+    operator.depositDataIndex = BIG_INT_ZERO;
     operator.save();
   }
   return operator as Operator;

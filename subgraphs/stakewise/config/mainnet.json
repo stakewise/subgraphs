@@ -39,5 +39,9 @@
   "rewardEthToken": {
     "address": "0x0000000000000000000000000000000000000000",
     "startBlock": "0"
+  },
+  "validatorRegistration": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "startBlock": "0"
   }
 }

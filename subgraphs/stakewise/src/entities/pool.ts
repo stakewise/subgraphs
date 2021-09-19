@@ -14,6 +14,7 @@ export function createOrLoadPool(): Pool {
     pool.pendingValidatorsLimit = BIG_INT_ZERO;
     pool.pendingValidators = BIG_INT_ZERO;
     pool.activatedValidators = BIG_INT_ZERO;
+    pool.balance = BIG_DECIMAL_ZERO;
     pool.save();
   }
   return pool as Pool;

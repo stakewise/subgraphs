@@ -1,48 +1,62 @@
 import { log } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_1E18, BYTES_ZERO } from "const";
+import { BIG_DECIMAL_1E18, MERKLE_DISTRIBUTOR_ADDRESS } from "const";
 import {
-  createOrLoadSettings,
-  createOrLoadStakeWiseTokenHolder,
   calculateHoldingPoints,
+  createOrLoadNetwork,
+  createOrLoadMerkleDistributor,
+  createOrLoadStakeWiseTokenHolder,
+  isSupportedSwiseHolder,
 } from "../entities";
 import {
-  Transfer,
   Paused,
+  Transfer,
   Unpaused,
 } from "../../generated/StakeWiseToken/StakeWiseToken";
 
 export function handleTransfer(event: Transfer): void {
-  let settings = createOrLoadSettings();
+  let distributor = createOrLoadMerkleDistributor();
   let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
   let fromId = event.params.from.toHexString();
-  if (event.params.from.notEqual(BYTES_ZERO)) {
+  if (isSupportedSwiseHolder(event.params.from)) {
     let fromHolder = createOrLoadStakeWiseTokenHolder(
       fromId,
+      event.block.number,
       event.block.timestamp
     );
     fromHolder.holdingPoints = calculateHoldingPoints(
       fromHolder,
-      settings.rewardsUpdatedAtTimestamp,
-      event.block.timestamp
+      distributor.rewardsUpdatedAtBlock,
+      event.block.number
     );
     fromHolder.balance = fromHolder.balance.minus(amount);
+    fromHolder.updatedAtBlock = event.block.number;
     fromHolder.updatedAtTimestamp = event.block.timestamp;
     fromHolder.save();
   }
 
   let toId = event.params.to.toHexString();
-  if (event.params.to.notEqual(BYTES_ZERO)) {
+  if (isSupportedSwiseHolder(event.params.to)) {
     let toHolder = createOrLoadStakeWiseTokenHolder(
       toId,
+      event.block.number,
       event.block.timestamp
     );
     toHolder.holdingPoints = calculateHoldingPoints(
       toHolder,
-      settings.rewardsUpdatedAtTimestamp,
-      event.block.timestamp
+      distributor.rewardsUpdatedAtBlock,
+      event.block.number
     );
+    if (event.params.from.equals(MERKLE_DISTRIBUTOR_ADDRESS)) {
+      // SWISE located in Merkle Distributor belongs to the claimer
+      toHolder.holdingPoints = toHolder.holdingPoints.plus(
+        event.params.value.times(
+          event.block.number.minus(distributor.rewardsUpdatedAtBlock)
+        )
+      );
+    }
     toHolder.balance = toHolder.balance.plus(amount);
+    toHolder.updatedAtBlock = event.block.number;
     toHolder.updatedAtTimestamp = event.block.timestamp;
     toHolder.save();
   }
@@ -55,10 +69,10 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.stakeWiseTokenPaused = true;
-  settings.save();
+  network.stakeWiseTokenPaused = true;
+  network.save();
 
   log.info("[StakeWiseToken] Paused account={}", [
     event.params.account.toHexString(),
@@ -66,10 +80,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.stakeWiseTokenPaused = false;
-  settings.save();
+  network.stakeWiseTokenPaused = false;
+  network.save();
 
   log.info("[StakeWiseToken] Unpaused account={}", [
     event.params.account.toHexString(),
