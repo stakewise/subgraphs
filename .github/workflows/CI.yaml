@@ -12,6 +12,7 @@ jobs:
       matrix:
         node: ['12.x', '14.x']
         os: [ubuntu-latest]
+        network: ['mainnet', 'goerli']
 
     runs-on: ${{ matrix.os }}
 
@@ -39,7 +40,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run GraphQL codegen
+      - name: Run network prepare
+        env:
+          NETWORK: ${{ matrix.network }}
+        run: yarn prepare:$NETWORK
+
+      - name: Run codegen
         run: yarn codegen
 
       - name: Build project
