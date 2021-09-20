@@ -11,8 +11,20 @@ import {
   Paused,
   RewardsVoteSubmitted,
   Unpaused,
+  Initialized,
 } from "../../generated/Oracles/Oracles";
 import { Oracle } from "../../generated/schema";
+
+export function handleInitialized(event: Initialized): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesRewardsNonce = event.params.rewardsNonce;
+  network.save();
+
+  log.info("[Oracles] Initialized rewardsNonce={}", [
+    network.oraclesRewardsNonce.toString(),
+  ]);
+}
 
 export function handleOracleAdded(event: OracleAdded): void {
   let oracle = createOrLoadOracle(event.params.oracle.toHexString());

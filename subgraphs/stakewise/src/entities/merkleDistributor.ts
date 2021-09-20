@@ -1,10 +1,8 @@
-import { dataSource } from "@graphprotocol/graph-ts";
-
-import { BYTES_ZERO, BIG_INT_ZERO } from "const";
+import { BIG_INT_ZERO, BYTES_ZERO, MERKLE_DISTRIBUTOR_ADDRESS } from "const";
 import { MerkleDistributor } from "../../generated/schema";
 
 export function createOrLoadMerkleDistributor(): MerkleDistributor {
-  let distributorAddress = dataSource.address().toHexString();
+  let distributorAddress = MERKLE_DISTRIBUTOR_ADDRESS.toHexString();
   let distributor = MerkleDistributor.load(distributorAddress);
 
   if (distributor == null) {

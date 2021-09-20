@@ -141,6 +141,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardsNonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "account",
         "type": "address"
@@ -273,18 +286,5 @@
     ],
     "name": "Unpaused",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "currentRewardsNonce",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   }
 ]

@@ -1,10 +1,4 @@
-import {
-  BigDecimal,
-  BigInt,
-  ethereum,
-  log,
-  store,
-} from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, log, store } from "@graphprotocol/graph-ts";
 
 import { BIG_DECIMAL_1E18 } from "const";
 import {
@@ -26,7 +20,7 @@ import {
   createOrLoadValidator,
   getDepositActivationId,
 } from "../entities";
-import { Block, DepositActivation } from "../../generated/schema";
+import { DepositActivation } from "../../generated/schema";
 
 export function handleMinActivatingDepositUpdated(
   event: MinActivatingDepositUpdated
@@ -142,7 +136,7 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
 
   // initialization is done with 1 ether deposit to the eth2 contract
   let pool = createOrLoadPool();
-  pool.balance = pool.balance.minus(BIG_DECIMAL_1E18);
+  pool.balance = pool.balance.minus(BigDecimal.fromString("1"));
   pool.save();
 
   log.info("[Pool] ValidatorInitialized publicKey={} operator={}", [
@@ -155,32 +149,28 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
   let operator = createOrLoadOperator(event.params.operator.toHexString());
   let validator = createOrLoadValidator(event.params.publicKey.toHexString());
 
-  validator.operator = operator.id;
-  validator.registrationStatus = "Finalized";
-  validator.save();
-
   let pool = createOrLoadPool();
   pool.pendingValidators = pool.pendingValidators.plus(BigInt.fromString("1"));
 
   if (validator.registrationStatus == "Uninitialized") {
     // compatibility with v1 contracts
-    pool.balance = pool.balance.minus(
-      BIG_DECIMAL_1E18.times(BigDecimal.fromString("32"))
-    );
+    pool.balance = pool.balance.minus(BigDecimal.fromString("32"));
     operator.validatorsCount = operator.validatorsCount.plus(
       BigInt.fromString("1")
     );
   } else {
     // finalization is done with 31 ether deposit to the eth2 contract
-    pool.balance = pool.balance.minus(
-      BIG_DECIMAL_1E18.times(BigDecimal.fromString("31"))
-    );
+    pool.balance = pool.balance.minus(BigDecimal.fromString("31"));
     operator.depositDataIndex = operator.depositDataIndex.plus(
       BigInt.fromString("1")
     );
   }
   operator.save();
   pool.save();
+
+  validator.operator = operator.id;
+  validator.registrationStatus = "Finalized";
+  validator.save();
 
   log.info("[Pool] ValidatorRegistered publicKey={} operator={}", [
     validator.id,
@@ -204,17 +194,4 @@ export function handleUnpaused(event: Unpaused): void {
   network.save();
 
   log.info("[Pool] Unpaused account={}", [event.params.account.toHexString()]);
-}
-
-export function handleBlock(block: ethereum.Block): void {
-  let id = block.number.toString();
-
-  let blockEntity = new Block(id);
-  blockEntity.timestamp = block.timestamp;
-  blockEntity.save();
-
-  log.info("[Block] number={} timestamp={}", [
-    blockEntity.id,
-    blockEntity.timestamp.toString(),
-  ]);
 }

@@ -1,10 +1,10 @@
-import { Address, BigInt, dataSource } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 
-import { BIG_DECIMAL_ZERO, BIG_INT_ZERO } from "const";
+import { POOL_ADDRESS, BIG_DECIMAL_ZERO, BIG_INT_ZERO } from "const";
 import { DepositActivation, Pool } from "../../generated/schema";
 
 export function createOrLoadPool(): Pool {
-  let poolAddress = dataSource.address().toHexString();
+  let poolAddress = POOL_ADDRESS.toHexString();
   let pool = Pool.load(poolAddress);
 
   if (pool == null) {

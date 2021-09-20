@@ -2,46 +2,42 @@
   "network": "mainnet",
   "pool": {
     "address": "0xc874b064f465bdd6411d45734b56fac750cda29a",
-    "startBlock": "0"
+    "startBlock": "11726298"
   },
   "poolValidators": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "11726298"
   },
   "merkleDistributor": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0xa3f21010e8b9a3930996c8849df38f9ca3647c20",
+    "startBlock": "12651371"
   },
   "vestingEscrowFactory": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x7b910cc3d4b42feff056218bd56d7700e4ea7dd5",
+    "startBlock": "12271843"
   },
   "oracles": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "12271843"
   },
   "operatorsRevenueSharing": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "11052984"
   },
   "partnersRevenueSharing": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "11052984"
   },
   "stakeWiseToken": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x48c3399719b582dd63eb5aadf12a40b4c3f52fa2",
+    "startBlock": "12271823"
   },
   "stakedEthToken": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0xfe2e637202056d30016725477c5da089ab0a043a",
+    "startBlock": "11726304"
   },
   "rewardEthToken": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
-  },
-  "validatorRegistration": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x20bc832ca081b91433ff6c17f85701b6e92486c5",
+    "startBlock": "11726341"
   }
 }

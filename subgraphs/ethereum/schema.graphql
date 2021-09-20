@@ -1,0 +1,21 @@
+"""
+Eth2 Validator registration
+"""
+type ValidatorRegistration @entity {
+    "The validator public key"
+    id: ID!
+
+    "The validator withdrawal credentials"
+    withdrawalCredentials: Bytes!
+}
+
+"""
+Ethereum block
+"""
+type Block @entity {
+    "Block number"
+    id: ID!
+
+    "Block timestamp"
+    timestamp: BigInt!
+}

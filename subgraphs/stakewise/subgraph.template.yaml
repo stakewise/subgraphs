@@ -22,7 +22,6 @@ dataSources:
         - DepositActivation
         - Operator
         - Validator
-        - Block
       abis:
         - name: Pool
           file: ./packages/abis/Pool.json
@@ -45,8 +44,6 @@ dataSources:
           handler: handleValidatorInitialized
         - event: ValidatorRegistered(bytes,address)
           handler: handleValidatorRegistered
-      blockHandlers:
-        - handler: handleBlock
 
   - kind: ethereum/contract
     name: PoolValidators
@@ -136,6 +133,8 @@ dataSources:
         - name: Oracles
           file: ./packages/abis/Oracles.json
       eventHandlers:
+        - event: Initialized(uint256)
+          handler: handleInitialized
         - event: OracleAdded(indexed address)
           handler: handleOracleAdded
         - event: OracleRemoved(indexed address)
@@ -380,27 +379,6 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
-
-  - kind: ethereum/contract
-    name: ValidatorRegistration
-    network: {{ network }}
-    source:
-      address: '{{ validatorRegistration.address }}'
-      abi: ValidatorRegistration
-      startBlock: {{ validatorRegistration.startBlock }}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/validatorRegistration.ts
-      entities:
-        - ValidatorRegistration
-      abis:
-        - name: ValidatorRegistration
-          file: ./packages/abis/ValidatorRegistration.json
-      eventHandlers:
-        - event: DepositEvent(bytes,bytes,bytes,bytes,bytes)
-          handler: handleDepositEvent
 templates:
   - kind: ethereum/contract
     name: VestingEscrow

@@ -48,7 +48,7 @@ export function handleDistributionAdded(event: DistributionAdded): void {
   let distributionId = event.transaction.hash
     .toHexString()
     .concat("-")
-    .concat(event.transaction.index.toString());
+    .concat(event.logIndex.toString());
 
   let distribution = new TokenDistribution(distributionId);
 

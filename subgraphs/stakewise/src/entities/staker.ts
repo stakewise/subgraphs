@@ -34,9 +34,9 @@ export function calculateStakerRewardBalance(
   if (latestRewardPerToken.le(staker.rewardPerStakedEthToken)) {
     return staker.rewardBalance;
   }
-  let earnedRewardEthToken = staker.principalBalance.times(
-    latestRewardPerToken.minus(staker.rewardPerStakedEthToken)
-  );
+  let earnedRewardEthToken = staker.principalBalance
+    .times(latestRewardPerToken.minus(staker.rewardPerStakedEthToken))
+    .truncate(18);
 
   return staker.rewardBalance.plus(earnedRewardEthToken);
 }

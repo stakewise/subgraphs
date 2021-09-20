@@ -1,9 +1,12 @@
-import { dataSource } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_ZERO, BIG_INT_ZERO } from "const";
+import {
+  REWARD_ETH_TOKEN_ADDRESS,
+  BIG_DECIMAL_ZERO,
+  BIG_INT_ZERO,
+} from "const";
 import { RewardEthToken } from "../../generated/schema";
 
 export function createOrLoadRewardEthToken(): RewardEthToken {
-  let rewardEthTokenAddress = dataSource.address().toHexString();
+  let rewardEthTokenAddress = REWARD_ETH_TOKEN_ADDRESS.toHexString();
   let rewardEthToken = RewardEthToken.load(rewardEthTokenAddress);
 
   if (rewardEthToken == null) {

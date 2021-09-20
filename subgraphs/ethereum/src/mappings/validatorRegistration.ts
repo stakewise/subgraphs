@@ -1,6 +1,6 @@
-import { log } from "@graphprotocol/graph-ts";
+import { ethereum, log } from "@graphprotocol/graph-ts";
 import { DepositEvent } from "../../generated/ValidatorRegistration/ValidatorRegistration";
-import { ValidatorRegistration } from "../../generated/schema";
+import { Block, ValidatorRegistration } from "../../generated/schema";
 
 export function handleDepositEvent(event: DepositEvent): void {
   let publicKey = event.params.pubkey.toHexString();
@@ -15,5 +15,18 @@ export function handleDepositEvent(event: DepositEvent): void {
   log.info("[VRC] DepositEvent publicKey={} withdrawalCredentials={}", [
     validator.id,
     validator.withdrawalCredentials.toHexString(),
+  ]);
+}
+
+export function handleBlock(block: ethereum.Block): void {
+  let id = block.number.toString();
+
+  let blockEntity = new Block(id);
+  blockEntity.timestamp = block.timestamp;
+  blockEntity.save();
+
+  log.info("[Block] number={} timestamp={}", [
+    blockEntity.id,
+    blockEntity.timestamp.toString(),
   ]);
 }

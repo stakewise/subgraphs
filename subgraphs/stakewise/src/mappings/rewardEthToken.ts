@@ -98,7 +98,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   let toId = event.params.to.toHexString();
-  if (event.params.from.notEqual(ADDRESS_ZERO)) {
+  if (event.params.to.notEqual(ADDRESS_ZERO)) {
     let toStaker = createOrLoadStaker(
       toId,
       rewardEthToken.rewardPerStakedEthToken
