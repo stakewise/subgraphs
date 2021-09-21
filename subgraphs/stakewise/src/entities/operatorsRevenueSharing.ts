@@ -1,10 +1,9 @@
-import { dataSource } from "@graphprotocol/graph-ts";
-
-import { BIG_DECIMAL_ZERO } from "const";
+import { BIG_DECIMAL_ZERO, OPERATORS_REVENUE_SHARING_ADDRESS } from "const";
 import { OperatorsRevenueSharing } from "../../generated/schema";
 
 export function createOrLoadOperatorsRevenueSharing(): OperatorsRevenueSharing {
-  let operatorsRevenueSharingAddress = dataSource.address().toHexString();
+  let operatorsRevenueSharingAddress =
+    OPERATORS_REVENUE_SHARING_ADDRESS.toHexString();
   let operatorsRevenueSharing = OperatorsRevenueSharing.load(
     operatorsRevenueSharingAddress
   );

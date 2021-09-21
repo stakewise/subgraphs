@@ -1,10 +1,5 @@
 import { log, store } from "@graphprotocol/graph-ts";
-import {
-  BIG_DECIMAL_1E18,
-  BIG_DECIMAL_1E22,
-  BIG_DECIMAL_1E4,
-  BIG_DECIMAL_ZERO,
-} from "const";
+import { BIG_DECIMAL_1E18, BIG_DECIMAL_1E4, BIG_DECIMAL_ZERO } from "const";
 import {
   AccountAdded,
   AccountRemoved,
@@ -18,7 +13,7 @@ import {
 import { OperatorRevenueSharingAccount } from "../../generated/schema";
 import {
   createOrLoadOperatorsRevenueSharing,
-  createOrLoadSettings,
+  createOrLoadNetwork,
 } from "../entities";
 
 export function handleRewardsUpdated(event: RewardsUpdated): void {
@@ -26,7 +21,7 @@ export function handleRewardsUpdated(event: RewardsUpdated): void {
   let periodReward = event.params.periodReward.divDecimal(BIG_DECIMAL_1E18);
 
   revenueSharing.rewardPerPoint =
-    event.params.rewardPerPoint.divDecimal(BIG_DECIMAL_1E22);
+    event.params.rewardPerPoint.divDecimal(BIG_DECIMAL_1E18);
   revenueSharing.totalReward = revenueSharing.totalReward.plus(periodReward);
   revenueSharing.save();
 
@@ -72,7 +67,7 @@ export function handleAccountRemoved(event: AccountRemoved): void {
   let reward = event.params.reward.divDecimal(BIG_DECIMAL_1E18);
 
   if (account != null) {
-    let points = account.amount.times(account.revenueShare);
+    let points = account.amount.times(account.revenueShare).truncate(18);
     revenueSharing.totalPoints = revenueSharing.totalPoints.minus(points);
     revenueSharing.totalReward = revenueSharing.totalReward.minus(reward);
     revenueSharing.save();
@@ -98,8 +93,11 @@ export function handleAmountIncreased(event: AmountIncreased): void {
   }
 
   let addedAmount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
-  let prevPoints = account.amount.times(account.revenueShare);
-  let newPoints = account.amount.plus(addedAmount).times(account.revenueShare);
+  let prevPoints = account.amount.times(account.revenueShare).truncate(18);
+  let newPoints = account.amount
+    .plus(addedAmount)
+    .times(account.revenueShare)
+    .truncate(18);
 
   let revenueSharing = createOrLoadOperatorsRevenueSharing();
   revenueSharing.totalPoints = revenueSharing.totalPoints
@@ -137,8 +135,8 @@ export function handleRevenueShareUpdated(event: RevenueShareUpdated): void {
 
   let revenueSharing = createOrLoadOperatorsRevenueSharing();
   revenueSharing.totalPoints = revenueSharing.totalPoints
-    .minus(account.amount.times(prevRevenueShare))
-    .plus(account.amount.times(newRevenueShare));
+    .minus(account.amount.times(prevRevenueShare).truncate(18))
+    .plus(account.amount.times(newRevenueShare).truncate(18));
   revenueSharing.save();
 
   let reward = event.params.reward.divDecimal(BIG_DECIMAL_1E18);
@@ -182,10 +180,10 @@ export function handleRewardCollected(event: RewardCollected): void {
 }
 
 export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.operatorsRevenueSharingPaused = true;
-  settings.save();
+  network.operatorsRevenueSharingPaused = true;
+  network.save();
 
   log.info("[OperatorsRevenueSharing] Paused account={}", [
     event.params.account.toHexString(),
@@ -193,10 +191,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.operatorsRevenueSharingPaused = false;
-  settings.save();
+  network.operatorsRevenueSharingPaused = false;
+  network.save();
 
   log.info("[OperatorsRevenueSharing] Unpaused account={}", [
     event.params.account.toHexString(),

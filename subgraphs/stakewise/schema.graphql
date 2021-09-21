@@ -16,12 +16,15 @@ type Pool @entity {
 
     "The total amount of activated validators"
     activatedValidators: BigInt!
+
+    "The total amount of unregistered ETH"
+    balance: BigDecimal!
 }
 
 """
-Global Settings
+StakeWise network global settings
 """
-type Settings @entity {
+type Network @entity {
     "Set to 1"
     id: ID!
 
@@ -55,11 +58,11 @@ type Settings @entity {
     "Defines whether the Reward ETH Token is paused"
     rewardEthTokenPaused: Boolean!
 
-    "The last rewards update timestamp"
-    rewardsUpdatedAtTimestamp: BigInt!
+    "Defines rewards nonce in Oracles contract"
+    oraclesRewardsNonce: BigInt!
 
-    "The current reward per staked ETH token"
-    rewardPerStakedEthToken: BigDecimal!
+    "Defines validators nonce in Oracles contract"
+    oraclesValidatorsNonce: BigInt!
 }
 
 """
@@ -101,6 +104,12 @@ type Operator @entity {
     "The collateral amount deposited for ensuring the validator registration process"
     collateral: BigDecimal!
 
+    "The operator's current available deposit data index"
+    depositDataIndex: BigInt!
+
+    "The operator's total number of the validators"
+    validatorsCount: BigInt!
+
     "The operator validators"
     validators: [Validator!]! @derivedFrom(field: "operator")
 }
@@ -111,12 +120,6 @@ StakeWise Oracle
 type Oracle @entity {
     "The oracle address"
     id: ID!
-
-    "The oracle rewards votes source"
-    rewardVotesSource: String!
-
-    "The oracle validators votes source"
-    validatorVotesSource: String!
 }
 
 """
@@ -155,10 +158,36 @@ type MerkleDistributor @entity {
     "The current merkle root proofs location"
     merkleProofs: String!
 
+    "The last synced rewards update block"
+    rewardsUpdatedAtBlock: BigInt!
+
     "The current merkle root update block number"
     updatedAtBlock: BigInt!
 
     "The current merkle root update timestamp"
+    updatedAtTimestamp: BigInt!
+}
+
+"""
+RewardEthToken contract settings
+"""
+type RewardEthToken @entity {
+    "RewardEthToken contract address"
+    id: ID!
+
+    "The current reward per staked ETH token"
+    rewardPerStakedEthToken: BigDecimal!
+
+    "Distributor period reward"
+    distributorPeriodReward: BigDecimal!
+
+    "Protocol period reward"
+    protocolPeriodReward: BigDecimal!
+
+    "The current rewards update block number"
+    updatedAtBlock: BigInt!
+
+    "The current rewards update timestamp"
     updatedAtTimestamp: BigInt!
 }
 
@@ -276,7 +305,7 @@ interface RevenueSharingAccount {
     "The total unclaimed rewards amount in last checkpoint"
     unclaimedReward: BigDecimal!,
 
-    "The reward per point in last checkpoint"
+    "The reward ETH per point in last checkpoint"
     rewardPerPoint:  BigDecimal!
 }
 
@@ -346,45 +375,32 @@ type StakeWiseTokenHolder @entity {
     "The holder's balance"
     balance: BigDecimal!
 
-    "The points are calculated based on the balance and the time passed since the last balance update"
-    holdingPoints: BigDecimal!
+    "The points are calculated based on the balance and the number of blocks passed since the last balance update"
+    holdingPoints: BigInt!
+
+    "The last balance update block number"
+    updatedAtBlock: BigInt!
 
     "The last balance update timestamp"
     updatedAtTimestamp: BigInt!
 }
 
 """
-Staked ETH token holder
+StakeWise Staker
 """
-type StakedEthTokenHolder @entity {
-    "The address of the Staked ETH token holder"
+type Staker @entity {
+    "The staker address"
     id: ID!
 
-    "The holder's balance"
-    balance: BigDecimal!
-}
+    "Defines whether rewards accrual is disabled"
+    rewardsDisabled: Boolean!
 
-"""
-Reward ETH token holder
-"""
-type RewardEthTokenHolder @entity {
-    "The address of the Reward ETH token holder"
-    id: ID!
+    "The staked ETH tokens balance"
+    principalBalance: BigDecimal!
 
-    "The last checkpoint's balance"
-    checkpointBalance: BigDecimal!
+    "The last checkpoint reward ETH tokens balance"
+    rewardBalance: BigDecimal!
 
-    "The last checkpoint's reward per Staked ETH token"
+    "The last checkpoint reward per staked ETH token"
     rewardPerStakedEthToken: BigDecimal!
-}
-
-"""
-Ethereum block
-"""
-type Block @entity {
-    "Block number"
-    id: ID!
-
-    "Block timestamp"
-    timestamp: BigInt!
 }

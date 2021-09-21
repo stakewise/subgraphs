@@ -1,0 +1,29 @@
+specVersion: 0.0.3
+description: The subgraph for indexing ethereum blocks and registered validators
+repository: https://github.com/stakewise/subgraphs/subgraphs/ethereum
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ValidatorRegistration
+    network: {{ network }}
+    source:
+      address: '{{ validatorRegistration.address }}'
+      abi: ValidatorRegistration
+      startBlock: {{ validatorRegistration.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/validatorRegistration.ts
+      entities:
+        - ValidatorRegistration
+        - Block
+      abis:
+        - name: ValidatorRegistration
+          file: ./packages/abis/ValidatorRegistration.json
+      eventHandlers:
+        - event: DepositEvent(bytes,bytes,bytes,bytes,bytes)
+          handler: handleDepositEvent
+      blockHandlers:
+        - handler: handleBlock

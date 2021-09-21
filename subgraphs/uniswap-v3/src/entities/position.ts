@@ -1,13 +1,19 @@
 import { BigInt, dataSource } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, BIG_INT_ZERO, UNISWAP_V3_FACTORY_ADDRESS } from "const";
+import {
+  ADDRESS_ZERO,
+  BIG_INT_ZERO,
+  UNISWAP_V3_FACTORY_ADDRESS,
+  UNISWAP_V3_POSITION_MANAGER_ADDRESS,
+} from "const";
 import { Position } from "../../generated/schema";
 import { NonfungiblePositionManager } from "../../generated/NonfungiblePositionManager/NonfungiblePositionManager";
 import { Factory as FactoryContract } from "../../generated/Factory/Factory";
 import { isSupportedToken } from "./pool";
 
 export function createOrLoadPosition(tokenId: BigInt): Position | null {
-  let positionManagerAddress = dataSource.address();
-  let contract = NonfungiblePositionManager.bind(positionManagerAddress);
+  let contract = NonfungiblePositionManager.bind(
+    UNISWAP_V3_POSITION_MANAGER_ADDRESS
+  );
   let positionCall = contract.try_positions(tokenId);
   if (positionCall.reverted) {
     // the call reverts in situations where the position is minted

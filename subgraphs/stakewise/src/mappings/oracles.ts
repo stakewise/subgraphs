@@ -1,31 +1,38 @@
 import { log, store } from "@graphprotocol/graph-ts";
 
-import { createOrLoadOracle, createOrLoadSettings } from "../entities";
+import { createOrLoadOracle, createOrLoadNetwork } from "../entities";
 
 import {
+  InitializeValidatorVoteSubmitted,
+  FinalizeValidatorVoteSubmitted,
+  MerkleRootVoteSubmitted,
   OracleAdded,
   OracleRemoved,
   Paused,
+  RewardsVoteSubmitted,
   Unpaused,
+  Initialized,
 } from "../../generated/Oracles/Oracles";
 import { Oracle } from "../../generated/schema";
+
+export function handleInitialized(event: Initialized): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesRewardsNonce = event.params.rewardsNonce;
+  network.save();
+
+  log.info("[Oracles] Initialized rewardsNonce={}", [
+    network.oraclesRewardsNonce.toString(),
+  ]);
+}
 
 export function handleOracleAdded(event: OracleAdded): void {
   let oracle = createOrLoadOracle(event.params.oracle.toHexString());
 
-  oracle.rewardVotesSource = event.params.rewardVotesSource;
-  oracle.validatorVotesSource = event.params.validatorVotesSource;
-  oracle.save();
-
-  log.info(
-    "[Oracles] OracleAdded oracle={} rewardVotesSource={} validatorVotesSource={} sender={}",
-    [
-      oracle.id,
-      event.params.rewardVotesSource,
-      event.params.validatorVotesSource,
-      event.transaction.from.toHexString(),
-    ]
-  );
+  log.info("[Oracles] OracleAdded oracle={} sender={}", [
+    oracle.id,
+    event.transaction.from.toHexString(),
+  ]);
 }
 
 export function handleOracleRemoved(event: OracleRemoved): void {
@@ -42,20 +49,84 @@ export function handleOracleRemoved(event: OracleRemoved): void {
   ]);
 }
 
-export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+export function handleRewardsVoteSubmitted(event: RewardsVoteSubmitted): void {
+  let network = createOrLoadNetwork();
 
-  settings.oraclesPaused = true;
-  settings.save();
+  network.oraclesRewardsNonce = event.params.nonce;
+  network.save();
+
+  log.info("[Oracles] RewardsVoteSubmitted nonce={} oracle={} sender={}", [
+    network.oraclesRewardsNonce.toString(),
+    event.params.oracle.toHexString(),
+    event.transaction.from.toHexString(),
+  ]);
+}
+
+export function handleMerkleRootVoteSubmitted(
+  event: MerkleRootVoteSubmitted
+): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesRewardsNonce = event.params.nonce;
+  network.save();
+
+  log.info("[Oracles] MerkleRootVoteSubmitted nonce={} oracle={} sender={}", [
+    network.oraclesRewardsNonce.toString(),
+    event.params.oracle.toHexString(),
+    event.transaction.from.toHexString(),
+  ]);
+}
+
+export function handleInitializeValidatorVoteSubmitted(
+  event: InitializeValidatorVoteSubmitted
+): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesValidatorsNonce = event.params.nonce;
+  network.save();
+
+  log.info(
+    "[Oracles] InitializeValidatorVoteSubmitted nonce={} oracle={} sender={}",
+    [
+      network.oraclesValidatorsNonce.toString(),
+      event.params.oracle.toHexString(),
+      event.transaction.from.toHexString(),
+    ]
+  );
+}
+
+export function handleFinalizeValidatorVoteSubmitted(
+  event: FinalizeValidatorVoteSubmitted
+): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesValidatorsNonce = event.params.nonce;
+  network.save();
+
+  log.info(
+    "[Oracles] FinalizeValidatorVoteSubmitted nonce={} oracle={} sender={}",
+    [
+      network.oraclesValidatorsNonce.toString(),
+      event.params.oracle.toHexString(),
+      event.transaction.from.toHexString(),
+    ]
+  );
+}
+
+export function handlePaused(event: Paused): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesPaused = true;
+  network.save();
 
   log.info("[Oracles] Paused account={}", [event.params.account.toHexString()]);
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.oraclesPaused = false;
-  settings.save();
+  network.oraclesPaused = false;
+  network.save();
 
   log.info("[Oracles] Unpaused account={}", [
     event.params.account.toHexString(),

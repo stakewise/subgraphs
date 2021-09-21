@@ -18,11 +18,10 @@ dataSources:
       file: ./src/mappings/pool.ts
       entities:
         - Pool
-        - Settings
+        - Network
         - DepositActivation
         - Operator
         - Validator
-        - Block
       abis:
         - name: Pool
           file: ./packages/abis/Pool.json
@@ -45,8 +44,6 @@ dataSources:
           handler: handleValidatorInitialized
         - event: ValidatorRegistered(bytes,address)
           handler: handleValidatorRegistered
-      blockHandlers:
-        - handler: handleBlock
 
   - kind: ethereum/contract
     name: PoolValidators
@@ -61,9 +58,10 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/poolValidators.ts
       entities:
+        - Pool
         - Operator
         - Validator
-        - Settings
+        - Network
       abis:
         - name: PoolValidators
           file: ./packages/abis/PoolValidators.json
@@ -99,7 +97,8 @@ dataSources:
         - MerkleDistributor
         - MerkleDistributorClaim
         - TokenDistribution
-        - Settings
+        - RewardEthToken
+        - Network
       abis:
         - name: MerkleDistributor
           file: ./packages/abis/MerkleDistributor.json
@@ -129,15 +128,25 @@ dataSources:
       file: ./src/mappings/oracles.ts
       entities:
         - Oracle
-        - Settings
+        - Network
       abis:
         - name: Oracles
           file: ./packages/abis/Oracles.json
       eventHandlers:
-        - event: OracleAdded(indexed address,string,string)
+        - event: Initialized(uint256)
+          handler: handleInitialized
+        - event: OracleAdded(indexed address)
           handler: handleOracleAdded
         - event: OracleRemoved(indexed address)
           handler: handleOracleRemoved
+        - event: RewardsVoteSubmitted(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleRewardsVoteSubmitted
+        - event: MerkleRootVoteSubmitted(indexed address,indexed address,uint256,indexed bytes32,string)
+          handler: handleMerkleRootVoteSubmitted
+        - event: InitializeValidatorVoteSubmitted(indexed address,indexed address,indexed address,bytes,uint256)
+          handler: handleInitializeValidatorVoteSubmitted
+        - event: FinalizeValidatorVoteSubmitted(indexed address,indexed address,indexed address,bytes,uint256)
+          handler: handleFinalizeValidatorVoteSubmitted
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
@@ -157,7 +166,7 @@ dataSources:
       file: ./src/mappings/vestingEscrowFactory.ts
       entities:
         - VestingEscrow
-        - Settings
+        - Network
       abis:
         - name: VestingEscrowFactory
           file: ./packages/abis/VestingEscrowFactory.json
@@ -184,7 +193,7 @@ dataSources:
       entities:
         - OperatorsRevenueSharing
         - OperatorRevenueSharingAccount
-        - Settings
+        - Network
       abis:
         - name: RevenueSharing
           file: ./packages/abis/RevenueSharing.json
@@ -221,7 +230,7 @@ dataSources:
       entities:
         - PartnersRevenueSharing
         - PartnerRevenueSharingAccount
-        - Settings
+        - Network
       abis:
         - name: RevenueSharing
           file: ./packages/abis/RevenueSharing.json
@@ -257,7 +266,8 @@ dataSources:
       file: ./src/mappings/stakeWiseToken.ts
       entities:
         - StakeWiseTokenHolder
-        - Settings
+        - RewardEthToken
+        - Network
       abis:
         - name: StakeWiseToken
           file: ./packages/abis/StakeWiseToken.json
@@ -282,9 +292,10 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/stakedEthToken.ts
       entities:
-        - StakedEthTokenHolder
-        - RewardEthTokenHolder
-        - Settings
+        - Pool
+        - Staker
+        - RewardEthToken
+        - Network
       abis:
         - name: StakedEthToken
           file: ./packages/abis/StakedEthToken.json
@@ -296,12 +307,13 @@ dataSources:
         - event: Unpaused(address)
           handler: handleUnpaused
 
+ # Process legacy events
   - kind: ethereum/contract
-    name: RewardEthToken
+    name: RewardEthTokenV0
     network: {{ network }}
     source:
       address: '{{ rewardEthToken.address }}'
-      abi: RewardEthToken
+      abi: RewardEthTokenV0
       startBlock: {{ rewardEthToken.startBlock }}
     mapping:
       kind: ethereum/events
@@ -309,15 +321,60 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/rewardEthToken.ts
       entities:
-        - StakedEthTokenHolder
-        - RewardEthTokenHolder
-        - Settings
+        - RewardEthToken
       abis:
-        - name: RewardEthToken
-          file: ./packages/abis/RewardEthToken.json
+        - name: RewardEthTokenV0
+          file: ./packages/abis/RewardEthTokenV0.json
+      eventHandlers:
+        - event: RewardsUpdated(uint256,uint256,uint256,uint256)
+          handler: handleRewardsUpdatedV0
+
+  # Process legacy events
+  - kind: ethereum/contract
+    name: RewardEthTokenV1
+    network: {{ network }}
+    source:
+      address: '{{ rewardEthToken.address }}'
+      abi: RewardEthTokenV1
+      startBlock: {{ rewardEthToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/rewardEthToken.ts
+      entities:
+        - RewardEthToken
+      abis:
+        - name: RewardEthTokenV1
+          file: ./packages/abis/RewardEthTokenV1.json
+      eventHandlers:
+        - event: RewardsUpdated(uint256,uint256,uint256)
+          handler: handleRewardsUpdatedV1
+
+  - kind: ethereum/contract
+    name: RewardEthTokenV2
+    network: {{ network }}
+    source:
+      address: '{{ rewardEthToken.address }}'
+      abi: RewardEthTokenV2
+      startBlock: {{ rewardEthToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/rewardEthToken.ts
+      entities:
+        - Staker
+        - RewardEthToken
+        - Network
+      abis:
+        - name: RewardEthTokenV2
+          file: ./packages/abis/RewardEthTokenV2.json
       eventHandlers:
         - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
           handler: handleRewardsUpdated
+        - event: RewardsToggled(indexed address,bool)
+          handler: handleRewardsToggled
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: Paused(address)

@@ -1,80 +1,110 @@
 import { log } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_1E18, BYTES_ZERO } from "const";
+import { ADDRESS_ZERO, BIG_DECIMAL_1E18 } from "const";
 import {
-  createOrLoadSettings,
-  createOrLoadRewardEthTokenHolder,
-  createOrLoadStakedEthTokenHolder,
-  calculateRewardEthTokenHolderBalance,
+  createOrLoadNetwork,
+  createOrLoadRewardEthToken,
+  createOrLoadStaker,
 } from "../entities";
+import { RewardsUpdated as RewardsUpdatedV0 } from "../../generated/RewardEthTokenV0/RewardEthTokenV0";
+import { RewardsUpdated as RewardsUpdatedV1 } from "../../generated/RewardEthTokenV1/RewardEthTokenV1";
 import {
   Paused,
-  Unpaused,
-  RewardsUpdated,
+  RewardsToggled,
+  RewardsUpdated as RewardsUpdatedV2,
   Transfer,
-} from "../../generated/RewardEthToken/RewardEthToken";
+  Unpaused,
+} from "../../generated/RewardEthTokenV2/RewardEthTokenV2";
 
-export function handleRewardsUpdated(event: RewardsUpdated): void {
-  let settings = createOrLoadSettings();
+export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
+  let rewardEthToken = createOrLoadRewardEthToken();
 
-  settings.rewardPerStakedEthToken =
+  rewardEthToken.rewardPerStakedEthToken =
     event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
-  settings.rewardsUpdatedAtTimestamp = event.block.timestamp;
-  settings.save();
+  rewardEthToken.updatedAtBlock = event.block.number;
+  rewardEthToken.updatedAtTimestamp = event.block.timestamp;
+  rewardEthToken.save();
 
-  log.info("[RewardEthToken] RewardsUpdated timestamp={} rewardPerToken={}", [
-    event.block.timestamp.toString(),
-    settings.rewardPerStakedEthToken.toString(),
-  ]);
+  log.info(
+    "[RewardEthToken] RewardsUpdated V0 timestamp={} rewardPerToken={}",
+    [
+      rewardEthToken.updatedAtTimestamp.toString(),
+      rewardEthToken.rewardPerStakedEthToken.toString(),
+    ]
+  );
+}
+
+export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
+  let rewardEthToken = createOrLoadRewardEthToken();
+
+  rewardEthToken.rewardPerStakedEthToken =
+    event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
+
+  rewardEthToken.updatedAtBlock = event.block.number;
+  rewardEthToken.updatedAtTimestamp = event.block.timestamp;
+  rewardEthToken.save();
+
+  log.info(
+    "[RewardEthToken] RewardsUpdated V1 timestamp={} rewardPerToken={}",
+    [
+      rewardEthToken.updatedAtTimestamp.toString(),
+      rewardEthToken.rewardPerStakedEthToken.toString(),
+    ]
+  );
+}
+
+export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
+  let rewardEthToken = createOrLoadRewardEthToken();
+
+  rewardEthToken.rewardPerStakedEthToken =
+    event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
+
+  let protocolReward = event.params.protocolReward.divDecimal(BIG_DECIMAL_1E18);
+  rewardEthToken.protocolPeriodReward =
+    rewardEthToken.protocolPeriodReward.plus(protocolReward);
+
+  let distributorReward = event.params.distributorReward
+    .divDecimal(BIG_DECIMAL_1E18)
+    .minus(protocolReward);
+  rewardEthToken.distributorPeriodReward =
+    rewardEthToken.distributorPeriodReward.plus(distributorReward);
+
+  rewardEthToken.updatedAtBlock = event.block.number;
+  rewardEthToken.updatedAtTimestamp = event.block.timestamp;
+  rewardEthToken.save();
+
+  log.info(
+    "[RewardEthToken] RewardsUpdated V2 timestamp={} rewardPerToken={} protocolReward={} distributorReward={}",
+    [
+      rewardEthToken.updatedAtTimestamp.toString(),
+      rewardEthToken.rewardPerStakedEthToken.toString(),
+      protocolReward.toString(),
+      distributorReward.toString(),
+    ]
+  );
 }
 
 export function handleTransfer(event: Transfer): void {
-  let settings = createOrLoadSettings();
+  let rewardEthToken = createOrLoadRewardEthToken();
   let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
   let fromId = event.params.from.toHexString();
-  if (event.params.from.notEqual(BYTES_ZERO)) {
-    let rewardEthHolder = createOrLoadRewardEthTokenHolder(
+  if (event.params.from.notEqual(ADDRESS_ZERO)) {
+    let fromStaker = createOrLoadStaker(
       fromId,
-      settings.rewardPerStakedEthToken
+      rewardEthToken.rewardPerStakedEthToken
     );
-    if (
-      settings.rewardPerStakedEthToken.gt(
-        rewardEthHolder.rewardPerStakedEthToken
-      )
-    ) {
-      rewardEthHolder.checkpointBalance = calculateRewardEthTokenHolderBalance(
-        rewardEthHolder,
-        createOrLoadStakedEthTokenHolder(fromId),
-        settings.rewardPerStakedEthToken
-      );
-    }
-
-    rewardEthHolder.checkpointBalance =
-      rewardEthHolder.checkpointBalance.minus(amount);
-    rewardEthHolder.save();
+    fromStaker.rewardBalance = fromStaker.rewardBalance.minus(amount);
+    fromStaker.save();
   }
 
   let toId = event.params.to.toHexString();
-  if (event.params.from.notEqual(BYTES_ZERO)) {
-    let rewardEthHolder = createOrLoadRewardEthTokenHolder(
+  if (event.params.to.notEqual(ADDRESS_ZERO)) {
+    let toStaker = createOrLoadStaker(
       toId,
-      settings.rewardPerStakedEthToken
+      rewardEthToken.rewardPerStakedEthToken
     );
-    if (
-      settings.rewardPerStakedEthToken.gt(
-        rewardEthHolder.rewardPerStakedEthToken
-      )
-    ) {
-      rewardEthHolder.checkpointBalance = calculateRewardEthTokenHolderBalance(
-        rewardEthHolder,
-        createOrLoadStakedEthTokenHolder(toId),
-        settings.rewardPerStakedEthToken
-      );
-    }
-
-    rewardEthHolder.checkpointBalance =
-      rewardEthHolder.checkpointBalance.plus(amount);
-    rewardEthHolder.save();
+    toStaker.rewardBalance = toStaker.rewardBalance.plus(amount);
+    toStaker.save();
   }
 
   log.info("[RewardEthToken] Transfer from={} to={} amount={}", [
@@ -84,11 +114,31 @@ export function handleTransfer(event: Transfer): void {
   ]);
 }
 
-export function handlePaused(event: Paused): void {
-  let settings = createOrLoadSettings();
+export function handleRewardsToggled(event: RewardsToggled): void {
+  let rewardEthToken = createOrLoadRewardEthToken();
+  let staker = createOrLoadStaker(
+    event.params.account.toHexString(),
+    rewardEthToken.rewardPerStakedEthToken
+  );
 
-  settings.rewardEthTokenPaused = true;
-  settings.save();
+  staker.rewardsDisabled = event.params.isDisabled;
+  staker.save();
+
+  log.info(
+    "[RewardEthToken] RewardsToggled account={} isDisabled={} sender={}",
+    [
+      staker.id,
+      staker.rewardsDisabled ? "true" : "false",
+      event.transaction.from.toHexString(),
+    ]
+  );
+}
+
+export function handlePaused(event: Paused): void {
+  let network = createOrLoadNetwork();
+
+  network.rewardEthTokenPaused = true;
+  network.save();
 
   log.info("[RewardEthToken] Paused account={}", [
     event.params.account.toHexString(),
@@ -96,10 +146,10 @@ export function handlePaused(event: Paused): void {
 }
 
 export function handleUnpaused(event: Unpaused): void {
-  let settings = createOrLoadSettings();
+  let network = createOrLoadNetwork();
 
-  settings.rewardEthTokenPaused = false;
-  settings.save();
+  network.rewardEthTokenPaused = false;
+  network.save();
 
   log.info("[RewardEthToken] Unpaused account={}", [
     event.params.account.toHexString(),
