@@ -201,8 +201,11 @@ export function handleActivated(event: Activated): void {
 }
 
 export function handleValidatorInitialized(event: ValidatorInitialized): void {
-  let operator = createOrLoadOperator(event.params.operator.toHexString());
-  let validator = createOrLoadValidator(event.params.publicKey.toHexString());
+  let operator = createOrLoadOperator(
+    event.params.operator,
+    event.block.number
+  );
+  let validator = createOrLoadValidator(event.params.publicKey);
 
   validator.operator = operator.id;
   validator.registrationStatus = "Initialized";
@@ -211,6 +214,8 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
   operator.validatorsCount = operator.validatorsCount.plus(
     BigInt.fromString("1")
   );
+  operator.updatedAtBlock = event.block.number;
+  operator.updatedAtTimestamp = event.block.timestamp;
   operator.save();
 
   // initialization is done with 1 ether deposit to the eth2 contract
@@ -225,8 +230,11 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
 }
 
 export function handleValidatorRegistered(event: ValidatorRegistered): void {
-  let operator = createOrLoadOperator(event.params.operator.toHexString());
-  let validator = createOrLoadValidator(event.params.publicKey.toHexString());
+  let operator = createOrLoadOperator(
+    event.params.operator,
+    event.block.number
+  );
+  let validator = createOrLoadValidator(event.params.publicKey);
 
   let pool = createOrLoadPool();
   pool.pendingValidators = pool.pendingValidators.plus(BigInt.fromString("1"));
@@ -248,8 +256,11 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
       BigInt.fromString("1")
     );
   }
-  operator.save();
   pool.save();
+
+  operator.updatedAtBlock = event.block.number;
+  operator.updatedAtTimestamp = event.block.timestamp;
+  operator.save();
 
   validator.operator = operator.id;
   validator.registrationStatus = "Finalized";
