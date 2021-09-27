@@ -1,11 +1,11 @@
-import { log } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_1E18, BIG_DECIMAL_ZERO } from "const";
+import { log, store } from "@graphprotocol/graph-ts";
+import { BIG_INT_ZERO, STAKEWISE_TOKEN_ADDRESS } from "const";
 import {
-  VestingEscrowCreated,
   Paused,
   Unpaused,
+  VestingEscrowCreated,
 } from "../../generated/VestingEscrowFactory/VestingEscrowFactory";
-import { VestingEscrow } from "../../generated/schema";
+import { StakeWiseTokenHolder, VestingEscrow } from "../../generated/schema";
 import { VestingEscrow as VestingEscrowTemplate } from "../../generated/templates";
 import { createOrLoadNetwork } from "../entities";
 
@@ -16,8 +16,8 @@ export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
   escrow.token = event.params.token;
   escrow.claimer = event.params.recipient;
   escrow.beneficiary = event.params.beneficiary;
-  escrow.totalAmount = event.params.totalAmount.divDecimal(BIG_DECIMAL_1E18);
-  escrow.totalClaimed = BIG_DECIMAL_ZERO;
+  escrow.totalAmount = event.params.totalAmount;
+  escrow.totalClaimed = BIG_INT_ZERO;
   escrow.startTimestamp = event.params.startTime;
   escrow.endTimestamp = event.params.endTime;
   escrow.cliffLength = event.params.cliffLength;
@@ -26,6 +26,14 @@ export function handleVestingEscrowCreated(event: VestingEscrowCreated): void {
 
   // create data source to track events of the new escrow contract
   VestingEscrowTemplate.create(event.params.escrow);
+
+  if (escrow.token == STAKEWISE_TOKEN_ADDRESS) {
+    // remove stakewise token holder to exclude escrows when calculating rewards
+    let holder = StakeWiseTokenHolder.load(escrow.id);
+    if (holder != null) {
+      store.remove("StakeWiseTokenHolder", escrow.id);
+    }
+  }
 
   log.info(
     "[VestingEscrowFactory] VestingEscrowCreated escrow={} admin={} token={} recipient={} beneficiary={} totalAmount={} startTime={} endTime={} cliffLength={}",
