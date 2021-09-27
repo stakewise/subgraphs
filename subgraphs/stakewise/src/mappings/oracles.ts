@@ -1,7 +1,6 @@
-import { log, store } from "@graphprotocol/graph-ts";
+import { BigInt, log, store } from "@graphprotocol/graph-ts";
 
 import { createOrLoadOracle, createOrLoadNetwork } from "../entities";
-
 import {
   InitializeValidatorVoteSubmitted,
   FinalizeValidatorVoteSubmitted,
@@ -27,7 +26,7 @@ export function handleInitialized(event: Initialized): void {
 }
 
 export function handleOracleAdded(event: OracleAdded): void {
-  let oracle = createOrLoadOracle(event.params.oracle.toHexString());
+  let oracle = createOrLoadOracle(event.params.oracle);
 
   log.info("[Oracles] OracleAdded oracle={} sender={}", [
     oracle.id,
@@ -52,7 +51,7 @@ export function handleOracleRemoved(event: OracleRemoved): void {
 export function handleRewardsVoteSubmitted(event: RewardsVoteSubmitted): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesRewardsNonce = event.params.nonce;
+  network.oraclesRewardsNonce = event.params.nonce.plus(BigInt.fromString("1"));
   network.save();
 
   log.info("[Oracles] RewardsVoteSubmitted nonce={} oracle={} sender={}", [
@@ -67,7 +66,7 @@ export function handleMerkleRootVoteSubmitted(
 ): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesRewardsNonce = event.params.nonce;
+  network.oraclesRewardsNonce = event.params.nonce.plus(BigInt.fromString("1"));
   network.save();
 
   log.info("[Oracles] MerkleRootVoteSubmitted nonce={} oracle={} sender={}", [
@@ -82,7 +81,9 @@ export function handleInitializeValidatorVoteSubmitted(
 ): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesValidatorsNonce = event.params.nonce;
+  network.oraclesValidatorsNonce = event.params.nonce.plus(
+    BigInt.fromString("1")
+  );
   network.save();
 
   log.info(
@@ -100,7 +101,9 @@ export function handleFinalizeValidatorVoteSubmitted(
 ): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesValidatorsNonce = event.params.nonce;
+  network.oraclesValidatorsNonce = event.params.nonce.plus(
+    BigInt.fromString("1")
+  );
   network.save();
 
   log.info(
