@@ -1,8 +1,4 @@
-import {
-  REWARD_ETH_TOKEN_ADDRESS,
-  BIG_DECIMAL_ZERO,
-  BIG_INT_ZERO,
-} from "const";
+import { REWARD_ETH_TOKEN_ADDRESS, BIG_INT_ZERO } from "const";
 import { RewardEthToken } from "../../generated/schema";
 
 export function createOrLoadRewardEthToken(): RewardEthToken {
@@ -12,9 +8,9 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
   if (rewardEthToken == null) {
     rewardEthToken = new RewardEthToken(rewardEthTokenAddress);
 
-    rewardEthToken.rewardPerStakedEthToken = BIG_DECIMAL_ZERO;
-    rewardEthToken.distributorPeriodReward = BIG_DECIMAL_ZERO;
-    rewardEthToken.protocolPeriodReward = BIG_DECIMAL_ZERO;
+    rewardEthToken.rewardPerStakedEthToken = BIG_INT_ZERO;
+    rewardEthToken.distributorPeriodReward = BIG_INT_ZERO;
+    rewardEthToken.protocolPeriodReward = BIG_INT_ZERO;
     rewardEthToken.updatedAtBlock = BIG_INT_ZERO;
     rewardEthToken.updatedAtTimestamp = BIG_INT_ZERO;
     rewardEthToken.save();

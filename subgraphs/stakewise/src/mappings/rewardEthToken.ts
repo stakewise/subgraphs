@@ -1,5 +1,5 @@
 import { log } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, BIG_DECIMAL_1E18 } from "const";
+import { ADDRESS_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
 import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
@@ -14,12 +14,12 @@ import {
   Transfer,
   Unpaused,
 } from "../../generated/RewardEthTokenV2/RewardEthTokenV2";
+import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker";
 
 export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   let rewardEthToken = createOrLoadRewardEthToken();
 
-  rewardEthToken.rewardPerStakedEthToken =
-    event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
+  rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
@@ -36,9 +36,7 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
 export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   let rewardEthToken = createOrLoadRewardEthToken();
 
-  rewardEthToken.rewardPerStakedEthToken =
-    event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
-
+  rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
@@ -55,16 +53,13 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
 export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   let rewardEthToken = createOrLoadRewardEthToken();
 
-  rewardEthToken.rewardPerStakedEthToken =
-    event.params.rewardPerToken.divDecimal(BIG_DECIMAL_1E18);
-
-  let protocolReward = event.params.protocolReward.divDecimal(BIG_DECIMAL_1E18);
+  rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.protocolPeriodReward =
-    rewardEthToken.protocolPeriodReward.plus(protocolReward);
+    rewardEthToken.protocolPeriodReward.plus(event.params.protocolReward);
 
-  let distributorReward = event.params.distributorReward
-    .divDecimal(BIG_DECIMAL_1E18)
-    .minus(protocolReward);
+  let distributorReward = event.params.distributorReward.minus(
+    event.params.protocolReward
+  );
   rewardEthToken.distributorPeriodReward =
     rewardEthToken.distributorPeriodReward.plus(distributorReward);
 
@@ -77,51 +72,43 @@ export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
     [
       rewardEthToken.updatedAtTimestamp.toString(),
       rewardEthToken.rewardPerStakedEthToken.toString(),
-      protocolReward.toString(),
+      event.params.protocolReward.toString(),
       distributorReward.toString(),
     ]
   );
 }
 
 export function handleTransfer(event: Transfer): void {
-  let rewardEthToken = createOrLoadRewardEthToken();
-  let amount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
+  let contractChecker = ContractChecker.bind(CONTRACT_CHECKER_ADDRESS);
 
-  let fromId = event.params.from.toHexString();
   if (event.params.from.notEqual(ADDRESS_ZERO)) {
-    let fromStaker = createOrLoadStaker(
-      fromId,
-      rewardEthToken.rewardPerStakedEthToken
+    let fromStaker = createOrLoadStaker(event.params.from, contractChecker);
+    fromStaker.rewardBalance = fromStaker.rewardBalance.minus(
+      event.params.value
     );
-    fromStaker.rewardBalance = fromStaker.rewardBalance.minus(amount);
     fromStaker.save();
   }
 
-  let toId = event.params.to.toHexString();
   if (event.params.to.notEqual(ADDRESS_ZERO)) {
-    let toStaker = createOrLoadStaker(
-      toId,
-      rewardEthToken.rewardPerStakedEthToken
-    );
-    toStaker.rewardBalance = toStaker.rewardBalance.plus(amount);
+    let toStaker = createOrLoadStaker(event.params.to, contractChecker);
+    toStaker.rewardBalance = toStaker.rewardBalance.plus(event.params.value);
     toStaker.save();
   }
 
-  log.info("[RewardEthToken] Transfer from={} to={} amount={}", [
-    fromId,
-    toId,
-    amount.toString(),
+  log.info("[RewardEthToken] Transfer from={} to={} value={}", [
+    event.params.from.toHexString(),
+    event.params.to.toHexString(),
+    event.params.value.toString(),
   ]);
 }
 
 export function handleRewardsToggled(event: RewardsToggled): void {
+  let contractChecker = ContractChecker.bind(CONTRACT_CHECKER_ADDRESS);
   let rewardEthToken = createOrLoadRewardEthToken();
-  let staker = createOrLoadStaker(
-    event.params.account.toHexString(),
-    rewardEthToken.rewardPerStakedEthToken
-  );
 
+  let staker = createOrLoadStaker(event.params.account, contractChecker);
   staker.rewardsDisabled = event.params.isDisabled;
+  staker.rewardPerStakedEthToken = rewardEthToken.rewardPerStakedEthToken;
   staker.save();
 
   log.info(

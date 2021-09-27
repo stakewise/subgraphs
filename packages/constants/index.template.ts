@@ -1,13 +1,11 @@
-import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 export let ADDRESS_ZERO = Address.fromString(
   "0x0000000000000000000000000000000000000000"
 );
-export let BIG_DECIMAL_ZERO = BigDecimal.fromString("0");
 export let BIG_INT_ZERO = BigInt.fromI32(0);
-export let BYTES_ZERO = Bytes.fromI32(0) as Bytes;
-export let BIG_DECIMAL_1E18 = BigDecimal.fromString("1e18");
-export let BIG_DECIMAL_1E4 = BigDecimal.fromString("1e4");
+export let BIG_INT_1E18 = BigInt.fromString("1e18");
+export let BYTES_ZERO = new Bytes(0);
 
 export let STAKED_ETH_TOKEN_ADDRESS = Address.fromString(
   "{{ staked_eth_token_address }}{{^staked_eth_token_address}}0x0000000000000000000000000000000000000000{{/staked_eth_token_address}}"
@@ -45,10 +43,6 @@ export let POOL_ADDRESS = Address.fromString(
   "{{ pool_address }}{{^pool_address}}0x0000000000000000000000000000000000000000{{/pool_address}}"
 );
 
-export let PARTNERS_REVENUE_SHARING_ADDRESS = Address.fromString(
-  "{{ partners_revenue_sharing_address }}{{^partners_revenue_sharing_address}}0x0000000000000000000000000000000000000000{{/partners_revenue_sharing_address}}"
-);
-
-export let OPERATORS_REVENUE_SHARING_ADDRESS = Address.fromString(
-  "{{ operators_revenue_sharing_address }}{{^operators_revenue_sharing_address}}0x0000000000000000000000000000000000000000{{/operators_revenue_sharing_address}}"
+export let CONTRACT_CHECKER_ADDRESS = Address.fromString(
+  "{{ contract_checker_address }}{{^contract_checker_address}}0x0000000000000000000000000000000000000000{{/contract_checker_address}}"
 );

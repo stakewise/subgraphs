@@ -20,14 +20,6 @@
     "address": "0x0000000000000000000000000000000000000000",
     "startBlock": "12271843"
   },
-  "operatorsRevenueSharing": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "11052984"
-  },
-  "partnersRevenueSharing": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "11052984"
-  },
   "stakeWiseToken": {
     "address": "0x48c3399719b582dd63eb5aadf12a40b4c3f52fa2",
     "startBlock": "12271823"
