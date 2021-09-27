@@ -1,13 +1,18 @@
-import { BigDecimal, BigInt, log, store } from "@graphprotocol/graph-ts";
+import { BigInt, log, store } from "@graphprotocol/graph-ts";
 
-import { BIG_DECIMAL_1E18 } from "const";
+import { BIG_INT_1E18 } from "const";
 import {
   Activated,
   ActivatedValidatorsUpdated,
   ActivationScheduled,
   MinActivatingDepositUpdated,
+  PartnersActivationsEnabled,
   Paused,
   PendingValidatorsLimitUpdated,
+  ReferrersActivationsEnabled,
+  Refunded,
+  StakedWithPartner,
+  StakedWithReferrer,
   Unpaused,
   ValidatorInitialized,
   ValidatorRegistered,
@@ -19,6 +24,8 @@ import {
   createOrLoadPool,
   createOrLoadValidator,
   getDepositActivationId,
+  loadPartner,
+  loadReferrer,
 } from "../entities";
 import { DepositActivation } from "../../generated/schema";
 
@@ -27,8 +34,7 @@ export function handleMinActivatingDepositUpdated(
 ): void {
   let pool = createOrLoadPool();
 
-  pool.minActivatingDeposit =
-    event.params.minActivatingDeposit.divDecimal(BIG_DECIMAL_1E18);
+  pool.minActivatingDeposit = event.params.minActivatingDeposit;
   pool.save();
 
   log.info(
@@ -76,24 +82,98 @@ export function handleActivatedValidatorsUpdated(
   );
 }
 
+export function handlePartnersActivationsEnabled(
+  event: PartnersActivationsEnabled
+): void {
+  let pool = createOrLoadPool();
+
+  pool.partnersActivationsEnabled = event.params.enabled;
+  pool.save();
+
+  log.info(
+    "[Pool] PartnersActivationsEnabled sender={} partnersActivationsEnabled={}",
+    [
+      event.transaction.from.toHexString(),
+      pool.partnersActivationsEnabled ? "true" : "false",
+    ]
+  );
+}
+
+export function handleReferrersActivationsEnabled(
+  event: ReferrersActivationsEnabled
+): void {
+  let pool = createOrLoadPool();
+
+  pool.referrersActivationsEnabled = event.params.enabled;
+  pool.save();
+
+  log.info(
+    "[Pool] ReferrersActivationsEnabled sender={} referrersActivationsEnabled={}",
+    [
+      event.transaction.from.toHexString(),
+      pool.referrersActivationsEnabled ? "true" : "false",
+    ]
+  );
+}
+
+export function handleStakeWithPartner(event: StakedWithPartner): void {
+  let partner = loadPartner(event.params.partner, event.block.number);
+  if (partner == null) {
+    // process only registered partners
+    return;
+  }
+  partner.contributedAmount = partner.contributedAmount.plus(
+    event.params.amount
+  );
+  partner.updatedAtBlock = event.block.number;
+  partner.updatedAtTimestamp = event.block.timestamp;
+  partner.save();
+
+  log.info("[Pool] StakedWithPartner sender={} partner={} amount={}", [
+    event.transaction.from.toHexString(),
+    partner.id,
+    event.params.amount.toString(),
+  ]);
+}
+
+export function handleStakeWithReferrer(event: StakedWithReferrer): void {
+  let referrer = loadReferrer(event.params.referrer);
+  if (referrer == null) {
+    // process only registered referrers
+    return;
+  }
+
+  referrer.contributedAmount = referrer.contributedAmount.plus(
+    event.params.amount
+  );
+  referrer.updatedAtBlock = event.block.number;
+  referrer.updatedAtTimestamp = event.block.timestamp;
+  referrer.save();
+
+  log.info("[Pool] StakedWithReferrer sender={} referrer={} amount={}", [
+    event.transaction.from.toHexString(),
+    referrer.id,
+    event.params.amount.toString(),
+  ]);
+}
+
 export function handleActivationScheduled(event: ActivationScheduled): void {
   let activation = createOrLoadDepositActivation(
     event.params.sender,
     event.params.validatorIndex
   );
+
+  activation.amount = activation.amount.plus(event.params.value);
   activation.save();
 
-  let addedAmount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
-  activation.amount = activation.amount.plus(addedAmount);
-
   let pool = createOrLoadPool();
-  pool.balance = pool.balance.plus(addedAmount);
+  pool.balance = pool.balance.plus(event.params.value);
   pool.save();
 
   log.info("[Pool] ActivationScheduled sender={} validatorIndex={} amount={}", [
     activation.account.toHexString(),
     event.params.validatorIndex.toString(),
-    addedAmount.toString(),
+    event.params.value.toString(),
   ]);
 }
 
@@ -102,21 +182,20 @@ export function handleActivated(event: Activated): void {
     event.params.account,
     event.params.validatorIndex
   );
-  let activation = DepositActivation.load(activationId);
-  let activatedAmount = event.params.value.divDecimal(BIG_DECIMAL_1E18);
 
+  let activation = DepositActivation.load(activationId);
   if (activation != null) {
     store.remove("DepositActivation", activationId);
     // remove activated amount as it was added during mint and scheduled activation
     let pool = createOrLoadPool();
-    pool.balance = pool.balance.minus(activatedAmount);
+    pool.balance = pool.balance.minus(event.params.value);
     pool.save();
   }
 
   log.info("[Pool] Activated account={} validatorIndex={} value={} sender={}", [
     event.params.account.toHexString(),
     event.params.validatorIndex.toString(),
-    activatedAmount.toString(),
+    event.params.value.toString(),
     event.params.sender.toHexString(),
   ]);
 }
@@ -136,7 +215,7 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
 
   // initialization is done with 1 ether deposit to the eth2 contract
   let pool = createOrLoadPool();
-  pool.balance = pool.balance.minus(BigDecimal.fromString("1"));
+  pool.balance = pool.balance.minus(BIG_INT_1E18);
   pool.save();
 
   log.info("[Pool] ValidatorInitialized publicKey={} operator={}", [
@@ -154,13 +233,17 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
 
   if (validator.registrationStatus == "Uninitialized") {
     // compatibility with v1 contracts
-    pool.balance = pool.balance.minus(BigDecimal.fromString("32"));
+    pool.balance = pool.balance.minus(
+      BigInt.fromString("32").times(BIG_INT_1E18)
+    );
     operator.validatorsCount = operator.validatorsCount.plus(
       BigInt.fromString("1")
     );
   } else {
     // finalization is done with 31 ether deposit to the eth2 contract
-    pool.balance = pool.balance.minus(BigDecimal.fromString("31"));
+    pool.balance = pool.balance.minus(
+      BigInt.fromString("31").times(BIG_INT_1E18)
+    );
     operator.depositDataIndex = operator.depositDataIndex.plus(
       BigInt.fromString("1")
     );
@@ -175,6 +258,18 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
   log.info("[Pool] ValidatorRegistered publicKey={} operator={}", [
     validator.id,
     operator.id,
+  ]);
+}
+
+export function handleRefunded(event: Refunded): void {
+  let pool = createOrLoadPool();
+
+  pool.balance = pool.balance.plus(event.params.amount);
+  pool.save();
+
+  log.info("[Pool] Refunded sender={} amount={}", [
+    event.transaction.from.toHexString(),
+    event.params.amount.toString(),
   ]);
 }
 
