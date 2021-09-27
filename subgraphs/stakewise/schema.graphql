@@ -6,7 +6,7 @@ type Pool @entity {
     id: ID!
 
     "The minimal deposit amount considered for the activation"
-    minActivatingDeposit: BigDecimal!
+    minActivatingDeposit: BigInt!
 
     "The pending validators limit percentage. When it's exceeded, the deposits will be set for the activation"
     pendingValidatorsLimit: BigInt!
@@ -18,7 +18,13 @@ type Pool @entity {
     activatedValidators: BigInt!
 
     "The total amount of unregistered ETH"
-    balance: BigDecimal!
+    balance: BigInt!
+
+    "Defines whether partners activations are enabled"
+    partnersActivationsEnabled: Boolean!
+
+    "Defines whether referrers activations are enabled"
+    referrersActivationsEnabled: Boolean!
 }
 
 """
@@ -43,11 +49,8 @@ type Network @entity {
     "Defines whether the Oracles contract is paused"
     oraclesPaused: Boolean!
 
-    "Defines whether the Operators' Revenue Sharing contract is paused"
-    operatorsRevenueSharingPaused: Boolean!
-
-    "Defines whether the Partners' Revenue Sharing contract is paused"
-    partnersRevenueSharingPaused: Boolean!
+    "Defines whether the Roles contract is paused"
+    rolesPaused: Boolean!
 
     "Defines whether the StakeWise Token is paused"
     stakeWiseTokenPaused: Boolean!
@@ -79,7 +82,7 @@ type DepositActivation @entity {
     validatorIndex: BigInt!
 
     "The amount that will be activated"
-    amount: BigDecimal!
+    amount: BigInt!
 }
 
 """
@@ -102,13 +105,25 @@ type Operator @entity {
     finalizeMerkleProofs: String!
 
     "The collateral amount deposited for ensuring the validator registration process"
-    collateral: BigDecimal!
+    collateral: BigInt!
 
     "The operator's current available deposit data index"
     depositDataIndex: BigInt!
 
     "The operator's total number of the validators"
     validatorsCount: BigInt!
+
+    "The configured revenue share - up to 10000 (100.00%)"
+    revenueShare: BigInt!
+
+    "The distributor points are used to calculate period rewards"
+    distributorPoints: BigInt!
+
+    "The last update block number"
+    updatedAtBlock: BigInt!
+
+    "The last update timestamp"
+    updatedAtTimestamp: BigInt!
 
     "The operator validators"
     validators: [Validator!]! @derivedFrom(field: "operator")
@@ -176,13 +191,13 @@ type RewardEthToken @entity {
     id: ID!
 
     "The current reward per staked ETH token"
-    rewardPerStakedEthToken: BigDecimal!
+    rewardPerStakedEthToken: BigInt!
 
     "Distributor period reward"
-    distributorPeriodReward: BigDecimal!
+    distributorPeriodReward: BigInt!
 
     "Protocol period reward"
-    protocolPeriodReward: BigDecimal!
+    protocolPeriodReward: BigInt!
 
     "The current rewards update block number"
     updatedAtBlock: BigInt!
@@ -192,9 +207,9 @@ type RewardEthToken @entity {
 }
 
 """
-Tokens distribution of the Merkle Distributor
+Tokens periodic distribution through the Merkle Distributor
 """
-type TokenDistribution @entity {
+type PeriodicDistribution @entity {
     "Set to `transaction hash-log index`"
     id: ID!
 
@@ -205,7 +220,7 @@ type TokenDistribution @entity {
     beneficiary: Bytes!
 
     "The amount to distribute"
-    amount: BigDecimal!
+    amount: BigInt!
 
     "The distribution start block number"
     startedAtBlock: BigInt!
@@ -215,6 +230,32 @@ type TokenDistribution @entity {
 
     "The distribution end block number"
     endedAtBlock: BigInt!
+}
+
+"""
+Tokens one time distribution through the Merkle Distributor
+"""
+type OneTimeDistribution @entity {
+    "Set to `transaction hash-log index`"
+    id: ID!
+
+    "The address of the token to distribute"
+    token: Bytes!
+
+    "The pre-defined address of the distribution origin to distinguish among others"
+    origin: Bytes!
+
+    "The amount to distribute"
+    amount: BigInt!
+
+    "The link to the rewards distribution file"
+    rewardsLink: String!
+
+    "The distribution block number"
+    distributedAtBlock: BigInt!
+
+    "The distribution timestamp"
+    distributedAtTimestamp: BigInt!
 }
 
 """
@@ -254,10 +295,10 @@ type VestingEscrow @entity {
     beneficiary: Bytes!
 
     "The total amount of tokens locked"
-    totalAmount: BigDecimal!
+    totalAmount: BigInt!
 
     "The total amount of tokens claimed"
-    totalClaimed: BigDecimal!
+    totalClaimed: BigInt!
 
     "The vesting start timestamp"
     startTimestamp: BigInt!
@@ -273,115 +314,25 @@ type VestingEscrow @entity {
 }
 
 """
-Generic revenue sharing contract
-"""
-interface RevenueSharing {
-    "The address of the revenue sharing contract"
-    id: ID!
-
-    "The total number of revenue points"
-    totalPoints: BigDecimal!
-
-    "The total rETH2 reward accumulated"
-    totalReward: BigDecimal!
-
-    "The reward ETH per point used for every account's reward calculation"
-    rewardPerPoint: BigDecimal!
-}
-
-"""
-Generic revenue sharing account
-"""
-interface RevenueSharingAccount {
-    "The address of the beneficiary"
-    id: ID!
-
-    "The total amount of ETH contributed"
-    amount: BigDecimal!
-
-    "The revenue share configured - up to 10000 (100.00%)"
-    revenueShare: BigDecimal!,
-
-    "The total unclaimed rewards amount in last checkpoint"
-    unclaimedReward: BigDecimal!,
-
-    "The reward ETH per point in last checkpoint"
-    rewardPerPoint:  BigDecimal!
-}
-
-"""
-Operators revenue sharing settings
-"""
-type OperatorsRevenueSharing implements RevenueSharing @entity {
-    id: ID!
-    totalPoints: BigDecimal!
-    totalReward: BigDecimal!
-    rewardPerPoint: BigDecimal!
-
-    "The array of revenue sharing accounts"
-    accounts: [OperatorRevenueSharingAccount!]! @derivedFrom(field: "contract")
-}
-
-
-"""
-Operator revenue sharing account
-"""
-type OperatorRevenueSharingAccount implements RevenueSharingAccount @entity {
-    id: ID!
-    amount: BigDecimal!
-    revenueShare: BigDecimal!,
-    unclaimedReward: BigDecimal!,
-    rewardPerPoint:  BigDecimal!
-
-    "The address of the operators' revenue sharing contract"
-    contract: OperatorsRevenueSharing!
-}
-
-"""
-Partners revenue sharing settings
-"""
-type PartnersRevenueSharing implements RevenueSharing @entity {
-    id: ID!
-    totalPoints: BigDecimal!
-    totalReward: BigDecimal!
-    rewardPerPoint: BigDecimal!
-
-    "The array of revenue sharing accounts"
-    accounts: [PartnerRevenueSharingAccount!]! @derivedFrom(field: "contract")
-}
-
-
-"""
-Partner revenue sharing account
-"""
-type PartnerRevenueSharingAccount implements RevenueSharingAccount @entity {
-    id: ID!
-    amount: BigDecimal!
-    revenueShare: BigDecimal!,
-    unclaimedReward: BigDecimal!,
-    rewardPerPoint:  BigDecimal!
-
-    "The address of the partners' revenue sharing contract"
-    contract: PartnersRevenueSharing!
-}
-
-"""
 StakeWise token holder
 """
 type StakeWiseTokenHolder @entity {
     "The address of the StakeWise token holder"
     id: ID!
 
+    "Defines whether the holder is a smart contract"
+    isContract: Boolean!
+
     "The holder's balance"
-    balance: BigDecimal!
+    balance: BigInt!
 
-    "The points are calculated based on the balance and the number of blocks passed since the last balance update"
-    holdingPoints: BigInt!
+    "The distributor points are used to calculate period rewards"
+    distributorPoints: BigInt!
 
-    "The last balance update block number"
+    "The last update block number"
     updatedAtBlock: BigInt!
 
-    "The last balance update timestamp"
+    "The last update timestamp"
     updatedAtTimestamp: BigInt!
 }
 
@@ -395,12 +346,55 @@ type Staker @entity {
     "Defines whether rewards accrual is disabled"
     rewardsDisabled: Boolean!
 
+    "Defines whether the staker is a smart contract"
+    isContract: Boolean!
+
     "The staked ETH tokens balance"
-    principalBalance: BigDecimal!
+    principalBalance: BigInt!
 
     "The last checkpoint reward ETH tokens balance"
-    rewardBalance: BigDecimal!
+    rewardBalance: BigInt!
 
     "The last checkpoint reward per staked ETH token"
-    rewardPerStakedEthToken: BigDecimal!
+    rewardPerStakedEthToken: BigInt!
+}
+
+"""
+StakeWise Partner
+"""
+type Partner @entity {
+    "The partner address"
+    id: ID!
+
+    "The total amount of ETH contributed"
+    contributedAmount: BigInt!
+
+    "The configured revenue share - up to 10000 (100.00%)"
+    revenueShare: BigInt!
+
+    "The distributor points are used to calculate period rewards"
+    distributorPoints: BigInt!
+
+    "The last update block number"
+    updatedAtBlock: BigInt!
+
+    "The last update timestamp"
+    updatedAtTimestamp: BigInt!
+}
+
+"""
+StakeWise Referrer
+"""
+type Referrer @entity {
+    "The referrer address"
+    id: ID!
+
+    "The total amount of ETH contributed since last distributor update"
+    contributedAmount: BigInt!
+
+    "The last update block number"
+    updatedAtBlock: BigInt!
+
+    "The last update timestamp"
+    updatedAtTimestamp: BigInt!
 }

@@ -31,5 +31,9 @@
   "rewardEthToken": {
     "address": "0x20bc832ca081b91433ff6c17f85701b6e92486c5",
     "startBlock": "11726341"
+  },
+  "roles": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "startBlock": "11726298"
   }
 }

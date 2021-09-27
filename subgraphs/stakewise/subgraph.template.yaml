@@ -18,10 +18,13 @@ dataSources:
       file: ./src/mappings/pool.ts
       entities:
         - Pool
-        - Network
+        - MerkleDistributor
+        - Partner
+        - Referrer
         - DepositActivation
         - Operator
         - Validator
+        - Network
       abis:
         - name: Pool
           file: ./packages/abis/Pool.json
@@ -32,10 +35,14 @@ dataSources:
           handler: handlePendingValidatorsLimitUpdated
         - event: ActivatedValidatorsUpdated(uint256,address)
           handler: handleActivatedValidatorsUpdated
-        - event: Paused(address)
-          handler: handlePaused
-        - event: Unpaused(address)
-          handler: handleUnpaused
+        - event: PartnersActivationsEnabled(bool)
+          handler: handlePartnersActivationsEnabled
+        - event: ReferrersActivationsEnabled(bool)
+          handler: handleReferrersActivationsEnabled
+        - event: StakedWithPartner(indexed address,uint256)
+          handler: handleStakeWithPartner
+        - event: StakedWithReferrer(indexed address,uint256)
+          handler: handleStakeWithReferrer
         - event: ActivationScheduled(indexed address,uint256,uint256)
           handler: handleActivationScheduled
         - event: Activated(indexed address,uint256,uint256,indexed address)
@@ -44,6 +51,12 @@ dataSources:
           handler: handleValidatorInitialized
         - event: ValidatorRegistered(bytes,address)
           handler: handleValidatorRegistered
+        - event: Refunded(indexed address,uint256)
+          handler: handleRefunded
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
 
   - kind: ethereum/contract
     name: PoolValidators
@@ -58,8 +71,8 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/poolValidators.ts
       entities:
-        - Pool
         - Operator
+        - MerkleDistributor
         - Validator
         - Network
       abis:
@@ -81,12 +94,34 @@ dataSources:
         - event: Unpaused(address)
           handler: handleUnpaused
 
+  # Process legacy events
   - kind: ethereum/contract
-    name: MerkleDistributor
+    name: MerkleDistributorV1
     network: {{ network }}
     source:
       address: '{{ merkleDistributor.address }}'
-      abi: MerkleDistributor
+      abi: MerkleDistributorV1
+      startBlock: {{ merkleDistributor.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/merkleDistributor.ts
+      entities:
+        - PeriodicDistribution
+      abis:
+        - name: MerkleDistributorV1
+          file: ./packages/abis/MerkleDistributorV1.json
+      eventHandlers:
+        - event: DistributionAdded(indexed address,indexed address,indexed address,uint256,uint256,uint256)
+          handler: handlePeriodicDistributionAddedV1
+
+  - kind: ethereum/contract
+    name: MerkleDistributorV2
+    network: {{ network }}
+    source:
+      address: '{{ merkleDistributor.address }}'
+      abi: MerkleDistributorV2
       startBlock: {{ merkleDistributor.startBlock }}
     mapping:
       kind: ethereum/events
@@ -96,17 +131,20 @@ dataSources:
       entities:
         - MerkleDistributor
         - MerkleDistributorClaim
-        - TokenDistribution
+        - PeriodicDistribution
+        - OneTimeDistribution
         - RewardEthToken
         - Network
       abis:
-        - name: MerkleDistributor
-          file: ./packages/abis/MerkleDistributor.json
+        - name: MerkleDistributorV2
+          file: ./packages/abis/MerkleDistributorV2.json
       eventHandlers:
         - event: MerkleRootUpdated(indexed address,indexed bytes32,string)
           handler: handleMerkleRootUpdated
-        - event: DistributionAdded(indexed address,indexed address,indexed address,uint256,uint256,uint256)
-          handler: handleDistributionAdded
+        - event: PeriodicDistributionAdded(indexed address,indexed address,indexed address,uint256,uint256,uint256)
+          handler: handlePeriodicDistributionAddedV2
+        - event: OneTimeDistributionAdded(indexed address,indexed address,indexed address,uint256,string)
+          handler: handleOneTimeDistributionAdded
         - event: Claimed(indexed address,uint256,address[],uint256[])
           handler: handleClaimed
         - event: Paused(address)
@@ -179,80 +217,6 @@ dataSources:
           handler: handleUnpaused
 
   - kind: ethereum/contract
-    name: OperatorsRevenueSharing
-    network: {{ network }}
-    source:
-      address: '{{ operatorsRevenueSharing.address }}'
-      abi: RevenueSharing
-      startBlock: {{ operatorsRevenueSharing.startBlock }}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/operatorsRevenueSharing.ts
-      entities:
-        - OperatorsRevenueSharing
-        - OperatorRevenueSharingAccount
-        - Network
-      abis:
-        - name: RevenueSharing
-          file: ./packages/abis/RevenueSharing.json
-      eventHandlers:
-        - event: RewardsUpdated(indexed address,uint256,uint256)
-          handler: handleRewardsUpdated
-        - event: AccountAdded(indexed address,indexed uint128)
-          handler: handleAccountAdded
-        - event: AccountRemoved(indexed address,uint256)
-          handler: handleAccountRemoved
-        - event: AmountIncreased(indexed address,uint256,uint256)
-          handler: handleAmountIncreased
-        - event: RevenueShareUpdated(indexed address,indexed uint256,uint256)
-          handler: handleRevenueShareUpdated
-        - event: RewardCollected(indexed address,indexed address,uint256)
-          handler: handleRewardCollected
-        - event: Paused(address)
-          handler: handlePaused
-        - event: Unpaused(address)
-          handler: handleUnpaused
-
-  - kind: ethereum/contract
-    name: PartnersRevenueSharing
-    network: {{ network }}
-    source:
-      address: '{{ partnersRevenueSharing.address }}'
-      abi: RevenueSharing
-      startBlock: {{ partnersRevenueSharing.startBlock }}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/partnersRevenueSharing.ts
-      entities:
-        - PartnersRevenueSharing
-        - PartnerRevenueSharingAccount
-        - Network
-      abis:
-        - name: RevenueSharing
-          file: ./packages/abis/RevenueSharing.json
-      eventHandlers:
-        - event: RewardsUpdated(indexed address,uint256,uint256)
-          handler: handleRewardsUpdated
-        - event: AccountAdded(indexed address,indexed uint128)
-          handler: handleAccountAdded
-        - event: AccountRemoved(indexed address,uint256)
-          handler: handleAccountRemoved
-        - event: AmountIncreased(indexed address,uint256,uint256)
-          handler: handleAmountIncreased
-        - event: RevenueShareUpdated(indexed address,indexed uint256,uint256)
-          handler: handleRevenueShareUpdated
-        - event: RewardCollected(indexed address,indexed address,uint256)
-          handler: handleRewardCollected
-        - event: Paused(address)
-          handler: handlePaused
-        - event: Unpaused(address)
-          handler: handleUnpaused
-
-  - kind: ethereum/contract
     name: StakeWiseToken
     network: {{ network }}
     source:
@@ -266,11 +230,14 @@ dataSources:
       file: ./src/mappings/stakeWiseToken.ts
       entities:
         - StakeWiseTokenHolder
-        - RewardEthToken
+        - MerkleDistributor
         - Network
+        - VestingEscrow
       abis:
         - name: StakeWiseToken
           file: ./packages/abis/StakeWiseToken.json
+        - name: ContractChecker
+          file: ./packages/abis/ContractChecker.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -299,6 +266,8 @@ dataSources:
       abis:
         - name: StakedEthToken
           file: ./packages/abis/StakedEthToken.json
+        - name: ContractChecker
+          file: ./packages/abis/ContractChecker.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -370,6 +339,8 @@ dataSources:
       abis:
         - name: RewardEthTokenV2
           file: ./packages/abis/RewardEthTokenV2.json
+        - name: ContractChecker
+          file: ./packages/abis/ContractChecker.json
       eventHandlers:
         - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
           handler: handleRewardsUpdated
@@ -377,6 +348,45 @@ dataSources:
           handler: handleRewardsToggled
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: Roles
+    network: {{ network }}
+    source:
+      address: '{{ roles.address }}'
+      abi: Roles
+      startBlock: {{ roles.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/roles.ts
+      entities:
+        - Partner
+        - Referrer
+        - Operator
+        - Network
+        - MerkleDistributor
+      abis:
+        - name: Roles
+          file: ./packages/abis/Roles.json
+      eventHandlers:
+        - event: OperatorUpdated(indexed address,uint256)
+          handler: handleOperatorUpdated
+        - event: OperatorRemoved(indexed address)
+          handler: handleOperatorRemoved
+        - event: PartnerUpdated(indexed address,uint256)
+          handler: handlePartnerUpdated
+        - event: PartnerRemoved(indexed address)
+          handler: handlePartnerRemoved
+        - event: ReferrerAdded(indexed address)
+          handler: handleReferrerAdded
+        - event: ReferrerRemoved(indexed address)
+          handler: handleReferrerRemoved
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
