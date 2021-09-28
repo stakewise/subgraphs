@@ -1,6 +1,6 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 
-import { POOL_ADDRESS, BIG_DECIMAL_ZERO, BIG_INT_ZERO } from "const";
+import { POOL_ADDRESS, BIG_INT_ZERO } from "const";
 import { DepositActivation, Pool } from "../../generated/schema";
 
 export function createOrLoadPool(): Pool {
@@ -10,11 +10,13 @@ export function createOrLoadPool(): Pool {
   if (pool == null) {
     pool = new Pool(poolAddress);
 
-    pool.minActivatingDeposit = BIG_DECIMAL_ZERO;
+    pool.minActivatingDeposit = BIG_INT_ZERO;
     pool.pendingValidatorsLimit = BIG_INT_ZERO;
     pool.pendingValidators = BIG_INT_ZERO;
     pool.activatedValidators = BIG_INT_ZERO;
-    pool.balance = BIG_DECIMAL_ZERO;
+    pool.balance = BIG_INT_ZERO;
+    pool.partnersActivationsEnabled = false;
+    pool.referrersActivationsEnabled = false;
     pool.save();
   }
   return pool as Pool;
@@ -39,7 +41,7 @@ export function createOrLoadDepositActivation(
 
     activation.account = account;
     activation.validatorIndex = validatorIndex;
-    activation.amount = BIG_DECIMAL_ZERO;
+    activation.amount = BIG_INT_ZERO;
     activation.save();
   }
 

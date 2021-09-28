@@ -1,51 +1,49 @@
-import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   ADDRESS_ZERO,
-  BIG_DECIMAL_1E18,
-  BIG_DECIMAL_ZERO,
   BIG_INT_ZERO,
   DAO_ADDRESS,
   FUTURE_FUND_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
 } from "const";
 import { StakeWiseTokenHolder, VestingEscrow } from "../../generated/schema";
+import {
+  calculateDistributorPoints,
+  createOrLoadMerkleDistributor,
+} from "./merkleDistributor";
+import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker";
 
 export function createOrLoadStakeWiseTokenHolder(
-  holderAddress: string,
-  blockNumber: BigInt,
-  timestamp: BigInt
+  holderAddress: Address,
+  contractChecker: ContractChecker,
+  currentBlock: BigInt
 ): StakeWiseTokenHolder {
-  let holder = StakeWiseTokenHolder.load(holderAddress);
+  let contractCheckerCall = contractChecker.try_isContract(holderAddress);
+  let isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
 
+  let holderId = holderAddress.toHexString();
+  let holder = StakeWiseTokenHolder.load(holderId);
   if (holder == null) {
-    holder = new StakeWiseTokenHolder(holderAddress);
+    holder = new StakeWiseTokenHolder(holderId);
 
-    holder.balance = BIG_DECIMAL_ZERO;
-    holder.holdingPoints = BIG_INT_ZERO;
-    holder.updatedAtBlock = blockNumber;
-    holder.updatedAtTimestamp = timestamp;
+    holder.balance = BIG_INT_ZERO;
+    holder.distributorPoints = BIG_INT_ZERO;
+    holder.isContract = isContract;
+    holder.updatedAtBlock = BIG_INT_ZERO;
+    holder.updatedAtTimestamp = BIG_INT_ZERO;
     holder.save();
+  } else {
+    let distributor = createOrLoadMerkleDistributor();
+    holder.isContract = isContract;
+    holder.distributorPoints = calculateDistributorPoints(
+      holder.balance,
+      holder.distributorPoints,
+      holder.updatedAtBlock,
+      distributor.rewardsUpdatedAtBlock,
+      currentBlock
+    );
   }
   return holder as StakeWiseTokenHolder;
-}
-
-export function calculateHoldingPoints(
-  holder: StakeWiseTokenHolder,
-  rewardsUpdatedAtBlock: BigInt,
-  currentBlock: BigInt
-): BigInt {
-  let fromBlock = holder.updatedAtBlock;
-  let prevHoldingPoints = holder.holdingPoints;
-  if (rewardsUpdatedAtBlock.ge(fromBlock)) {
-    // reset from block number and holding points
-    fromBlock = rewardsUpdatedAtBlock;
-    prevHoldingPoints = BIG_INT_ZERO;
-  }
-  return prevHoldingPoints.plus(
-    BigInt.fromString(holder.balance.times(BIG_DECIMAL_1E18).toString()).times(
-      currentBlock.minus(fromBlock)
-    )
-  );
 }
 
 export function isSupportedSwiseHolder(holderAddress: Address): boolean {

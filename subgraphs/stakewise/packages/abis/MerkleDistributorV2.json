@@ -5,36 +5,29 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "beneficiary",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint128",
-        "name": "revenueShare",
-        "type": "uint128"
-      }
-    ],
-    "name": "AccountAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "beneficiary",
+        "name": "account",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "reward",
+        "name": "index",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "tokens",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
       }
     ],
-    "name": "AccountRemoved",
+    "name": "Claimed",
     "type": "event"
   },
   {
@@ -43,7 +36,44 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "beneficiary",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "merkleRoot",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "merkleProofs",
+        "type": "string"
+      }
+    ],
+    "name": "MerkleRootUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "origin",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
         "type": "address"
       },
       {
@@ -54,12 +84,12 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "reward",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "rewardsLink",
+        "type": "string"
       }
     ],
-    "name": "AmountIncreased",
+    "name": "OneTimeDistributionAdded",
     "type": "event"
   },
   {
@@ -81,32 +111,13 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "beneficiary",
+        "name": "from",
         "type": "address"
       },
       {
         "indexed": true,
-        "internalType": "uint256",
-        "name": "revenueShare",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "reward",
-        "type": "uint256"
-      }
-    ],
-    "name": "RevenueShareUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
         "internalType": "address",
-        "name": "sender",
+        "name": "token",
         "type": "address"
       },
       {
@@ -118,36 +129,23 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "reward",
-        "type": "uint256"
-      }
-    ],
-    "name": "RewardCollected",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "periodReward",
+        "name": "amount",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "rewardPerPoint",
+        "name": "startBlock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endBlock",
         "type": "uint256"
       }
     ],
-    "name": "RewardsUpdated",
+    "name": "PeriodicDistributionAdded",
     "type": "event"
   },
   {

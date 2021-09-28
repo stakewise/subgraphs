@@ -1,42 +1,52 @@
-import { BigDecimal } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_ZERO } from "const";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { BIG_INT_1E18, BIG_INT_ZERO } from "const";
 import { Staker } from "../../generated/schema";
+import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker";
+import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
 export function createOrLoadStaker(
-  holderAddress: string,
-  latestRewardPerStakedEthToken: BigDecimal
+  holderAddress: Address,
+  contractChecker: ContractChecker
 ): Staker {
-  let staker = Staker.load(holderAddress);
+  let contractCheckerCall = contractChecker.try_isContract(holderAddress);
+  let isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
 
+  let rewardEthToken = createOrLoadRewardEthToken();
+  let stakerId = holderAddress.toHexString();
+  let staker = Staker.load(stakerId);
   if (staker == null) {
-    staker = new Staker(holderAddress);
+    staker = new Staker(stakerId);
 
+    staker.isContract = isContract;
     staker.rewardsDisabled = false;
-    staker.principalBalance = BIG_DECIMAL_ZERO;
-    staker.rewardBalance = BIG_DECIMAL_ZERO;
-    staker.rewardPerStakedEthToken = latestRewardPerStakedEthToken;
+    staker.principalBalance = BIG_INT_ZERO;
+    staker.rewardBalance = BIG_INT_ZERO;
+    staker.rewardPerStakedEthToken = rewardEthToken.rewardPerStakedEthToken;
     staker.save();
-  } else {
+  } else if (!staker.rewardsDisabled) {
+    staker.isContract = isContract;
     staker.rewardBalance = calculateStakerRewardBalance(
       staker as Staker,
-      latestRewardPerStakedEthToken
+      rewardEthToken.rewardPerStakedEthToken
     );
-    staker.rewardPerStakedEthToken = latestRewardPerStakedEthToken;
-    staker.save();
+    staker.rewardPerStakedEthToken = rewardEthToken.rewardPerStakedEthToken;
+  } else {
+    staker.isContract = isContract;
   }
+
   return staker as Staker;
 }
 
 export function calculateStakerRewardBalance(
   staker: Staker,
-  latestRewardPerToken: BigDecimal
-): BigDecimal {
+  latestRewardPerToken: BigInt
+): BigInt {
   if (latestRewardPerToken.le(staker.rewardPerStakedEthToken)) {
     return staker.rewardBalance;
   }
   let earnedRewardEthToken = staker.principalBalance
     .times(latestRewardPerToken.minus(staker.rewardPerStakedEthToken))
-    .truncate(18);
+    .div(BIG_INT_1E18);
 
   return staker.rewardBalance.plus(earnedRewardEthToken);
 }

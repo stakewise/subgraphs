@@ -5,29 +5,11 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "account",
+        "name": "operator",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address[]",
-        "name": "tokens",
-        "type": "address[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256[]",
-        "name": "amounts",
-        "type": "uint256[]"
       }
     ],
-    "name": "Claimed",
+    "name": "OperatorRemoved",
     "type": "event"
   },
   {
@@ -36,41 +18,17 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "beneficiary",
+        "name": "operator",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "startBlock",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "endBlock",
+        "name": "revenueShare",
         "type": "uint256"
       }
     ],
-    "name": "DistributionAdded",
+    "name": "OperatorUpdated",
     "type": "event"
   },
   {
@@ -79,23 +37,30 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "sender",
+        "name": "partner",
+        "type": "address"
+      }
+    ],
+    "name": "PartnerRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "partner",
         "type": "address"
       },
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "merkleRoot",
-        "type": "bytes32"
-      },
-      {
         "indexed": false,
-        "internalType": "string",
-        "name": "merkleProofs",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "revenueShare",
+        "type": "uint256"
       }
     ],
-    "name": "MerkleRootUpdated",
+    "name": "PartnerUpdated",
     "type": "event"
   },
   {
@@ -109,6 +74,32 @@
       }
     ],
     "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "referrer",
+        "type": "address"
+      }
+    ],
+    "name": "ReferrerAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "referrer",
+        "type": "address"
+      }
+    ],
+    "name": "ReferrerRemoved",
     "type": "event"
   },
   {

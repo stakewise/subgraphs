@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO, BYTES_ZERO, MERKLE_DISTRIBUTOR_ADDRESS } from "const";
 import { MerkleDistributor } from "../../generated/schema";
 
@@ -16,4 +17,20 @@ export function createOrLoadMerkleDistributor(): MerkleDistributor {
     distributor.save();
   }
   return distributor as MerkleDistributor;
+}
+
+export function calculateDistributorPoints(
+  principal: BigInt,
+  prevDistributorPoints: BigInt,
+  updatedAtBlock: BigInt,
+  rewardsUpdatedAtBlock: BigInt,
+  currentBlock: BigInt
+): BigInt {
+  if (rewardsUpdatedAtBlock.ge(updatedAtBlock)) {
+    return principal.times(currentBlock.minus(rewardsUpdatedAtBlock));
+  }
+
+  return prevDistributorPoints.plus(
+    principal.times(currentBlock.minus(updatedAtBlock))
+  );
 }

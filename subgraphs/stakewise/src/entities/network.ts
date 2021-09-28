@@ -11,12 +11,11 @@ export function createOrLoadNetwork(): Network {
     network.poolValidatorsPaused = false;
     network.merkleDistributorPaused = false;
     network.vestingEscrowFactoryPaused = false;
-    network.operatorsRevenueSharingPaused = false;
-    network.partnersRevenueSharingPaused = false;
     network.oraclesPaused = false;
     network.stakeWiseTokenPaused = false;
     network.stakedEthTokenPaused = false;
     network.rewardEthTokenPaused = false;
+    network.rolesPaused = false;
     network.oraclesRewardsNonce = BIG_INT_ZERO;
     network.oraclesValidatorsNonce = BIG_INT_ZERO;
     network.save();

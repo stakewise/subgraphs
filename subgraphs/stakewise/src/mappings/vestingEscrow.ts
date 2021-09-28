@@ -1,5 +1,4 @@
 import { log } from "@graphprotocol/graph-ts";
-import { BIG_DECIMAL_1E18 } from "const";
 import {
   Stopped,
   Paused,
@@ -15,8 +14,7 @@ export function handleStopped(event: Stopped): void {
     return;
   }
 
-  let pulledAmount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
-  escrow.totalClaimed = escrow.totalClaimed.plus(pulledAmount);
+  escrow.totalClaimed = escrow.totalClaimed.plus(event.params.amount);
   escrow.save();
 
   log.info(
@@ -25,7 +23,7 @@ export function handleStopped(event: Stopped): void {
       escrow.id,
       event.params.sender.toHexString(),
       event.params.beneficiary.toHexString(),
-      pulledAmount.toString(),
+      event.params.amount.toString(),
     ]
   );
 }
@@ -37,8 +35,7 @@ export function handleClaimed(event: Claimed): void {
     return;
   }
 
-  let pulledAmount = event.params.amount.divDecimal(BIG_DECIMAL_1E18);
-  escrow.totalClaimed = escrow.totalClaimed.plus(pulledAmount);
+  escrow.totalClaimed = escrow.totalClaimed.plus(event.params.amount);
   escrow.save();
 
   log.info(
@@ -47,7 +44,7 @@ export function handleClaimed(event: Claimed): void {
       escrow.id,
       event.params.sender.toHexString(),
       event.params.beneficiary.toHexString(),
-      pulledAmount.toString(),
+      event.params.amount.toString(),
     ]
   );
 }
