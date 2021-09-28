@@ -1,11 +1,9 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-export let ADDRESS_ZERO = Address.fromString(
-  "0x0000000000000000000000000000000000000000"
-);
-export let BIG_INT_ZERO = BigInt.fromI32(0);
-export let BIG_INT_1E18 = BigInt.fromString("1e18");
-export let BYTES_ZERO = new Bytes(0);
+export let ADDRESS_ZERO = Address.zero();
+export let BIG_INT_ZERO = BigInt.zero();
+export let BIG_INT_1E18 = BigInt.fromString("1000000000000000000");
+export let BYTES_ZERO = Bytes.empty();
 
 export let STAKED_ETH_TOKEN_ADDRESS = Address.fromString(
   "{{ staked_eth_token_address }}{{^staked_eth_token_address}}0x0000000000000000000000000000000000000000{{/staked_eth_token_address}}"

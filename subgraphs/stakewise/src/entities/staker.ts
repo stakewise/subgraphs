@@ -8,8 +8,8 @@ export function createOrLoadStaker(
   holderAddress: Address,
   contractChecker: ContractChecker
 ): Staker {
-  let isContractCall = contractChecker.try_isContract(holderAddress);
-  let isContract = !isContractCall.reverted && isContractCall.value;
+  let contractCheckerCall = contractChecker.try_isContract(holderAddress);
+  let isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
 
   let rewardEthToken = createOrLoadRewardEthToken();
   let stakerId = holderAddress.toHexString();

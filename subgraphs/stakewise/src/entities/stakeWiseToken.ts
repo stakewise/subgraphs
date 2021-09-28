@@ -18,8 +18,8 @@ export function createOrLoadStakeWiseTokenHolder(
   contractChecker: ContractChecker,
   currentBlock: BigInt
 ): StakeWiseTokenHolder {
-  let isContractCall = contractChecker.try_isContract(holderAddress);
-  let isContract = !isContractCall.reverted && isContractCall.value;
+  let contractCheckerCall = contractChecker.try_isContract(holderAddress);
+  let isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
 
   let holderId = holderAddress.toHexString();
   let holder = StakeWiseTokenHolder.load(holderId);

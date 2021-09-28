@@ -23,7 +23,7 @@ export function handleInitialize(event: Initialize): void {
   log.info("[Pool] Initialize pool={} sqrtPrice={} tick={}", [
     pool.id,
     pool.sqrtPrice.toString(),
-    pool.tick.toString(),
+    (pool.tick as BigInt).toString(),
   ]);
 }
 
@@ -38,7 +38,7 @@ export function handleMint(event: Mint): void {
   let tickLower = BigInt.fromI32(event.params.tickLower);
   let tickUpper = BigInt.fromI32(event.params.tickUpper);
   if (
-    pool.tick != null &&
+    pool.tick !== null &&
     tickLower.le(pool.tick as BigInt) &&
     tickUpper.gt(pool.tick as BigInt)
   ) {
@@ -66,7 +66,7 @@ export function handleBurn(event: Burn): void {
   let tickLower = BigInt.fromI32(event.params.tickLower);
   let tickUpper = BigInt.fromI32(event.params.tickUpper);
   if (
-    pool.tick != null &&
+    pool.tick !== null &&
     tickLower.le(pool.tick as BigInt) &&
     tickUpper.gt(pool.tick as BigInt)
   ) {
