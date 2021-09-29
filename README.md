@@ -6,9 +6,11 @@ The Graph exposes a GraphQL endpoint to query the events and entities within the
 
 Current subgraphs:
 
-1. **stakewise**: Includes all the StakeWise contracts data.
+1. **ethereum**: Includes data about ETH2 validator registrations through the deposit contract and ETH1 blocks.
 
-2. **uniswap-v3**: Includes all the relevant data around Uniswap V3 liquidity pools for the pairs that include any of the sETH2, rETH2, SWISE tokens.
+3. **stakewise**: Includes all the StakeWise contracts data.
+
+4. **uniswap-v3**: Includes all the relevant data around Uniswap V3 liquidity pools for the pairs that include any of the sETH2, rETH2, SWISE tokens.
 
 ## Deployment
 
