@@ -19,12 +19,6 @@ type Pool @entity {
 
     "The total amount of unregistered ETH"
     balance: BigInt!
-
-    "Defines whether partners activations are enabled"
-    partnersActivationsEnabled: Boolean!
-
-    "Defines whether referrers activations are enabled"
-    referrersActivationsEnabled: Boolean!
 }
 
 """

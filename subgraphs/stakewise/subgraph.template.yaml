@@ -35,10 +35,6 @@ dataSources:
           handler: handlePendingValidatorsLimitUpdated
         - event: ActivatedValidatorsUpdated(uint256,address)
           handler: handleActivatedValidatorsUpdated
-        - event: PartnersActivationsEnabled(bool)
-          handler: handlePartnersActivationsEnabled
-        - event: ReferrersActivationsEnabled(bool)
-          handler: handleReferrersActivationsEnabled
         - event: StakedWithPartner(indexed address,uint256)
           handler: handleStakeWithPartner
         - event: StakedWithReferrer(indexed address,uint256)

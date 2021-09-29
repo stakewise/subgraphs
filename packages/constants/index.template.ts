@@ -18,7 +18,11 @@ export let STAKEWISE_TOKEN_ADDRESS = Address.fromString(
 );
 
 export let MERKLE_DISTRIBUTOR_ADDRESS = Address.fromString(
-  "{{ stakewise_token_address }}{{^stakewise_token_address}}0x0000000000000000000000000000000000000000{{/stakewise_token_address}}"
+  "{{ merkle_distributor_address }}{{^merkle_distributor_address}}0x0000000000000000000000000000000000000000{{/merkle_distributor_address}}"
+);
+
+export let MERKLE_DROP_ADDRESS = Address.fromString(
+  "{{ merkle_drop_address }}{{^merkle_drop_address}}0x0000000000000000000000000000000000000000{{/merkle_drop_address}}"
 );
 
 export let DAO_ADDRESS = Address.fromString(

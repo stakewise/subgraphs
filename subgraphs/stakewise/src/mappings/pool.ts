@@ -6,10 +6,8 @@ import {
   ActivatedValidatorsUpdated,
   ActivationScheduled,
   MinActivatingDepositUpdated,
-  PartnersActivationsEnabled,
   Paused,
   PendingValidatorsLimitUpdated,
-  ReferrersActivationsEnabled,
   Refunded,
   StakedWithPartner,
   StakedWithReferrer,
@@ -78,40 +76,6 @@ export function handleActivatedValidatorsUpdated(
     [
       event.params.sender.toHexString(),
       event.params.activatedValidators.toString(),
-    ]
-  );
-}
-
-export function handlePartnersActivationsEnabled(
-  event: PartnersActivationsEnabled
-): void {
-  let pool = createOrLoadPool();
-
-  pool.partnersActivationsEnabled = event.params.enabled;
-  pool.save();
-
-  log.info(
-    "[Pool] PartnersActivationsEnabled sender={} partnersActivationsEnabled={}",
-    [
-      event.transaction.from.toHexString(),
-      pool.partnersActivationsEnabled ? "true" : "false",
-    ]
-  );
-}
-
-export function handleReferrersActivationsEnabled(
-  event: ReferrersActivationsEnabled
-): void {
-  let pool = createOrLoadPool();
-
-  pool.referrersActivationsEnabled = event.params.enabled;
-  pool.save();
-
-  log.info(
-    "[Pool] ReferrersActivationsEnabled sender={} referrersActivationsEnabled={}",
-    [
-      event.transaction.from.toHexString(),
-      pool.referrersActivationsEnabled ? "true" : "false",
     ]
   );
 }

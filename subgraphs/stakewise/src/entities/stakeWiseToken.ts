@@ -5,6 +5,7 @@ import {
   DAO_ADDRESS,
   FUTURE_FUND_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
+  MERKLE_DROP_ADDRESS,
 } from "const";
 import { StakeWiseTokenHolder, VestingEscrow } from "../../generated/schema";
 import {
@@ -52,6 +53,7 @@ export function isSupportedSwiseHolder(holderAddress: Address): boolean {
     holderAddress.notEqual(ADDRESS_ZERO) &&
     holderAddress.notEqual(FUTURE_FUND_ADDRESS) &&
     holderAddress.notEqual(MERKLE_DISTRIBUTOR_ADDRESS) &&
+    holderAddress.notEqual(MERKLE_DROP_ADDRESS) &&
     VestingEscrow.load(holderAddress.toHexString()) == null
   );
 }
