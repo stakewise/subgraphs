@@ -15,8 +15,6 @@ export function createOrLoadPool(): Pool {
     pool.pendingValidators = BIG_INT_ZERO;
     pool.activatedValidators = BIG_INT_ZERO;
     pool.balance = BIG_INT_ZERO;
-    pool.partnersActivationsEnabled = false;
-    pool.referrersActivationsEnabled = false;
     pool.save();
   }
   return pool as Pool;
