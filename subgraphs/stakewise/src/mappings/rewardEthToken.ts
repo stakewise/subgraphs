@@ -20,6 +20,7 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   let rewardEthToken = createOrLoadRewardEthToken();
 
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
+  rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
@@ -37,6 +38,7 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   let rewardEthToken = createOrLoadRewardEthToken();
 
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
+  rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
@@ -62,6 +64,7 @@ export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   );
   rewardEthToken.distributorPeriodReward =
     rewardEthToken.distributorPeriodReward.plus(distributorReward);
+  rewardEthToken.totalRewards = event.params.totalRewards;
 
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;

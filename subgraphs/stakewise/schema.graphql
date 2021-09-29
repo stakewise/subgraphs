@@ -193,6 +193,9 @@ type RewardEthToken @entity {
     "Protocol period reward"
     protocolPeriodReward: BigInt!
 
+    "Total rewards"
+    totalRewards: BigInt!
+
     "The current rewards update block number"
     updatedAtBlock: BigInt!
 
