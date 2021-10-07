@@ -204,6 +204,26 @@ type RewardEthToken @entity {
 }
 
 """
+Staking Rewards Snasphot for every oracles update
+"""
+type StakingRewardsSnapshot @entity {
+    "Set to `transaction hash-log index`"
+    id: ID!
+
+    "The reward per staked ETH token before update"
+    rewardPerStakedEthTokenBefore: BigInt!
+
+    "The reward per staked ETH token after update"
+    rewardPerStakedEthTokenAfter: BigInt!
+
+    "The snapshot creation block number"
+    createdAtBlock: BigInt!
+
+    "The snapshot creation timestamp"
+    createdAtTimestamp: BigInt!
+}
+
+"""
 Tokens periodic distribution through the Merkle Distributor
 """
 type PeriodicDistribution @entity {
