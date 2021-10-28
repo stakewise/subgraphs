@@ -1,7 +1,7 @@
 {
   "network": "goerli",
   "validatorRegistration": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0xff50ed3d0ec03ac01d4c79aad74928bff48a7b2b",
+    "startBlock": "4367322"
   }
 }
