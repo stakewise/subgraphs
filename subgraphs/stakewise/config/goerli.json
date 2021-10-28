@@ -2,38 +2,38 @@
   "network": "goerli",
   "pool": {
     "address": "0x8c1efecfb5c4f1099ab0460b5659342943764df7",
-    "startBlock": "0"
+    "startBlock": "4468087"
   },
   "poolValidators": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "4468087"
   },
   "merkleDistributor": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x6ef0172b79131c66c7012db3545d637b116feb12",
+    "startBlock": "4824183"
   },
   "vestingEscrowFactory": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0xba91cdd484893c1f8f75db55733ccadcd0fe5f59",
+    "startBlock": "4623211"
   },
   "oracles": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "4468087"
   },
   "stakeWiseToken": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x0e2497aacec2755d831e4afdea25b4ef1b823855",
+    "startBlock": "4623207"
   },
   "stakedEthToken": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x221d9812823dbab0f1fb40b0d294d9875980ac19",
+    "startBlock": "4468090"
   },
   "rewardEthToken": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "address": "0x826f88d423440c305d9096cc1581ae751efcafb0",
+    "startBlock": "4468093"
   },
   "roles": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "0"
+    "startBlock": "4468087"
   }
 }
