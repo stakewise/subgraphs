@@ -4,6 +4,7 @@ import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
   createOrLoadStaker,
+  createStakingRewardsSnapshot,
 } from "../entities";
 import { RewardsUpdated as RewardsUpdatedV0 } from "../../generated/RewardEthTokenV0/RewardEthTokenV0";
 import { RewardsUpdated as RewardsUpdatedV1 } from "../../generated/RewardEthTokenV1/RewardEthTokenV1";
@@ -18,6 +19,17 @@ import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker"
 
 export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   let rewardEthToken = createOrLoadRewardEthToken();
+
+  let snapshotId = event.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+  createStakingRewardsSnapshot(
+    snapshotId,
+    rewardEthToken.rewardPerStakedEthToken,
+    event.params.rewardPerToken,
+    event.block
+  );
 
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.totalRewards = event.params.totalRewards;
@@ -37,6 +49,17 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
 export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   let rewardEthToken = createOrLoadRewardEthToken();
 
+  let snapshotId = event.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+  createStakingRewardsSnapshot(
+    snapshotId,
+    rewardEthToken.rewardPerStakedEthToken,
+    event.params.rewardPerToken,
+    event.block
+  );
+
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
@@ -54,6 +77,17 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
 
 export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   let rewardEthToken = createOrLoadRewardEthToken();
+
+  let snapshotId = event.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+  createStakingRewardsSnapshot(
+    snapshotId,
+    rewardEthToken.rewardPerStakedEthToken,
+    event.params.rewardPerToken,
+    event.block
+  );
 
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.protocolPeriodReward =

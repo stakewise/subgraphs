@@ -1,5 +1,6 @@
+import { BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { REWARD_ETH_TOKEN_ADDRESS, BIG_INT_ZERO } from "const";
-import { RewardEthToken } from "../../generated/schema";
+import { RewardEthToken, StakingRewardsSnapshot } from "../../generated/schema";
 
 export function createOrLoadRewardEthToken(): RewardEthToken {
   let rewardEthTokenAddress = REWARD_ETH_TOKEN_ADDRESS.toHexString();
@@ -16,4 +17,18 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
     rewardEthToken.save();
   }
   return rewardEthToken as RewardEthToken;
+}
+
+export function createStakingRewardsSnapshot(
+  snapshotId: string,
+  oldRewardPerStakedEthToken: BigInt,
+  newRewardPerStakedEthToken: BigInt,
+  block: ethereum.Block
+): void {
+  let snapshot = new StakingRewardsSnapshot(snapshotId);
+  snapshot.rewardPerStakedEthTokenBefore = oldRewardPerStakedEthToken;
+  snapshot.rewardPerStakedEthTokenAfter = newRewardPerStakedEthToken;
+  snapshot.createdAtBlock = block.number;
+  snapshot.createdAtTimestamp = block.timestamp;
+  snapshot.save();
 }

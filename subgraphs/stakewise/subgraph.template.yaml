@@ -81,8 +81,8 @@ dataSources:
           handler: handleOperatorRemoved
         - event: OperatorSlashed(indexed address,bytes,uint256)
           handler: handleOperatorSlashed
-        - event: CollateralDeposited(indexed address,uint256)
-          handler: handleCollateralDeposited
+        - event: OperatorCommitted(indexed address,uint256)
+          handler: handleOperatorCommitted
         - event: CollateralWithdrawn(indexed address,indexed address,uint256)
           handler: handleCollateralWithdrawn
         - event: Paused(address)
