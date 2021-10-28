@@ -98,6 +98,9 @@ type Operator @entity {
     "The finalize merkle root proofs link"
     finalizeMerkleProofs: String!
 
+    "Defines whether operator has committed the readiness to host the validators"
+    committed: Boolean!
+
     "The collateral amount deposited for ensuring the validator registration process"
     collateral: BigInt!
 

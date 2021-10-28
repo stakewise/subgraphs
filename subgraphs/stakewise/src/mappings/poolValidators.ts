@@ -6,7 +6,7 @@ import {
   createOrLoadValidator,
 } from "../entities";
 import {
-  CollateralDeposited,
+  OperatorCommitted,
   CollateralWithdrawn,
   OperatorAdded,
   OperatorRemoved,
@@ -25,6 +25,7 @@ export function handleOperatorAdded(event: OperatorAdded): void {
   operator.initializeMerkleProofs = event.params.initializeMerkleProofs;
   operator.finalizeMerkleRoot = event.params.finalizeMerkleRoot;
   operator.finalizeMerkleProofs = event.params.finalizeMerkleProofs;
+  operator.committed = false;
   operator.depositDataIndex = BIG_INT_ZERO;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
@@ -53,6 +54,7 @@ export function handleOperatorRemoved(event: OperatorRemoved): void {
   operator.finalizeMerkleRoot = BYTES_ZERO;
   operator.finalizeMerkleProofs = "";
   operator.depositDataIndex = BIG_INT_ZERO;
+  operator.committed = false;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
   operator.save();
@@ -76,6 +78,7 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   operator.depositDataIndex = BIG_INT_ZERO;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
+  operator.committed = false;
   operator.collateral = operator.collateral.minus(event.params.refundedAmount);
   operator.validatorsCount = operator.validatorsCount.minus(
     BigInt.fromString("1")
@@ -92,18 +95,19 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   );
 }
 
-export function handleCollateralDeposited(event: CollateralDeposited): void {
+export function handleOperatorCommitted(event: OperatorCommitted): void {
   let operator = createOrLoadOperator(
     event.params.operator,
     event.block.number
   );
 
   operator.collateral = operator.collateral.plus(event.params.collateral);
+  operator.committed = true;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
   operator.save();
 
-  log.info("[PoolValidators] CollateralDeposited operator={} collateral={}", [
+  log.info("[PoolValidators] OperatorCommitted operator={} collateral={}", [
     operator.id,
     event.params.collateral.toString(),
   ]);
