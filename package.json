@@ -14,8 +14,6 @@
     "build": "yarn workspaces run build",
     "prepare:goerli": "yarn workspaces run prepare:goerli",
     "prepare:mainnet": "yarn workspaces run prepare:mainnet",
-    "create:mainnet": "yarn workspaces run create:mainnet",
-    "create:goerli": "yarn workspaces run create:goerli",
     "create:local": "yarn workspaces run create:local",
     "deploy:mainnet": "yarn workspaces run deploy:mainnet",
     "deploy:goerli": "yarn workspaces run deploy:goerli",

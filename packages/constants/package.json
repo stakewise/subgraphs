@@ -8,8 +8,6 @@
     "build": "true",
     "prepare:goerli": "mustache ../../config/goerli.json index.template.ts > index.ts",
     "prepare:mainnet": "mustache ../../config/mainnet.json index.template.ts > index.ts",
-    "create:mainnet": "true",
-    "create:goerli": "true",
     "create:local": "true",
     "deploy:mainnet": "true",
     "deploy:goerli": "true",

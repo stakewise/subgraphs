@@ -7,8 +7,6 @@
     "build": "graph build subgraph.yaml",
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
-    "create:mainnet": "graph create --node https://api.thegraph.com/deploy/ stakewise/ethereum-mainnet",
-    "create:goerli": "graph create --node https://api.thegraph.com/deploy/ stakewise/ethereum-goerli",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/ethereum",
     "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --version-label 0.1.0 stakewise/ethereum-mainnet",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --version-label 0.1.0 stakewise/ethereum-goerli",
