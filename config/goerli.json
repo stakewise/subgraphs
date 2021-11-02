@@ -6,7 +6,7 @@
   "merkle_drop_address": "0xfc3513e92799f0169e5f14f354d0097e4b790498",
   "pool_address": "0x8c1efecfb5c4f1099ab0460b5659342943764df7",
   "dao_address": "0x1867c96601bc5fe24f685d112314b8f3fe228d5a",
-  "future_fund_address": "0xb9f1d498d8e910211a7c656c9bcc67ab58943ebd",
+  "future_fund_address": "0x1867c96601bc5fe24f685d112314b8f3fe228d5a",
   "uniswap_v3_factory_address": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
   "uniswap_v3_position_manager_address": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
   "contract_checker_address": "0x0000000000000000000000000000000000000000"
