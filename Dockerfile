@@ -1,5 +1,6 @@
 ARG NETWORK="mainnet"
 FROM node:16-alpine
+ARG NETWORK
 WORKDIR /app
 COPY . ./
 RUN yarn install
