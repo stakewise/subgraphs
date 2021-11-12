@@ -29,13 +29,13 @@ Current subgraphs:
 3. Generate types for the Typescript source code:
 
     ```shell script
-    yarn run codegen:mainnet
+    yarn run codegen
     ```
 
 4. Optionally, build the subgraph to check compile errors before deploying:
 
     ```shell script
-    yarn run build:mainnet
+    yarn run build
     ```
 
 5. Authenticate to the Graph API for deployment:
@@ -45,7 +45,7 @@ Current subgraphs:
 
 6. Deploy all the subgraphs or a specific one by navigating to `subgraphs/<subgraph_name>` and running:
     ```shell script
-    yarn deploy
+    yarn deploy:mainnet
     ```
 
 ## Documentation
