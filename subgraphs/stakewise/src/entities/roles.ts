@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO } from "const";
 import {
   calculateDistributorPoints,
@@ -24,13 +24,17 @@ export function loadPartner(
   return partner;
 }
 
-export function loadReferrer(referrerAddress: Address): Referrer | null {
+export function loadReferrer(
+  referrerAddress: Address,
+  block: ethereum.Block
+): Referrer | null {
   let referrer = Referrer.load(referrerAddress.toHexString());
-  if (referrer != null) {
-    let distributor = createOrLoadMerkleDistributor();
-    if (referrer.updatedAtBlock.le(distributor.rewardsUpdatedAtBlock)) {
-      referrer.contributedAmount = BIG_INT_ZERO;
-    }
+  if (referrer == null) {
+    referrer = new Referrer(referrerAddress.toHexString());
+    referrer.contributedAmount = BIG_INT_ZERO;
+    referrer.updatedAtBlock = block.number;
+    referrer.updatedAtTimestamp = block.timestamp;
+    referrer.save();
   }
   return referrer;
 }

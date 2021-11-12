@@ -119,7 +119,11 @@ export function handleTransfer(event: Transfer): void {
   let contractChecker = ContractChecker.bind(CONTRACT_CHECKER_ADDRESS);
 
   if (event.params.from.notEqual(ADDRESS_ZERO)) {
-    let fromStaker = createOrLoadStaker(event.params.from, contractChecker);
+    let fromStaker = createOrLoadStaker(
+      event.params.from,
+      contractChecker,
+      event.block.number
+    );
     fromStaker.rewardBalance = fromStaker.rewardBalance.minus(
       event.params.value
     );
@@ -127,7 +131,11 @@ export function handleTransfer(event: Transfer): void {
   }
 
   if (event.params.to.notEqual(ADDRESS_ZERO)) {
-    let toStaker = createOrLoadStaker(event.params.to, contractChecker);
+    let toStaker = createOrLoadStaker(
+      event.params.to,
+      contractChecker,
+      event.block.number
+    );
     toStaker.rewardBalance = toStaker.rewardBalance.plus(event.params.value);
     toStaker.save();
   }
@@ -143,7 +151,11 @@ export function handleRewardsToggled(event: RewardsToggled): void {
   let contractChecker = ContractChecker.bind(CONTRACT_CHECKER_ADDRESS);
   let rewardEthToken = createOrLoadRewardEthToken();
 
-  let staker = createOrLoadStaker(event.params.account, contractChecker);
+  let staker = createOrLoadStaker(
+    event.params.account,
+    contractChecker,
+    event.block.number
+  );
   staker.rewardsDisabled = event.params.isDisabled;
   staker.rewardPerStakedEthToken = rewardEthToken.rewardPerStakedEthToken;
   staker.save();

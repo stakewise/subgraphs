@@ -6,6 +6,7 @@ import {
   FUTURE_FUND_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MERKLE_DROP_ADDRESS,
+  CONTRACT_CHECKER_DEPLOYMENT_BLOCK,
 } from "const";
 import { StakeWiseTokenHolder, VestingEscrow } from "../../generated/schema";
 import {
@@ -19,8 +20,11 @@ export function createOrLoadStakeWiseTokenHolder(
   contractChecker: ContractChecker,
   currentBlock: BigInt
 ): StakeWiseTokenHolder {
-  let contractCheckerCall = contractChecker.try_isContract(holderAddress);
-  let isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
+  let isContract = false;
+  if (currentBlock.gt(CONTRACT_CHECKER_DEPLOYMENT_BLOCK)) {
+    let contractCheckerCall = contractChecker.try_isContract(holderAddress);
+    isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
+  }
 
   let holderId = holderAddress.toHexString();
   let holder = StakeWiseTokenHolder.load(holderId);

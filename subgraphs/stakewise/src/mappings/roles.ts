@@ -5,17 +5,14 @@ import {
   createOrLoadNetwork,
   createOrLoadOperator,
   loadPartner,
-  loadReferrer,
 } from "../entities";
-import { Partner, Referrer } from "../../generated/schema";
+import { Partner } from "../../generated/schema";
 import {
   OperatorRemoved,
   OperatorUpdated,
   PartnerRemoved,
   PartnerUpdated,
   Paused,
-  ReferrerAdded,
-  ReferrerRemoved,
   Unpaused,
 } from "../../generated/Roles/Roles";
 
@@ -84,35 +81,6 @@ export function handlePartnerRemoved(event: PartnerRemoved): void {
   log.info("[Roles] PartnerRemoved sender={} partner={}", [
     event.transaction.from.toHexString(),
     event.params.partner.toHexString(),
-  ]);
-}
-
-export function handleReferrerAdded(event: ReferrerAdded): void {
-  let referrer = loadReferrer(event.params.referrer);
-  if (referrer == null) {
-    referrer = new Referrer(event.params.referrer.toHexString());
-    referrer.contributedAmount = BIG_INT_ZERO;
-  }
-
-  referrer.updatedAtBlock = event.block.number;
-  referrer.updatedAtTimestamp = event.block.timestamp;
-  referrer.save();
-
-  log.info("[Roles] ReferrerAdded sender={} referrer={}", [
-    event.transaction.from.toHexString(),
-    referrer.id,
-  ]);
-}
-
-export function handleReferrerRemoved(event: ReferrerRemoved): void {
-  let referrer = loadReferrer(event.params.referrer);
-  if (referrer != null) {
-    store.remove("Referrer", referrer.id);
-  }
-
-  log.info("[Roles] PartnerRemoved sender={} partner={}", [
-    event.transaction.from.toHexString(),
-    event.params.referrer.toHexString(),
   ]);
 }
 
