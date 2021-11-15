@@ -16,7 +16,11 @@ export function handleTransfer(event: Transfer): void {
   let contractChecker = ContractChecker.bind(CONTRACT_CHECKER_ADDRESS);
 
   if (event.params.from.notEqual(ADDRESS_ZERO)) {
-    let fromStaker = createOrLoadStaker(event.params.from, contractChecker);
+    let fromStaker = createOrLoadStaker(
+      event.params.from,
+      contractChecker,
+      event.block.number
+    );
     fromStaker.principalBalance = fromStaker.principalBalance.minus(
       event.params.value
     );
@@ -28,7 +32,11 @@ export function handleTransfer(event: Transfer): void {
   }
 
   if (event.params.to.notEqual(ADDRESS_ZERO)) {
-    let toStaker = createOrLoadStaker(event.params.to, contractChecker);
+    let toStaker = createOrLoadStaker(
+      event.params.to,
+      contractChecker,
+      event.block.number
+    );
     toStaker.principalBalance = toStaker.principalBalance.plus(
       event.params.value
     );

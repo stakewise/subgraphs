@@ -1,15 +1,23 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { BIG_INT_1E18, BIG_INT_ZERO } from "const";
+import {
+  BIG_INT_1E18,
+  BIG_INT_ZERO,
+  CONTRACT_CHECKER_DEPLOYMENT_BLOCK,
+} from "const";
 import { Staker } from "../../generated/schema";
 import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker";
 import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
 export function createOrLoadStaker(
   holderAddress: Address,
-  contractChecker: ContractChecker
+  contractChecker: ContractChecker,
+  currentBlock: BigInt
 ): Staker {
-  let contractCheckerCall = contractChecker.try_isContract(holderAddress);
-  let isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
+  let isContract = false;
+  if (currentBlock.gt(CONTRACT_CHECKER_DEPLOYMENT_BLOCK)) {
+    let contractCheckerCall = contractChecker.try_isContract(holderAddress);
+    isContract = !contractCheckerCall.reverted && contractCheckerCall.value;
+  }
 
   let rewardEthToken = createOrLoadRewardEthToken();
   let stakerId = holderAddress.toHexString();

@@ -101,7 +101,7 @@ export function handleStakeWithPartner(event: StakedWithPartner): void {
 }
 
 export function handleStakeWithReferrer(event: StakedWithReferrer): void {
-  let referrer = loadReferrer(event.params.referrer);
+  let referrer = loadReferrer(event.params.referrer, event.block);
   if (referrer == null) {
     // process only registered referrers
     return;

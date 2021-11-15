@@ -48,3 +48,7 @@ export let POOL_ADDRESS = Address.fromString(
 export let CONTRACT_CHECKER_ADDRESS = Address.fromString(
   "{{ contract_checker_address }}{{^contract_checker_address}}0x0000000000000000000000000000000000000000{{/contract_checker_address}}"
 );
+
+export let CONTRACT_CHECKER_DEPLOYMENT_BLOCK = BigInt.fromString(
+  "{{ contract_checker_deployment_block }}{{^contract_checker_deployment_block}}0{{/contract_checker_deployment_block}}"
+);

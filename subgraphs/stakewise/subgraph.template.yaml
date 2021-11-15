@@ -379,10 +379,6 @@ dataSources:
           handler: handlePartnerUpdated
         - event: PartnerRemoved(indexed address)
           handler: handlePartnerRemoved
-        - event: ReferrerAdded(indexed address)
-          handler: handleReferrerAdded
-        - event: ReferrerRemoved(indexed address)
-          handler: handleReferrerRemoved
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
