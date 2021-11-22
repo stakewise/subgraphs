@@ -24,6 +24,12 @@ type Pool @entity {
   "The tracker for the global fees growth of token1"
   feeGrowthGlobal1X128: BigInt!
 
+  "The tracker of the accumulated token0 fees"
+  feesToken0: BigInt!
+
+  "The tracker of the accumulated token1 fees"
+  feesToken1: BigInt!
+
   "The current tick"
   tick: BigInt
 
