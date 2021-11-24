@@ -1,5 +1,5 @@
 import { BigInt, log } from "@graphprotocol/graph-ts";
-import { BIG_INT_ZERO } from "const";
+import { BIG_INT_1E6, BIG_INT_ZERO } from "const";
 import {
   Burn,
   Flash,
@@ -92,10 +92,17 @@ export function handleSwap(event: Swap): void {
   let amount0Abs = event.params.amount0;
   if (event.params.amount0.lt(BIG_INT_ZERO)) {
     amount0Abs = event.params.amount0.times(BigInt.fromString("-1"));
+    pool.feesToken0 = pool.feesToken0.plus(
+      amount0Abs.times(pool.feeTier).div(BIG_INT_1E6)
+    );
   }
+
   let amount1Abs = event.params.amount1;
   if (event.params.amount1.lt(BIG_INT_ZERO)) {
     amount1Abs = event.params.amount1.times(BigInt.fromString("-1"));
+    pool.feesToken1 = pool.feesToken1.plus(
+      amount1Abs.times(pool.feeTier).div(BIG_INT_1E6)
+    );
   }
 
   // pool volume

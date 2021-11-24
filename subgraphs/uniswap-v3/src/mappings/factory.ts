@@ -22,6 +22,8 @@ export function handlePoolCreated(event: PoolCreated): void {
   pool.sqrtPrice = BIG_INT_ZERO;
   pool.feeGrowthGlobal0X128 = BIG_INT_ZERO;
   pool.feeGrowthGlobal1X128 = BIG_INT_ZERO;
+  pool.feesToken0 = BIG_INT_ZERO;
+  pool.feesToken1 = BIG_INT_ZERO;
   pool.volumeToken0 = BIG_INT_ZERO;
   pool.volumeToken1 = BIG_INT_ZERO;
   pool.save();
