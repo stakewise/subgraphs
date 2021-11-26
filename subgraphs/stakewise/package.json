@@ -1,6 +1,6 @@
 {
   "name": "stakewise",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "AGPL-3.0-only",
   "scripts": {
     "codegen": "graph codegen subgraph.yaml",
@@ -10,6 +10,6 @@
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/stakewise",
     "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-mainnet",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-goerli",
-    "deploy:local": "graph deploy --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/stakewise"
+    "deploy:local": "graph deploy --version-label 0.1.1 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/stakewise"
   }
 }
