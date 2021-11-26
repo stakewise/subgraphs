@@ -8,8 +8,8 @@
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/uniswap-v3",
-    "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --version-label 0.1.0 stakewise/uniswap-v3-mainnet",
-    "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --version-label 0.1.0 stakewise/uniswap-v3-goerli",
-    "deploy:local": "graph deploy --node $GRAPH_NODE_URL --ipfs $IPFS_URL --version-label 0.1.0 stakewise/uniswap-v3"
+    "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-mainnet",
+    "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-goerli",
+    "deploy:local": "graph deploy --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/uniswap-v3"
   }
 }
