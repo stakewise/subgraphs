@@ -7,6 +7,7 @@ export function createOrLoadOracle(oracleAddress: Address): Oracle {
 
   if (oracle == null) {
     oracle = new Oracle(oracleId);
+    oracle.save();
   }
   return oracle as Oracle;
 }
