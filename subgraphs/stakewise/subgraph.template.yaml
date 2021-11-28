@@ -339,7 +339,7 @@ dataSources:
           file: ./packages/abis/ContractChecker.json
       eventHandlers:
         - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
-          handler: handleRewardsUpdated
+          handler: handleRewardsUpdatedV2
         - event: RewardsToggled(indexed address,bool)
           handler: handleRewardsToggled
         - event: Transfer(indexed address,indexed address,uint256)
