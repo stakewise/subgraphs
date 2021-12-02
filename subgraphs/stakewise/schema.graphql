@@ -209,7 +209,7 @@ type RewardEthToken @entity {
 """
 Period staking rewards in the last oracles update
 """
-type PeriodStakingRewards @entity {
+type StakingRewardsPeriod @entity {
     "Set to 1"
     id: ID!
 

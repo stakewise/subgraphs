@@ -4,7 +4,7 @@ import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
   createOrLoadStaker,
-  updatePeriodStakingRewards,
+  updateStakingRewardsPeriod,
 } from "../entities";
 import { RewardsUpdated as RewardsUpdatedV0 } from "../../generated/RewardEthTokenV0/RewardEthTokenV0";
 import { RewardsUpdated as RewardsUpdatedV1 } from "../../generated/RewardEthTokenV1/RewardEthTokenV1";
@@ -25,7 +25,7 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
 
-  updatePeriodStakingRewards(
+  updateStakingRewardsPeriod(
     event.params.periodRewards,
     BIG_INT_ZERO,
     event.block
@@ -48,7 +48,7 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
 
-  updatePeriodStakingRewards(
+  updateStakingRewardsPeriod(
     event.params.periodRewards,
     BIG_INT_ZERO,
     event.block
@@ -80,7 +80,7 @@ export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
 
-  updatePeriodStakingRewards(
+  updateStakingRewardsPeriod(
     event.params.periodRewards,
     event.params.protocolReward,
     event.block

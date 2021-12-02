@@ -4,7 +4,7 @@ import {
   BIG_INT_ZERO,
   ORACLES_UPDATE_PERIOD,
 } from "const";
-import { RewardEthToken, PeriodStakingRewards } from "../../generated/schema";
+import { RewardEthToken, StakingRewardsPeriod } from "../../generated/schema";
 
 export function createOrLoadRewardEthToken(): RewardEthToken {
   let rewardEthTokenAddress = REWARD_ETH_TOKEN_ADDRESS.toHexString();
@@ -23,34 +23,34 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
   return rewardEthToken as RewardEthToken;
 }
 
-export function updatePeriodStakingRewards(
+export function updateStakingRewardsPeriod(
   periodTotalRewards: BigInt,
   periodProtocolRewards: BigInt,
   block: ethereum.Block
 ): void {
-  let periodStakingRewards = PeriodStakingRewards.load("1");
-  if (periodStakingRewards == null) {
-    periodStakingRewards = new PeriodStakingRewards("1");
-    periodStakingRewards.periodProtocolRewards = periodProtocolRewards;
-    periodStakingRewards.periodTotalRewards = periodTotalRewards;
-    periodStakingRewards.periodDuration = BIG_INT_ZERO;
-    periodStakingRewards.updatedAtBlock = block.number;
-    periodStakingRewards.updatedAtTimestamp = block.timestamp;
-    periodStakingRewards.save();
+  let stakingRewardsPeriod = StakingRewardsPeriod.load("1");
+  if (stakingRewardsPeriod == null) {
+    stakingRewardsPeriod = new StakingRewardsPeriod("1");
+    stakingRewardsPeriod.periodProtocolRewards = periodProtocolRewards;
+    stakingRewardsPeriod.periodTotalRewards = periodTotalRewards;
+    stakingRewardsPeriod.periodDuration = BIG_INT_ZERO;
+    stakingRewardsPeriod.updatedAtBlock = block.number;
+    stakingRewardsPeriod.updatedAtTimestamp = block.timestamp;
+    stakingRewardsPeriod.save();
   } else {
     let periodDuration = BIG_INT_ZERO;
     let submitDuration = block.timestamp.minus(
-      periodStakingRewards.updatedAtTimestamp
+      stakingRewardsPeriod.updatedAtTimestamp
     );
     while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
       periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
     }
 
-    periodStakingRewards.periodDuration = periodDuration;
-    periodStakingRewards.periodTotalRewards = periodTotalRewards;
-    periodStakingRewards.periodProtocolRewards = periodProtocolRewards;
-    periodStakingRewards.updatedAtBlock = block.number;
-    periodStakingRewards.updatedAtTimestamp = block.timestamp;
-    periodStakingRewards.save();
+    stakingRewardsPeriod.periodDuration = periodDuration;
+    stakingRewardsPeriod.periodTotalRewards = periodTotalRewards;
+    stakingRewardsPeriod.periodProtocolRewards = periodProtocolRewards;
+    stakingRewardsPeriod.updatedAtBlock = block.number;
+    stakingRewardsPeriod.updatedAtTimestamp = block.timestamp;
+    stakingRewardsPeriod.save();
   }
 }
