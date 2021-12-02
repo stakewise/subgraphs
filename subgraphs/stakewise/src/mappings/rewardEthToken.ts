@@ -1,10 +1,10 @@
 import { log } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
+import { ADDRESS_ZERO, BIG_INT_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
 import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
   createOrLoadStaker,
-  createStakingRewardsSnapshot,
+  updatePeriodStakingRewards,
 } from "../entities";
 import { RewardsUpdated as RewardsUpdatedV0 } from "../../generated/RewardEthTokenV0/RewardEthTokenV0";
 import { RewardsUpdated as RewardsUpdatedV1 } from "../../generated/RewardEthTokenV1/RewardEthTokenV1";
@@ -19,23 +19,17 @@ import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker"
 
 export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   let rewardEthToken = createOrLoadRewardEthToken();
-
-  let snapshotId = event.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(event.logIndex.toString());
-  createStakingRewardsSnapshot(
-    snapshotId,
-    rewardEthToken.rewardPerStakedEthToken,
-    event.params.rewardPerToken,
-    event.block
-  );
-
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
+
+  updatePeriodStakingRewards(
+    event.params.periodRewards,
+    BIG_INT_ZERO,
+    event.block
+  );
 
   log.info(
     "[RewardEthToken] RewardsUpdated V0 timestamp={} rewardPerToken={}",
@@ -48,23 +42,17 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
 
 export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   let rewardEthToken = createOrLoadRewardEthToken();
-
-  let snapshotId = event.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(event.logIndex.toString());
-  createStakingRewardsSnapshot(
-    snapshotId,
-    rewardEthToken.rewardPerStakedEthToken,
-    event.params.rewardPerToken,
-    event.block
-  );
-
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
+
+  updatePeriodStakingRewards(
+    event.params.periodRewards,
+    BIG_INT_ZERO,
+    event.block
+  );
 
   log.info(
     "[RewardEthToken] RewardsUpdated V1 timestamp={} rewardPerToken={}",
@@ -77,18 +65,6 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
 
 export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   let rewardEthToken = createOrLoadRewardEthToken();
-
-  let snapshotId = event.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(event.logIndex.toString());
-  createStakingRewardsSnapshot(
-    snapshotId,
-    rewardEthToken.rewardPerStakedEthToken,
-    event.params.rewardPerToken,
-    event.block
-  );
-
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.protocolPeriodReward =
     rewardEthToken.protocolPeriodReward.plus(event.params.protocolReward);
@@ -103,6 +79,12 @@ export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   rewardEthToken.updatedAtBlock = event.block.number;
   rewardEthToken.updatedAtTimestamp = event.block.timestamp;
   rewardEthToken.save();
+
+  updatePeriodStakingRewards(
+    event.params.periodRewards,
+    event.params.protocolReward,
+    event.block
+  );
 
   log.info(
     "[RewardEthToken] RewardsUpdated V2 timestamp={} rewardPerToken={} protocolReward={} distributorReward={}",

@@ -20,15 +20,15 @@
     "deploy:local": "yarn workspaces run deploy:local"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "0.23.0",
-    "@graphprotocol/graph-ts": "0.23.0",
-    "@types/node": "16.11.6",
-    "@typescript-eslint/eslint-plugin": "5.2.0",
-    "@typescript-eslint/parser": "5.2.0",
-    "eslint": "8.1.0",
+    "@graphprotocol/graph-cli": "0.25.0",
+    "@graphprotocol/graph-ts": "0.24.1",
+    "@types/node": "16.11.11",
+    "@typescript-eslint/eslint-plugin": "5.5.0",
+    "@typescript-eslint/parser": "5.5.0",
+    "eslint": "8.3.0",
     "eslint-config-prettier": "8.3.0",
     "mustache": "4.2.0",
-    "prettier": "2.4.1",
-    "typescript": "4.4.4"
+    "prettier": "2.5.0",
+    "typescript": "4.5.2"
   }
 }

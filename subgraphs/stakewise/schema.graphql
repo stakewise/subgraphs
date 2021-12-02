@@ -207,23 +207,26 @@ type RewardEthToken @entity {
 }
 
 """
-Staking Rewards Snasphot for every oracles update
+Period staking rewards in the last oracles update
 """
-type StakingRewardsSnapshot @entity {
-    "Set to `transaction hash-log index`"
+type PeriodStakingRewards @entity {
+    "Set to 1"
     id: ID!
 
-    "The reward per staked ETH token before update"
-    rewardPerStakedEthTokenBefore: BigInt!
+    "Total rewards earned in the last update"
+    periodTotalRewards: BigInt!
 
-    "The reward per staked ETH token after update"
-    rewardPerStakedEthTokenAfter: BigInt!
+    "Protocol rewards earned in the last update"
+    periodProtocolRewards: BigInt!
 
-    "The snapshot creation block number"
-    createdAtBlock: BigInt!
+    "The duration of the update period"
+    periodDuration: BigInt!
 
-    "The snapshot creation timestamp"
-    createdAtTimestamp: BigInt!
+    "The update block number"
+    updatedAtBlock: BigInt!
+
+    "The update timestamp"
+    updatedAtTimestamp: BigInt!
 }
 
 """
