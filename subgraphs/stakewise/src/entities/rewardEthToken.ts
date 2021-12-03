@@ -4,7 +4,7 @@ import {
   BIG_INT_ZERO,
   ORACLES_UPDATE_PERIOD,
 } from "const";
-import { RewardEthToken, StakingRewardsPeriod } from "../../generated/schema";
+import { RewardEthToken, StakingRewardsSnapshot } from "../../generated/schema";
 
 export function createOrLoadRewardEthToken(): RewardEthToken {
   let rewardEthTokenAddress = REWARD_ETH_TOKEN_ADDRESS.toHexString();
@@ -23,34 +23,25 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
   return rewardEthToken as RewardEthToken;
 }
 
-export function updateStakingRewardsPeriod(
+export function createStakingRewardsSnapshot(
+  snapshotId: string,
+  lastUpdateTimestamp: BigInt,
   periodTotalRewards: BigInt,
   periodProtocolRewards: BigInt,
   block: ethereum.Block
 ): void {
-  let stakingRewardsPeriod = StakingRewardsPeriod.load("1");
-  if (stakingRewardsPeriod == null) {
-    stakingRewardsPeriod = new StakingRewardsPeriod("1");
-    stakingRewardsPeriod.periodProtocolRewards = periodProtocolRewards;
-    stakingRewardsPeriod.periodTotalRewards = periodTotalRewards;
-    stakingRewardsPeriod.periodDuration = BIG_INT_ZERO;
-    stakingRewardsPeriod.updatedAtBlock = block.number;
-    stakingRewardsPeriod.updatedAtTimestamp = block.timestamp;
-    stakingRewardsPeriod.save();
-  } else {
-    let periodDuration = BIG_INT_ZERO;
-    let submitDuration = block.timestamp.minus(
-      stakingRewardsPeriod.updatedAtTimestamp
-    );
-    while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
-      periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
-    }
+  let snapshot = new StakingRewardsSnapshot(snapshotId);
 
-    stakingRewardsPeriod.periodDuration = periodDuration;
-    stakingRewardsPeriod.periodTotalRewards = periodTotalRewards;
-    stakingRewardsPeriod.periodProtocolRewards = periodProtocolRewards;
-    stakingRewardsPeriod.updatedAtBlock = block.number;
-    stakingRewardsPeriod.updatedAtTimestamp = block.timestamp;
-    stakingRewardsPeriod.save();
+  let periodDuration = BIG_INT_ZERO;
+  let submitDuration = block.timestamp.minus(lastUpdateTimestamp);
+  while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
+    periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
   }
+
+  snapshot.periodDuration = periodDuration;
+  snapshot.periodTotalRewards = periodTotalRewards;
+  snapshot.periodProtocolRewards = periodProtocolRewards;
+  snapshot.createdAtBlock = block.number;
+  snapshot.createdAtTimestamp = block.timestamp;
+  snapshot.save();
 }
