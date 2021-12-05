@@ -1,5 +1,5 @@
 specVersion: 0.0.3
-description: The StakeWise ETH2 liquid staking protocol
+description: The ETH2 liquid staking protocol
 repository: https://github.com/stakewise/subgraphs/subgraphs/stakewise
 schema:
   file: ./schema.graphql
