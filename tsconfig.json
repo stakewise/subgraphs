@@ -1,6 +1,7 @@
 {
-  "extends": "@graphprotocol/graph-ts/tsconfig",
   "compilerOptions": {
-    "types": ["@graphprotocol/graph-ts"]
+    "strict": true,
+    "target": "es5",
+    "moduleResolution": "node"
   }
 }

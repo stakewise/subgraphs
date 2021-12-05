@@ -3,7 +3,7 @@ import { log } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO } from "const";
 import {
   createOrLoadMerkleDistributor,
-  createOrLoadMerkleRootSnapshot,
+  createMerkleRootSnapshot,
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
 } from "../entities";
@@ -30,7 +30,7 @@ export function handleMerkleRootUpdated(event: MerkleRootUpdated): void {
     .toHexString()
     .concat("-")
     .concat(event.logIndex.toString());
-  createOrLoadMerkleRootSnapshot(
+  createMerkleRootSnapshot(
     snapshotId,
     event.params.merkleRoot,
     event.params.merkleProofs,

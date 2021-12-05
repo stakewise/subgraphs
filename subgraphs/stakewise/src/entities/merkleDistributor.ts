@@ -19,7 +19,7 @@ export function createOrLoadMerkleDistributor(): MerkleDistributor {
   return distributor as MerkleDistributor;
 }
 
-export function createOrLoadMerkleRootSnapshot(
+export function createMerkleRootSnapshot(
   snapshotId: string,
   merkleRoot: Bytes,
   merkleProofs: string,
