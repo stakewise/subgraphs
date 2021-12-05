@@ -26,6 +26,7 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
 export function createStakingRewardsSnapshot(
   snapshotId: string,
   lastUpdateTimestamp: BigInt,
+  totalStaked: BigInt,
   periodTotalRewards: BigInt,
   periodProtocolRewards: BigInt,
   block: ethereum.Block
@@ -38,9 +39,10 @@ export function createStakingRewardsSnapshot(
     periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
   }
 
-  snapshot.periodDuration = periodDuration;
   snapshot.periodTotalRewards = periodTotalRewards;
   snapshot.periodProtocolRewards = periodProtocolRewards;
+  snapshot.periodDuration = periodDuration;
+  snapshot.totalStaked = totalStaked;
   snapshot.createdAtBlock = block.number;
   snapshot.createdAtTimestamp = block.timestamp;
   snapshot.save();

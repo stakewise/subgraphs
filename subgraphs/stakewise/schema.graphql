@@ -17,6 +17,9 @@ type Pool @entity {
     "The total amount of activated validators"
     activatedValidators: BigInt!
 
+    "The total amount of ETH staked"
+    totalStaked: BigInt!
+
     "The total amount of unregistered ETH"
     balance: BigInt!
 }
@@ -207,25 +210,51 @@ type RewardEthToken @entity {
 }
 
 """
-Staking Rewards Snasphot for every oracles update
+Distributor merkle root update snapshot
+"""
+type MerkleRootSnapshot @entity {
+    "Set to `transaction hash-log index`"
+    id: ID!
+
+    "The merkle root"
+    merkleRoot: Bytes!
+
+    "The merkle proofs"
+    merkleProofs: String!
+
+    "The rewards update block number"
+    rewardsUpdateAtBlock: BigInt!
+
+    "The update block number"
+    createdAtBlock: BigInt!
+
+    "The update timestamp"
+    createdAtTimestamp: BigInt!
+}
+
+"""
+Staking rewards update snapshot
 """
 type StakingRewardsSnapshot @entity {
     "Set to `transaction hash-log index`"
     id: ID!
 
-    "Total rewards earned in the last update"
+    "Total rewards earned"
     periodTotalRewards: BigInt!
 
-    "Protocol rewards earned in the last update"
+    "Protocol rewards earned"
     periodProtocolRewards: BigInt!
 
     "The duration of the update period"
     periodDuration: BigInt!
 
-    "The snapshot creation block number"
+    "The total amount staked at the time of update"
+    totalStaked: BigInt!
+
+    "The update block number"
     createdAtBlock: BigInt!
 
-    "The snapshot creation timestamp"
+    "The update timestamp"
     createdAtTimestamp: BigInt!
 }
 
