@@ -18,7 +18,7 @@
   },
   "oracles": {
     "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "12271843"
+    "startBlock": "11726298"
   },
   "stakeWiseToken": {
     "address": "0x48c3399719b582dd63eb5aadf12a40b4c3f52fa2",

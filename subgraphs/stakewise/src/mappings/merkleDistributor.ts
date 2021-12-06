@@ -3,6 +3,7 @@ import { log } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO } from "const";
 import {
   createOrLoadMerkleDistributor,
+  createMerkleRootSnapshot,
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
 } from "../entities";
@@ -24,6 +25,18 @@ import {
 export function handleMerkleRootUpdated(event: MerkleRootUpdated): void {
   let distributor = createOrLoadMerkleDistributor();
   let rewardEthToken = createOrLoadRewardEthToken();
+
+  let snapshotId = event.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+  createMerkleRootSnapshot(
+    snapshotId,
+    event.params.merkleRoot,
+    event.params.merkleProofs,
+    rewardEthToken.updatedAtBlock,
+    event.block
+  );
 
   distributor.merkleRoot = event.params.merkleRoot;
   distributor.merkleProofs = event.params.merkleProofs;

@@ -1,5 +1,5 @@
 specVersion: 0.0.3
-description: The StakeWise ETH2 liquid staking protocol
+description: The ETH2 liquid staking protocol
 repository: https://github.com/stakewise/subgraphs/subgraphs/stakewise
 schema:
   file: ./schema.graphql
@@ -131,6 +131,7 @@ dataSources:
         - OneTimeDistribution
         - RewardEthToken
         - Network
+        - MerkleRootSnapshot
       abis:
         - name: MerkleDistributorV2
           file: ./packages/abis/MerkleDistributorV2.json
@@ -287,6 +288,8 @@ dataSources:
       file: ./src/mappings/rewardEthToken.ts
       entities:
         - RewardEthToken
+        - Pool
+        - StakingRewardsSnapshot
       abis:
         - name: RewardEthTokenV0
           file: ./packages/abis/RewardEthTokenV0.json
@@ -309,6 +312,8 @@ dataSources:
       file: ./src/mappings/rewardEthToken.ts
       entities:
         - RewardEthToken
+        - Pool
+        - StakingRewardsSnapshot
       abis:
         - name: RewardEthTokenV1
           file: ./packages/abis/RewardEthTokenV1.json
@@ -332,6 +337,8 @@ dataSources:
         - Staker
         - RewardEthToken
         - Network
+        - Pool
+        - StakingRewardsSnapshot
       abis:
         - name: RewardEthTokenV2
           file: ./packages/abis/RewardEthTokenV2.json

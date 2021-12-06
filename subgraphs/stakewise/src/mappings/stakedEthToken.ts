@@ -28,6 +28,7 @@ export function handleTransfer(event: Transfer): void {
   } else {
     let pool = createOrLoadPool();
     pool.balance = pool.balance.plus(event.params.value);
+    pool.totalStaked = pool.totalStaked.plus(event.params.value);
     pool.save();
   }
 

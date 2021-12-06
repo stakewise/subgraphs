@@ -1,6 +1,6 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO, BYTES_ZERO, MERKLE_DISTRIBUTOR_ADDRESS } from "const";
-import { MerkleDistributor } from "../../generated/schema";
+import { MerkleDistributor, MerkleRootSnapshot } from "../../generated/schema";
 
 export function createOrLoadMerkleDistributor(): MerkleDistributor {
   let distributorAddress = MERKLE_DISTRIBUTOR_ADDRESS.toHexString();
@@ -17,6 +17,23 @@ export function createOrLoadMerkleDistributor(): MerkleDistributor {
     distributor.save();
   }
   return distributor as MerkleDistributor;
+}
+
+export function createMerkleRootSnapshot(
+  snapshotId: string,
+  merkleRoot: Bytes,
+  merkleProofs: string,
+  rewardsUpdateAtBlock: BigInt,
+  block: ethereum.Block
+): void {
+  let snapshot = new MerkleRootSnapshot(snapshotId);
+
+  snapshot.merkleRoot = merkleRoot;
+  snapshot.merkleProofs = merkleProofs;
+  snapshot.rewardsUpdateAtBlock = rewardsUpdateAtBlock;
+  snapshot.createdAtBlock = block.number;
+  snapshot.createdAtTimestamp = block.timestamp;
+  snapshot.save();
 }
 
 export function calculateDistributorPoints(

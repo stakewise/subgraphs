@@ -1,8 +1,9 @@
 import { log } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
+import { ADDRESS_ZERO, BIG_INT_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
 import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
+  createOrLoadPool,
   createOrLoadStaker,
   createStakingRewardsSnapshot,
 } from "../entities";
@@ -19,6 +20,7 @@ import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker"
 
 export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   let rewardEthToken = createOrLoadRewardEthToken();
+  let pool = createOrLoadPool();
 
   let snapshotId = event.transaction.hash
     .toHexString()
@@ -26,8 +28,10 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
     .concat(event.logIndex.toString());
   createStakingRewardsSnapshot(
     snapshotId,
-    rewardEthToken.rewardPerStakedEthToken,
-    event.params.rewardPerToken,
+    rewardEthToken.updatedAtTimestamp,
+    pool.totalStaked,
+    event.params.periodRewards,
+    BIG_INT_ZERO,
     event.block
   );
 
@@ -48,6 +52,7 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
 
 export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   let rewardEthToken = createOrLoadRewardEthToken();
+  let pool = createOrLoadPool();
 
   let snapshotId = event.transaction.hash
     .toHexString()
@@ -55,8 +60,10 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
     .concat(event.logIndex.toString());
   createStakingRewardsSnapshot(
     snapshotId,
-    rewardEthToken.rewardPerStakedEthToken,
-    event.params.rewardPerToken,
+    rewardEthToken.updatedAtTimestamp,
+    pool.totalStaked,
+    event.params.periodRewards,
+    BIG_INT_ZERO,
     event.block
   );
 
@@ -77,15 +84,18 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
 
 export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   let rewardEthToken = createOrLoadRewardEthToken();
-
+  let pool = createOrLoadPool();
   let snapshotId = event.transaction.hash
     .toHexString()
     .concat("-")
     .concat(event.logIndex.toString());
+
   createStakingRewardsSnapshot(
     snapshotId,
-    rewardEthToken.rewardPerStakedEthToken,
-    event.params.rewardPerToken,
+    rewardEthToken.updatedAtTimestamp,
+    pool.totalStaked,
+    event.params.periodRewards,
+    event.params.protocolReward,
     event.block
   );
 

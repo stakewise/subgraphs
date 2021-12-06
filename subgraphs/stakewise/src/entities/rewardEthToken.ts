@@ -1,5 +1,9 @@
 import { BigInt, ethereum } from "@graphprotocol/graph-ts";
-import { REWARD_ETH_TOKEN_ADDRESS, BIG_INT_ZERO } from "const";
+import {
+  REWARD_ETH_TOKEN_ADDRESS,
+  BIG_INT_ZERO,
+  ORACLES_UPDATE_PERIOD,
+} from "const";
 import { RewardEthToken, StakingRewardsSnapshot } from "../../generated/schema";
 
 export function createOrLoadRewardEthToken(): RewardEthToken {
@@ -21,13 +25,24 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
 
 export function createStakingRewardsSnapshot(
   snapshotId: string,
-  oldRewardPerStakedEthToken: BigInt,
-  newRewardPerStakedEthToken: BigInt,
+  lastUpdateTimestamp: BigInt,
+  totalStaked: BigInt,
+  periodTotalRewards: BigInt,
+  periodProtocolRewards: BigInt,
   block: ethereum.Block
 ): void {
   let snapshot = new StakingRewardsSnapshot(snapshotId);
-  snapshot.rewardPerStakedEthTokenBefore = oldRewardPerStakedEthToken;
-  snapshot.rewardPerStakedEthTokenAfter = newRewardPerStakedEthToken;
+
+  let periodDuration = BIG_INT_ZERO;
+  let submitDuration = block.timestamp.minus(lastUpdateTimestamp);
+  while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
+    periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
+  }
+
+  snapshot.periodTotalRewards = periodTotalRewards;
+  snapshot.periodProtocolRewards = periodProtocolRewards;
+  snapshot.periodDuration = periodDuration;
+  snapshot.totalStaked = totalStaked;
   snapshot.createdAtBlock = block.number;
   snapshot.createdAtTimestamp = block.timestamp;
   snapshot.save();

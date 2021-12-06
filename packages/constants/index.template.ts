@@ -53,3 +53,7 @@ export let CONTRACT_CHECKER_ADDRESS = Address.fromString(
 export let CONTRACT_CHECKER_DEPLOYMENT_BLOCK = BigInt.fromString(
   "{{ contract_checker_deployment_block }}{{^contract_checker_deployment_block}}0{{/contract_checker_deployment_block}}"
 );
+
+export let ORACLES_UPDATE_PERIOD = BigInt.fromString(
+  "{{ oracles_update_period }}{{^oracles_update_period}}0{{/oracles_update_period}}"
+);
