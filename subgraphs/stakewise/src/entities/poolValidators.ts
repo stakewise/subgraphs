@@ -22,6 +22,7 @@ export function createOrLoadOperator(
     operator.finalizeMerkleProofs = "";
     operator.collateral = BIG_INT_ZERO;
     operator.committed = false;
+    operator.locked = false;
     operator.validatorsCount = BIG_INT_ZERO;
     operator.depositDataIndex = BIG_INT_ZERO;
     operator.revenueShare = BIG_INT_ZERO;
