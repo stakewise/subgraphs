@@ -104,6 +104,9 @@ type Operator @entity {
     "Defines whether operator has committed the readiness to host the validators"
     committed: Boolean!
 
+    "Defines whether operator is currently locked and is not capable of getting new validators assigned"
+    locked: Boolean!
+
     "The collateral amount deposited for ensuring the validator registration process"
     collateral: BigInt!
 

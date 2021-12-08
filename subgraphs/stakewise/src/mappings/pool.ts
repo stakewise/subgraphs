@@ -178,6 +178,7 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
   operator.validatorsCount = operator.validatorsCount.plus(
     BigInt.fromString("1")
   );
+  operator.locked = true;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
   operator.save();
@@ -219,6 +220,7 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
     operator.depositDataIndex = operator.depositDataIndex.plus(
       BigInt.fromString("1")
     );
+    operator.locked = false;
   }
   pool.save();
 

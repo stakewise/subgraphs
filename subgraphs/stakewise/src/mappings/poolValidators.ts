@@ -26,6 +26,7 @@ export function handleOperatorAdded(event: OperatorAdded): void {
   operator.finalizeMerkleRoot = event.params.finalizeMerkleRoot;
   operator.finalizeMerkleProofs = event.params.finalizeMerkleProofs;
   operator.committed = false;
+  operator.locked = false;
   operator.depositDataIndex = BIG_INT_ZERO;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
@@ -55,6 +56,7 @@ export function handleOperatorRemoved(event: OperatorRemoved): void {
   operator.finalizeMerkleProofs = "";
   operator.depositDataIndex = BIG_INT_ZERO;
   operator.committed = false;
+  operator.locked = false;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
   operator.save();
@@ -79,6 +81,7 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
   operator.committed = false;
+  operator.locked = false;
   operator.collateral = operator.collateral.minus(event.params.refundedAmount);
   operator.validatorsCount = operator.validatorsCount.minus(
     BigInt.fromString("1")
