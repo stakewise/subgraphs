@@ -83,6 +83,20 @@ type DepositActivation @entity {
 }
 
 """
+StakeWise Operator keys allocation
+"""
+type OperatorAllocation @entity {
+    "Set to `operator.id-operator.allocationsCount`"
+    id: ID!
+
+    "The operator"
+    operator: Operator!
+
+    "The allocation's total number of staked validators"
+    validatorsCount: BigInt!
+}
+
+"""
 StakeWise Operator
 """
 type Operator @entity {
@@ -128,8 +142,14 @@ type Operator @entity {
     "The last update timestamp"
     updatedAtTimestamp: BigInt!
 
+    "The total number of validator keys allocations"
+    allocationsCount: BigInt!
+
     "The operator validators"
     validators: [Validator!]! @derivedFrom(field: "operator")
+
+    "The operator keys allocations"
+    allocations: [OperatorAllocation!]! @derivedFrom(field: "operator")
 }
 
 """

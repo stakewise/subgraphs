@@ -1,9 +1,10 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
-import { BIG_INT_ZERO, BYTES_ZERO } from "const";
+import { log } from "@graphprotocol/graph-ts";
+import { BIG_INT_ONE, BIG_INT_ZERO, BYTES_ZERO } from "const";
 import {
   createOrLoadOperator,
   createOrLoadNetwork,
   createOrLoadValidator,
+  createOrLoadOperatorAllocation,
 } from "../entities";
 import {
   OperatorCommitted,
@@ -30,6 +31,7 @@ export function handleOperatorAdded(event: OperatorAdded): void {
   operator.depositDataIndex = BIG_INT_ZERO;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
+  operator.allocationsCount = operator.allocationsCount.plus(BIG_INT_ONE);
   operator.save();
 
   log.info(
@@ -73,6 +75,10 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
     event.block.number
   );
 
+  let allocation = createOrLoadOperatorAllocation(operator);
+  allocation.validatorsCount = allocation.validatorsCount.minus(BIG_INT_ONE);
+  allocation.save();
+
   operator.initializeMerkleRoot = BYTES_ZERO;
   operator.initializeMerkleProofs = "";
   operator.finalizeMerkleRoot = BYTES_ZERO;
@@ -83,9 +89,7 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   operator.committed = false;
   operator.locked = false;
   operator.collateral = operator.collateral.minus(event.params.refundedAmount);
-  operator.validatorsCount = operator.validatorsCount.minus(
-    BigInt.fromString("1")
-  );
+  operator.validatorsCount = operator.validatorsCount.minus(BIG_INT_ONE);
   operator.save();
 
   let validator = createOrLoadValidator(event.params.publicKey);

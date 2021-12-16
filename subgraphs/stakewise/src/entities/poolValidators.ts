@@ -1,6 +1,10 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO, BYTES_ZERO } from "const";
-import { Operator, Validator } from "../../generated/schema";
+import {
+  Operator,
+  Validator,
+  OperatorAllocation,
+} from "../../generated/schema";
 import {
   calculateDistributorPoints,
   createOrLoadMerkleDistributor,
@@ -24,6 +28,7 @@ export function createOrLoadOperator(
     operator.committed = false;
     operator.locked = false;
     operator.validatorsCount = BIG_INT_ZERO;
+    operator.allocationsCount = BIG_INT_ZERO;
     operator.depositDataIndex = BIG_INT_ZERO;
     operator.revenueShare = BIG_INT_ZERO;
     operator.distributorPoints = BIG_INT_ZERO;
@@ -41,6 +46,22 @@ export function createOrLoadOperator(
     );
   }
   return operator as Operator;
+}
+
+export function createOrLoadOperatorAllocation(
+  operator: Operator
+): OperatorAllocation {
+  let allocationId = operator.id
+    .concat("-")
+    .concat(operator.allocationsCount.toString());
+  let allocation = OperatorAllocation.load(allocationId);
+  if (allocation == null) {
+    allocation = new OperatorAllocation(allocationId);
+    allocation.validatorsCount = BIG_INT_ZERO;
+    allocation.operator = operator.id;
+    allocation.save();
+  }
+  return allocation as OperatorAllocation;
 }
 
 export function createOrLoadValidator(publicKey: Bytes): Validator {

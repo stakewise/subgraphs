@@ -23,6 +23,7 @@ dataSources:
         - Referrer
         - DepositActivation
         - Operator
+        - OperatorSnapshot
         - Validator
         - Network
       abis:
@@ -68,6 +69,7 @@ dataSources:
       file: ./src/mappings/poolValidators.ts
       entities:
         - Operator
+        - OperatorSnapshot
         - MerkleDistributor
         - Validator
         - Network
