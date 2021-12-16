@@ -1,6 +1,6 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO, BYTES_ZERO } from "const";
-import { Operator, Validator } from "../../generated/schema";
+import { Operator, Validator, OperatorSnapshot } from "../../generated/schema";
 import {
   calculateDistributorPoints,
   createOrLoadMerkleDistributor,
@@ -41,6 +41,20 @@ export function createOrLoadOperator(
     );
   }
   return operator as Operator;
+}
+
+export function createOrLoadOperatorSnapshot(
+  snapshotId: string,
+  operatorId: string
+): OperatorSnapshot {
+  let snapshot = OperatorSnapshot.load(snapshotId);
+  if (snapshot == null) {
+    snapshot = new OperatorSnapshot(snapshotId);
+    snapshot.validatorsCount = BIG_INT_ZERO;
+    snapshot.operator = operatorId;
+    snapshot.save();
+  }
+  return snapshot as OperatorSnapshot;
 }
 
 export function createOrLoadValidator(publicKey: Bytes): Validator {

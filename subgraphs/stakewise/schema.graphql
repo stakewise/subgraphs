@@ -83,6 +83,20 @@ type DepositActivation @entity {
 }
 
 """
+StakeWise Operator Snapshot of initialize merkle roots
+"""
+type OperatorSnapshot @entity {
+    "The operator initialize merkle root"
+    id: ID!
+
+    "The snapshot operator"
+    operator: Operator!
+
+    "The operator's total number of the validators registered for this merkle root"
+    validatorsCount: BigInt!
+}
+
+"""
 StakeWise Operator
 """
 type Operator @entity {
@@ -130,6 +144,9 @@ type Operator @entity {
 
     "The operator validators"
     validators: [Validator!]! @derivedFrom(field: "operator")
+
+    "The operator snapshots"
+    snapshots: [OperatorSnapshot!]! @derivedFrom(field: "operator")
 }
 
 """

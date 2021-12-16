@@ -1,9 +1,10 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
-import { BIG_INT_ZERO, BYTES_ZERO } from "const";
+import { log } from "@graphprotocol/graph-ts";
+import { BIG_INT_ONE, BIG_INT_ZERO, BYTES_ZERO } from "const";
 import {
   createOrLoadOperator,
   createOrLoadNetwork,
   createOrLoadValidator,
+  createOrLoadOperatorSnapshot,
 } from "../entities";
 import {
   OperatorCommitted,
@@ -73,6 +74,13 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
     event.block.number
   );
 
+  let snapshot = createOrLoadOperatorSnapshot(
+    operator.initializeMerkleRoot.toHexString(),
+    operator.id
+  );
+  snapshot.validatorsCount = snapshot.validatorsCount.minus(BIG_INT_ONE);
+  snapshot.save();
+
   operator.initializeMerkleRoot = BYTES_ZERO;
   operator.initializeMerkleProofs = "";
   operator.finalizeMerkleRoot = BYTES_ZERO;
@@ -83,9 +91,7 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
   operator.committed = false;
   operator.locked = false;
   operator.collateral = operator.collateral.minus(event.params.refundedAmount);
-  operator.validatorsCount = operator.validatorsCount.minus(
-    BigInt.fromString("1")
-  );
+  operator.validatorsCount = operator.validatorsCount.minus(BIG_INT_ONE);
   operator.save();
 
   let validator = createOrLoadValidator(event.params.publicKey);

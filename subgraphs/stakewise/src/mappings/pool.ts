@@ -1,6 +1,6 @@
 import { BigInt, log, store } from "@graphprotocol/graph-ts";
 
-import { BIG_INT_1E18 } from "const";
+import { BIG_INT_1E18, BIG_INT_ONE } from "const";
 import {
   Activated,
   ActivatedValidatorsUpdated,
@@ -19,6 +19,7 @@ import {
   createOrLoadDepositActivation,
   createOrLoadNetwork,
   createOrLoadOperator,
+  createOrLoadOperatorSnapshot,
   createOrLoadPool,
   createOrLoadValidator,
   getDepositActivationId,
@@ -175,9 +176,14 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
   validator.registrationStatus = "Initialized";
   validator.save();
 
-  operator.validatorsCount = operator.validatorsCount.plus(
-    BigInt.fromString("1")
+  let snapshot = createOrLoadOperatorSnapshot(
+    operator.initializeMerkleRoot.toHexString(),
+    operator.id
   );
+  snapshot.validatorsCount = snapshot.validatorsCount.plus(BIG_INT_ONE);
+  snapshot.save();
+
+  operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
   operator.locked = true;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
@@ -202,24 +208,27 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
   let validator = createOrLoadValidator(event.params.publicKey);
 
   let pool = createOrLoadPool();
-  pool.pendingValidators = pool.pendingValidators.plus(BigInt.fromString("1"));
+  pool.pendingValidators = pool.pendingValidators.plus(BIG_INT_ONE);
 
   if (validator.registrationStatus == "Uninitialized") {
     // compatibility with v1 contracts
     pool.balance = pool.balance.minus(
       BigInt.fromString("32").times(BIG_INT_1E18)
     );
-    operator.validatorsCount = operator.validatorsCount.plus(
-      BigInt.fromString("1")
+    operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
+
+    let snapshot = createOrLoadOperatorSnapshot(
+      operator.initializeMerkleRoot.toHexString(),
+      operator.id
     );
+    snapshot.validatorsCount = snapshot.validatorsCount.plus(BIG_INT_ONE);
+    snapshot.save();
   } else {
     // finalization is done with 31 ether deposit to the eth2 contract
     pool.balance = pool.balance.minus(
       BigInt.fromString("31").times(BIG_INT_1E18)
     );
-    operator.depositDataIndex = operator.depositDataIndex.plus(
-      BigInt.fromString("1")
-    );
+    operator.depositDataIndex = operator.depositDataIndex.plus(BIG_INT_ONE);
     operator.locked = false;
   }
   pool.save();

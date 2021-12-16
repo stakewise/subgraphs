@@ -1,5 +1,6 @@
-import { BigInt, log, store } from "@graphprotocol/graph-ts";
+import { log, store } from "@graphprotocol/graph-ts";
 
+import { BIG_INT_ONE } from "const";
 import { createOrLoadOracle, createOrLoadNetwork } from "../entities";
 import {
   InitializeValidatorVoteSubmitted,
@@ -51,7 +52,7 @@ export function handleOracleRemoved(event: OracleRemoved): void {
 export function handleRewardsVoteSubmitted(event: RewardsVoteSubmitted): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesRewardsNonce = event.params.nonce.plus(BigInt.fromString("1"));
+  network.oraclesRewardsNonce = event.params.nonce.plus(BIG_INT_ONE);
   network.save();
 
   log.info("[Oracles] RewardsVoteSubmitted nonce={} oracle={} sender={}", [
@@ -66,7 +67,7 @@ export function handleMerkleRootVoteSubmitted(
 ): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesRewardsNonce = event.params.nonce.plus(BigInt.fromString("1"));
+  network.oraclesRewardsNonce = event.params.nonce.plus(BIG_INT_ONE);
   network.save();
 
   log.info("[Oracles] MerkleRootVoteSubmitted nonce={} oracle={} sender={}", [
@@ -81,9 +82,7 @@ export function handleInitializeValidatorVoteSubmitted(
 ): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesValidatorsNonce = event.params.nonce.plus(
-    BigInt.fromString("1")
-  );
+  network.oraclesValidatorsNonce = event.params.nonce.plus(BIG_INT_ONE);
   network.save();
 
   log.info(
@@ -101,9 +100,7 @@ export function handleFinalizeValidatorVoteSubmitted(
 ): void {
   let network = createOrLoadNetwork();
 
-  network.oraclesValidatorsNonce = event.params.nonce.plus(
-    BigInt.fromString("1")
-  );
+  network.oraclesValidatorsNonce = event.params.nonce.plus(BIG_INT_ONE);
   network.save();
 
   log.info(

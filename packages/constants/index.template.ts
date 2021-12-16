@@ -2,6 +2,7 @@ import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 export let ADDRESS_ZERO = Address.zero();
 export let BIG_INT_ZERO = BigInt.zero();
+export let BIG_INT_ONE = BigInt.fromString("1");
 export let BIG_INT_1E18 = BigInt.fromString("1000000000000000000");
 export let BIG_INT_1E6 = BigInt.fromString("1000000");
 export let BYTES_ZERO = Bytes.empty();
