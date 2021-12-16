@@ -19,7 +19,7 @@ import {
   createOrLoadDepositActivation,
   createOrLoadNetwork,
   createOrLoadOperator,
-  createOrLoadOperatorSnapshot,
+  createOrLoadOperatorAllocation,
   createOrLoadPool,
   createOrLoadValidator,
   getDepositActivationId,
@@ -176,12 +176,12 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
   validator.registrationStatus = "Initialized";
   validator.save();
 
-  let snapshot = createOrLoadOperatorSnapshot(
-    operator.initializeMerkleRoot.toHexString(),
+  let allocation = createOrLoadOperatorAllocation(
+    operator.allocationsCount.toString(),
     operator.id
   );
-  snapshot.validatorsCount = snapshot.validatorsCount.plus(BIG_INT_ONE);
-  snapshot.save();
+  allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
+  allocation.save();
 
   operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
   operator.locked = true;
@@ -217,12 +217,12 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
     );
     operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
 
-    let snapshot = createOrLoadOperatorSnapshot(
-      operator.initializeMerkleRoot.toHexString(),
+    let allocation = createOrLoadOperatorAllocation(
+      operator.allocationsCount.toString(),
       operator.id
     );
-    snapshot.validatorsCount = snapshot.validatorsCount.plus(BIG_INT_ONE);
-    snapshot.save();
+    allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
+    allocation.save();
   } else {
     // finalization is done with 31 ether deposit to the eth2 contract
     pool.balance = pool.balance.minus(

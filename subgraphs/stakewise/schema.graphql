@@ -83,16 +83,16 @@ type DepositActivation @entity {
 }
 
 """
-StakeWise Operator Snapshot of initialize merkle roots
+StakeWise Operator keys allocation
 """
-type OperatorSnapshot @entity {
-    "The operator initialize merkle root"
+type OperatorAllocation @entity {
+    "The allocation ID"
     id: ID!
 
-    "The snapshot operator"
+    "The operator"
     operator: Operator!
 
-    "The operator's total number of the validators registered for this merkle root"
+    "The allocation's total number of staked validators"
     validatorsCount: BigInt!
 }
 
@@ -142,11 +142,14 @@ type Operator @entity {
     "The last update timestamp"
     updatedAtTimestamp: BigInt!
 
+    "The total number of validator keys allocations"
+    allocationsCount: BigInt!
+
     "The operator validators"
     validators: [Validator!]! @derivedFrom(field: "operator")
 
-    "The operator snapshots"
-    snapshots: [OperatorSnapshot!]! @derivedFrom(field: "operator")
+    "The operator keys allocations"
+    allocations: [OperatorAllocation!]! @derivedFrom(field: "operator")
 }
 
 """

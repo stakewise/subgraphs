@@ -4,7 +4,7 @@ import {
   createOrLoadOperator,
   createOrLoadNetwork,
   createOrLoadValidator,
-  createOrLoadOperatorSnapshot,
+  createOrLoadOperatorAllocation,
 } from "../entities";
 import {
   OperatorCommitted,
@@ -31,6 +31,7 @@ export function handleOperatorAdded(event: OperatorAdded): void {
   operator.depositDataIndex = BIG_INT_ZERO;
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
+  operator.allocationsCount = operator.allocationsCount.plus(BIG_INT_ONE);
   operator.save();
 
   log.info(
@@ -74,12 +75,12 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
     event.block.number
   );
 
-  let snapshot = createOrLoadOperatorSnapshot(
-    operator.initializeMerkleRoot.toHexString(),
+  let allocation = createOrLoadOperatorAllocation(
+    operator.allocationsCount.toString(),
     operator.id
   );
-  snapshot.validatorsCount = snapshot.validatorsCount.minus(BIG_INT_ONE);
-  snapshot.save();
+  allocation.validatorsCount = allocation.validatorsCount.minus(BIG_INT_ONE);
+  allocation.save();
 
   operator.initializeMerkleRoot = BYTES_ZERO;
   operator.initializeMerkleProofs = "";
