@@ -49,14 +49,16 @@ export function createOrLoadOperator(
 }
 
 export function createOrLoadOperatorAllocation(
-  allocationId: string,
-  operatorId: string
+  operator: Operator
 ): OperatorAllocation {
+  let allocationId = operator.id
+    .concat("-")
+    .concat(operator.allocationsCount.toString());
   let allocation = OperatorAllocation.load(allocationId);
   if (allocation == null) {
     allocation = new OperatorAllocation(allocationId);
     allocation.validatorsCount = BIG_INT_ZERO;
-    allocation.operator = operatorId;
+    allocation.operator = operator.id;
     allocation.save();
   }
   return allocation as OperatorAllocation;

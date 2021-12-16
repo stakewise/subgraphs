@@ -86,7 +86,7 @@ type DepositActivation @entity {
 StakeWise Operator keys allocation
 """
 type OperatorAllocation @entity {
-    "The allocation ID"
+    "Set to `operator.id-operator.allocationsCount`"
     id: ID!
 
     "The operator"

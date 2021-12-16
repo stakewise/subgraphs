@@ -75,10 +75,7 @@ export function handleOperatorSlashed(event: OperatorSlashed): void {
     event.block.number
   );
 
-  let allocation = createOrLoadOperatorAllocation(
-    operator.allocationsCount.toString(),
-    operator.id
-  );
+  let allocation = createOrLoadOperatorAllocation(operator);
   allocation.validatorsCount = allocation.validatorsCount.minus(BIG_INT_ONE);
   allocation.save();
 

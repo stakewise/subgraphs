@@ -176,10 +176,7 @@ export function handleValidatorInitialized(event: ValidatorInitialized): void {
   validator.registrationStatus = "Initialized";
   validator.save();
 
-  let allocation = createOrLoadOperatorAllocation(
-    operator.allocationsCount.toString(),
-    operator.id
-  );
+  let allocation = createOrLoadOperatorAllocation(operator);
   allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
   allocation.save();
 
@@ -217,10 +214,7 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
     );
     operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
 
-    let allocation = createOrLoadOperatorAllocation(
-      operator.allocationsCount.toString(),
-      operator.id
-    );
+    let allocation = createOrLoadOperatorAllocation(operator);
     allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
     allocation.save();
   } else {
