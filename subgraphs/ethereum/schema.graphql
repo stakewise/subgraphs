@@ -7,6 +7,15 @@ type ValidatorRegistration @entity {
 
     "The validator withdrawal credentials"
     withdrawalCredentials: Bytes!
+
+    "The registration index (little endian)"
+    index: Bytes!
+
+    "The block number the registration was created at"
+    createdAtBlock: BigInt!
+
+    "The timestamp the registration was created at"
+    createdAtTimestamp: BigInt!
 }
 
 """

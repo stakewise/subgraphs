@@ -12,7 +12,6 @@ import {
   StakedWithPartner,
   StakedWithReferrer,
   Unpaused,
-  ValidatorInitialized,
   ValidatorRegistered,
 } from "../../generated/Pool/Pool";
 import {
@@ -165,74 +164,33 @@ export function handleActivated(event: Activated): void {
   ]);
 }
 
-export function handleValidatorInitialized(event: ValidatorInitialized): void {
-  let operator = createOrLoadOperator(
-    event.params.operator,
-    event.block.number
-  );
-  let validator = createOrLoadValidator(event.params.publicKey);
-
-  validator.operator = operator.id;
-  validator.registrationStatus = "Initialized";
-  validator.save();
-
-  let allocation = createOrLoadOperatorAllocation(operator);
-  allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
-  allocation.save();
-
-  operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
-  operator.locked = true;
-  operator.updatedAtBlock = event.block.number;
-  operator.updatedAtTimestamp = event.block.timestamp;
-  operator.save();
-
-  // initialization is done with 1 ether deposit to the eth2 contract
-  let pool = createOrLoadPool();
-  pool.balance = pool.balance.minus(BIG_INT_1E18);
-  pool.save();
-
-  log.info("[Pool] ValidatorInitialized publicKey={} operator={}", [
-    validator.id,
-    operator.id,
-  ]);
-}
-
 export function handleValidatorRegistered(event: ValidatorRegistered): void {
   let operator = createOrLoadOperator(
     event.params.operator,
     event.block.number
   );
   let validator = createOrLoadValidator(event.params.publicKey);
-
   let pool = createOrLoadPool();
+
   pool.pendingValidators = pool.pendingValidators.plus(BIG_INT_ONE);
-
-  if (validator.registrationStatus == "Uninitialized") {
-    // compatibility with v1 contracts
-    pool.balance = pool.balance.minus(
-      BigInt.fromString("32").times(BIG_INT_1E18)
-    );
-    operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
-
-    let allocation = createOrLoadOperatorAllocation(operator);
-    allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
-    allocation.save();
-  } else {
-    // finalization is done with 31 ether deposit to the eth2 contract
-    pool.balance = pool.balance.minus(
-      BigInt.fromString("31").times(BIG_INT_1E18)
-    );
-    operator.depositDataIndex = operator.depositDataIndex.plus(BIG_INT_ONE);
-    operator.locked = false;
-  }
+  pool.balance = pool.balance.minus(
+    BigInt.fromString("32").times(BIG_INT_1E18)
+  );
   pool.save();
 
+  let allocation = createOrLoadOperatorAllocation(operator);
+  allocation.validatorsCount = allocation.validatorsCount.plus(BIG_INT_ONE);
+  allocation.save();
+
+  operator.validatorsCount = operator.validatorsCount.plus(BIG_INT_ONE);
+  operator.depositDataIndex = operator.depositDataIndex.plus(BIG_INT_ONE);
   operator.updatedAtBlock = event.block.number;
   operator.updatedAtTimestamp = event.block.timestamp;
   operator.save();
 
   validator.operator = operator.id;
-  validator.registrationStatus = "Finalized";
+  validator.createdAtBlock = event.block.number;
+  validator.createdAtTimestamp = event.block.timestamp;
   validator.save();
 
   log.info("[Pool] ValidatorRegistered publicKey={} operator={}", [

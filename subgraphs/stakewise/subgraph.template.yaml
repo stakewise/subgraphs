@@ -44,8 +44,6 @@ dataSources:
           handler: handleActivationScheduled
         - event: Activated(indexed address,uint256,uint256,indexed address)
           handler: handleActivated
-        - event: ValidatorInitialized(bytes,address)
-          handler: handleValidatorInitialized
         - event: ValidatorRegistered(bytes,address)
           handler: handleValidatorRegistered
         - event: Refunded(indexed address,uint256)
@@ -77,16 +75,12 @@ dataSources:
         - name: PoolValidators
           file: ./packages/abis/PoolValidators.json
       eventHandlers:
-        - event: OperatorAdded(indexed address,indexed bytes32,string,indexed bytes32,string)
+        - event: OperatorAdded(indexed address,indexed bytes32,string)
           handler: handleOperatorAdded
         - event: OperatorRemoved(indexed address,indexed address)
           handler: handleOperatorRemoved
-        - event: OperatorSlashed(indexed address,bytes,uint256)
-          handler: handleOperatorSlashed
-        - event: OperatorCommitted(indexed address,uint256)
+        - event: OperatorCommitted(indexed address)
           handler: handleOperatorCommitted
-        - event: CollateralWithdrawn(indexed address,indexed address,uint256)
-          handler: handleCollateralWithdrawn
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)
@@ -180,10 +174,8 @@ dataSources:
           handler: handleRewardsVoteSubmitted
         - event: MerkleRootVoteSubmitted(indexed address,indexed address,uint256,indexed bytes32,string)
           handler: handleMerkleRootVoteSubmitted
-        - event: InitializeValidatorVoteSubmitted(indexed address,indexed address,indexed address,bytes,uint256)
-          handler: handleInitializeValidatorVoteSubmitted
-        - event: FinalizeValidatorVoteSubmitted(indexed address,indexed address,indexed address,bytes,uint256)
-          handler: handleFinalizeValidatorVoteSubmitted
+        - event: RegisterValidatorVoteSubmitted(indexed address,indexed address,indexed address,bytes,uint256)
+          handler: handleRegisterValidatorVoteSubmitted
         - event: Paused(address)
           handler: handlePaused
         - event: Unpaused(address)

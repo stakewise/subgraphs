@@ -103,26 +103,14 @@ type Operator @entity {
     "The operator address"
     id: ID!
 
-    "The initialize merkle root used to verify validator registration initialization"
-    initializeMerkleRoot: Bytes!
+    "The deposit data merkle root used to verify validator registration"
+    depositDataMerkleRoot: Bytes!
 
-    "The initialize merkle root proofs link"
-    initializeMerkleProofs: String!
-
-    "The finalize merkle root used to verify validator registration finalization"
-    finalizeMerkleRoot: Bytes!
-
-    "The finalize merkle root proofs link"
-    finalizeMerkleProofs: String!
+    "The deposit data merkle root proofs link"
+    depositDataMerkleProofs: String!
 
     "Defines whether operator has committed the readiness to host the validators"
     committed: Boolean!
-
-    "Defines whether operator is currently locked and is not capable of getting new validators assigned"
-    locked: Boolean!
-
-    "The collateral amount deposited for ensuring the validator registration process"
-    collateral: BigInt!
 
     "The operator's current available deposit data index"
     depositDataIndex: BigInt!
@@ -161,15 +149,6 @@ type Oracle @entity {
 }
 
 """
-Enum to track status of the validator registration.
-Uninitialized - validator has not been initialized.
-Initialized - 1 ether deposit has been made to the ETH2 registration contract for the public key.
-Finalized - 31 ether deposit has been made to the ETH2 registration contract for the public key.
-Failed - 1 ether deposit has failed as it was assigned to the different from the protocol's withdrawal key.
-"""
-enum RegistrationStatus { Uninitialized, Initialized, Finalized, Failed }
-
-"""
 StakeWise Validator
 """
 type Validator @entity {
@@ -179,8 +158,11 @@ type Validator @entity {
     "The validator operator"
     operator: Operator!
 
-    "The validator registration status"
-    registrationStatus: RegistrationStatus!
+    "The creation block number"
+    createdAtBlock: BigInt!
+
+    "The creation timestamp"
+    createdAtTimestamp: BigInt!
 }
 
 """
@@ -248,10 +230,10 @@ type MerkleRootSnapshot @entity {
     "The rewards update block number"
     rewardsUpdateAtBlock: BigInt!
 
-    "The update block number"
+    "The creation block number"
     createdAtBlock: BigInt!
 
-    "The update timestamp"
+    "The creation timestamp"
     createdAtTimestamp: BigInt!
 }
 

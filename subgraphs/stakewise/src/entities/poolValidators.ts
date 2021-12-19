@@ -20,13 +20,9 @@ export function createOrLoadOperator(
   if (operator == null) {
     operator = new Operator(operatorId);
 
-    operator.initializeMerkleRoot = BYTES_ZERO;
-    operator.initializeMerkleProofs = "";
-    operator.finalizeMerkleRoot = BYTES_ZERO;
-    operator.finalizeMerkleProofs = "";
-    operator.collateral = BIG_INT_ZERO;
+    operator.depositDataMerkleRoot = BYTES_ZERO;
+    operator.depositDataMerkleProofs = "";
     operator.committed = false;
-    operator.locked = false;
     operator.validatorsCount = BIG_INT_ZERO;
     operator.allocationsCount = BIG_INT_ZERO;
     operator.depositDataIndex = BIG_INT_ZERO;
@@ -72,7 +68,8 @@ export function createOrLoadValidator(publicKey: Bytes): Validator {
     validator = new Validator(validatorId);
 
     validator.operator = "";
-    validator.registrationStatus = "Uninitialized";
+    validator.createdAtBlock = BIG_INT_ZERO;
+    validator.createdAtTimestamp = BIG_INT_ZERO;
     validator.save();
   }
   return validator as Validator;

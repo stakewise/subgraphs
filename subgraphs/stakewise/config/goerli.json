@@ -5,8 +5,8 @@
     "startBlock": "4468087"
   },
   "poolValidators": {
-    "address": "0x0d92156861a0bc7037cc21470327bd3bc750eb1d",
-    "startBlock": "5905172"
+    "address": "0x908c06affda0ffdbb4578629aa8ccff372e510b6",
+    "startBlock": "6049456"
   },
   "merkleDistributor": {
     "address": "0x6ef0172b79131c66c7012db3545d637b116feb12",
@@ -17,8 +17,8 @@
     "startBlock": "4623211"
   },
   "oracles": {
-    "address": "0x06b0c9476315634dcc59aa3f3f7d5df6fecbaa90",
-    "startBlock": "5905173"
+    "address": "0x4bbaa17efd71683dcb9c769dd38e7674994fe38d",
+    "startBlock": "6049460"
   },
   "stakeWiseToken": {
     "address": "0x0e2497aacec2755d831e4afdea25b4ef1b823855",
