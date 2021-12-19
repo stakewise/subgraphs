@@ -9,6 +9,9 @@ export function handleDepositEvent(event: DepositEvent): void {
   if (validator == null) {
     validator = new ValidatorRegistration(publicKey);
     validator.withdrawalCredentials = event.params.withdrawal_credentials;
+    validator.index = event.params.index;
+    validator.createdAtBlock = event.block.number;
+    validator.createdAtTimestamp = event.block.timestamp;
     validator.save();
   }
 

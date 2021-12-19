@@ -3,8 +3,7 @@ import { log, store } from "@graphprotocol/graph-ts";
 import { BIG_INT_ONE } from "const";
 import { createOrLoadOracle, createOrLoadNetwork } from "../entities";
 import {
-  InitializeValidatorVoteSubmitted,
-  FinalizeValidatorVoteSubmitted,
+  RegisterValidatorVoteSubmitted,
   MerkleRootVoteSubmitted,
   OracleAdded,
   OracleRemoved,
@@ -77,8 +76,8 @@ export function handleMerkleRootVoteSubmitted(
   ]);
 }
 
-export function handleInitializeValidatorVoteSubmitted(
-  event: InitializeValidatorVoteSubmitted
+export function handleRegisterValidatorVoteSubmitted(
+  event: RegisterValidatorVoteSubmitted
 ): void {
   let network = createOrLoadNetwork();
 
@@ -86,25 +85,7 @@ export function handleInitializeValidatorVoteSubmitted(
   network.save();
 
   log.info(
-    "[Oracles] InitializeValidatorVoteSubmitted nonce={} oracle={} sender={}",
-    [
-      network.oraclesValidatorsNonce.toString(),
-      event.params.oracle.toHexString(),
-      event.transaction.from.toHexString(),
-    ]
-  );
-}
-
-export function handleFinalizeValidatorVoteSubmitted(
-  event: FinalizeValidatorVoteSubmitted
-): void {
-  let network = createOrLoadNetwork();
-
-  network.oraclesValidatorsNonce = event.params.nonce.plus(BIG_INT_ONE);
-  network.save();
-
-  log.info(
-    "[Oracles] FinalizeValidatorVoteSubmitted nonce={} oracle={} sender={}",
+    "[Oracles] RegisterValidatorVoteSubmitted nonce={} oracle={} sender={}",
     [
       network.oraclesValidatorsNonce.toString(),
       event.params.oracle.toHexString(),
