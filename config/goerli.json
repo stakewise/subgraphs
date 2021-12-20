@@ -9,6 +9,7 @@
   "future_fund_address": "0x1867c96601bc5fe24f685d112314b8f3fe228d5a",
   "uniswap_v3_factory_address": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
   "uniswap_v3_position_manager_address": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+  "validator_registration_address": "0xff50ed3d0ec03ac01d4c79aad74928bff48a7b2b",
   "contract_checker_address": "0x85ee326f839bc430655a3fad447837072ef52c2f",
   "contract_checker_deployment_block": "5797179",
   "oracles_update_period": "3600"

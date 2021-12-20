@@ -47,6 +47,10 @@ export let POOL_ADDRESS = Address.fromString(
   "{{ pool_address }}{{^pool_address}}0x0000000000000000000000000000000000000000{{/pool_address}}"
 );
 
+export let VALIDATOR_REGISTRATION_ADDRESS = Address.fromString(
+  "{{ validator_registration_address }}{{^validator_registration_address}}0x0000000000000000000000000000000000000000{{/validator_registration_address}}"
+);
+
 export let CONTRACT_CHECKER_ADDRESS = Address.fromString(
   "{{ contract_checker_address }}{{^contract_checker_address}}0x0000000000000000000000000000000000000000{{/contract_checker_address}}"
 );
