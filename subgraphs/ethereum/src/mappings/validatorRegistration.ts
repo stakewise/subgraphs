@@ -1,5 +1,9 @@
 import { ethereum, log } from "@graphprotocol/graph-ts";
-import { BYTES_ZERO, VALIDATOR_REGISTRATION_ADDRESS } from "const";
+import {
+  BYTES_ZERO,
+  VALIDATOR_REGISTRATION_ADDRESS,
+  ETHEREUM_VALIDATORS_DEPOSIT_ROOT_START_BLOCK,
+} from "const";
 import {
   DepositEvent,
   ValidatorRegistration as ValidatorRegistrationContract,
@@ -17,15 +21,20 @@ export function handleDepositEvent(event: DepositEvent): void {
   registration.createdAtBlock = event.block.number;
   registration.createdAtTimestamp = event.block.timestamp;
 
-  let contract = ValidatorRegistrationContract.bind(
-    VALIDATOR_REGISTRATION_ADDRESS
-  );
-  let depositRootCall = contract.try_get_deposit_root();
-  if (!depositRootCall.reverted) {
-    registration.validatorsDepositRoot = depositRootCall.value;
+  if (event.block.number.ge(ETHEREUM_VALIDATORS_DEPOSIT_ROOT_START_BLOCK)) {
+    let contract = ValidatorRegistrationContract.bind(
+      VALIDATOR_REGISTRATION_ADDRESS
+    );
+    let depositRootCall = contract.try_get_deposit_root();
+    if (!depositRootCall.reverted) {
+      registration.validatorsDepositRoot = depositRootCall.value;
+    } else {
+      registration.validatorsDepositRoot = BYTES_ZERO;
+    }
   } else {
     registration.validatorsDepositRoot = BYTES_ZERO;
   }
+
   registration.save();
   log.info("[VRC] DepositEvent publicKey={} withdrawalCredentials={}", [
     registration.id,
