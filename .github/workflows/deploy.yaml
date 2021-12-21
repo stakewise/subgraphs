@@ -17,10 +17,12 @@ jobs:
         uses: actions/checkout@v2
       - run: |
           yarn install
+          yarn prepare:goerli
           yarn prepare:mainnet
           yarn run codegen
           yarn run build
           yarn global add @graphprotocol/graph-cli
           graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
+          yarn deploy:goerli
           yarn deploy:mainnet
         name: Deploy
