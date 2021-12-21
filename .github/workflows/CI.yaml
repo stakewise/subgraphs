@@ -12,7 +12,7 @@ jobs:
       matrix:
         node: ['14.x']
         os: [ubuntu-latest]
-        network: ['mainnet', 'goerli']
+        network: ['goerli', 'mainnet']
 
     runs-on: ${{ matrix.os }}
 
@@ -46,7 +46,17 @@ jobs:
         run: yarn prepare:$NETWORK
 
       - name: Run codegen
-        run: yarn codegen
+        run: yarn run codegen
 
       - name: Build project
-        run: yarn build
+        run: yarn run build
+      
+      - name: Install Graph CLI
+        run: |
+          yarn global add @graphprotocol/graph-cli
+          graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
+      
+      - name: Deploy Subgraphs
+        env:
+          NETWORK: ${{ matrix.network }}
+        run: yarn deploy:$NETWORK
