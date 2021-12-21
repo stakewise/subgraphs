@@ -8,19 +8,55 @@ on:
       - "v*"
 
 jobs:
-  docker:
-    name: Deploy Subgraphs
-    runs-on: ubuntu-latest
-    container: node:16-alpine
+  deploy:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        network: ['goerli', 'mainnet']
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - run: |
-          yarn install
-          yarn prepare:mainnet
-          yarn run codegen
-          yarn run build
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run network prepare
+        env:
+          NETWORK: ${{ matrix.network }}
+        run: yarn prepare:$NETWORK
+
+      - name: Run codegen
+        run: yarn run codegen
+
+      - name: Build project
+        run: yarn run build
+
+      - name: Install Graph CLI
+        run: |
           yarn global add @graphprotocol/graph-cli
           graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
-          yarn deploy:mainnet
-        name: Deploy
+      
+      - name: Deploy Subgraphs
+        env:
+          NETWORK: ${{ matrix.network }}
+        run: yarn deploy:$NETWORK
