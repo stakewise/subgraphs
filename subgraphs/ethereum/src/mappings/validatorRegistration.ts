@@ -1,23 +1,44 @@
 import { ethereum, log } from "@graphprotocol/graph-ts";
-import { DepositEvent } from "../../generated/ValidatorRegistration/ValidatorRegistration";
+import {
+  BYTES_ZERO,
+  VALIDATOR_REGISTRATION_ADDRESS,
+  ETHEREUM_VALIDATORS_DEPOSIT_ROOT_START_BLOCK,
+} from "const";
+import {
+  DepositEvent,
+  ValidatorRegistration as ValidatorRegistrationContract,
+} from "../../generated/ValidatorRegistration/ValidatorRegistration";
 import { Block, ValidatorRegistration } from "../../generated/schema";
 
 export function handleDepositEvent(event: DepositEvent): void {
-  let publicKey = event.params.pubkey.toHexString();
-  let validator = ValidatorRegistration.load(publicKey);
+  let registrationId = event.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+  let registration = new ValidatorRegistration(registrationId);
+  registration.publicKey = event.params.pubkey;
+  registration.withdrawalCredentials = event.params.withdrawal_credentials;
+  registration.createdAtBlock = event.block.number;
+  registration.createdAtTimestamp = event.block.timestamp;
 
-  if (validator == null) {
-    validator = new ValidatorRegistration(publicKey);
-    validator.withdrawalCredentials = event.params.withdrawal_credentials;
-    validator.index = event.params.index;
-    validator.createdAtBlock = event.block.number;
-    validator.createdAtTimestamp = event.block.timestamp;
-    validator.save();
+  if (event.block.number.ge(ETHEREUM_VALIDATORS_DEPOSIT_ROOT_START_BLOCK)) {
+    let contract = ValidatorRegistrationContract.bind(
+      VALIDATOR_REGISTRATION_ADDRESS
+    );
+    let depositRootCall = contract.try_get_deposit_root();
+    if (!depositRootCall.reverted) {
+      registration.validatorsDepositRoot = depositRootCall.value;
+    } else {
+      registration.validatorsDepositRoot = BYTES_ZERO;
+    }
+  } else {
+    registration.validatorsDepositRoot = BYTES_ZERO;
   }
 
+  registration.save();
   log.info("[VRC] DepositEvent publicKey={} withdrawalCredentials={}", [
-    validator.id,
-    validator.withdrawalCredentials.toHexString(),
+    registration.id,
+    registration.withdrawalCredentials.toHexString(),
   ]);
 }
 

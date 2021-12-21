@@ -2,14 +2,17 @@
 Eth2 Validator registration
 """
 type ValidatorRegistration @entity {
-    "The validator public key"
+    "Set to `transaction hash-log index`"
     id: ID!
+
+    "The validator public key"
+    publicKey: Bytes!
 
     "The validator withdrawal credentials"
     withdrawalCredentials: Bytes!
 
-    "The registration index (little endian)"
-    index: Bytes!
+    "The validators deposit root"
+    validatorsDepositRoot: Bytes!
 
     "The block number the registration was created at"
     createdAtBlock: BigInt!

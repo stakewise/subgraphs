@@ -47,12 +47,20 @@ export let POOL_ADDRESS = Address.fromString(
   "{{ pool_address }}{{^pool_address}}0x0000000000000000000000000000000000000000{{/pool_address}}"
 );
 
+export let VALIDATOR_REGISTRATION_ADDRESS = Address.fromString(
+  "{{ validator_registration_address }}{{^validator_registration_address}}0x0000000000000000000000000000000000000000{{/validator_registration_address}}"
+);
+
 export let CONTRACT_CHECKER_ADDRESS = Address.fromString(
   "{{ contract_checker_address }}{{^contract_checker_address}}0x0000000000000000000000000000000000000000{{/contract_checker_address}}"
 );
 
 export let CONTRACT_CHECKER_DEPLOYMENT_BLOCK = BigInt.fromString(
   "{{ contract_checker_deployment_block }}{{^contract_checker_deployment_block}}0{{/contract_checker_deployment_block}}"
+);
+
+export let ETHEREUM_VALIDATORS_DEPOSIT_ROOT_START_BLOCK = BigInt.fromString(
+  "{{ ethereum_validators_deposit_root_start_block }}{{^ethereum_validators_deposit_root_start_block}}0{{/ethereum_validators_deposit_root_start_block}}"
 );
 
 export let ORACLES_UPDATE_PERIOD = BigInt.fromString(

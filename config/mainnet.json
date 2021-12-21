@@ -9,7 +9,9 @@
   "future_fund_address": "0xf91aa4a655b6f43243ed4c2853f3508314daa2ab",
   "uniswap_v3_factory_address": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
   "uniswap_v3_position_manager_address": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+  "validator_registration_address": "0x00000000219ab540356cbb839cbe05303d7705fa",
   "contract_checker_address": "0xfc1fc7257aea7c7c08a498594dca97ce5a72fdcb",
   "contract_checker_deployment_block": "13748882",
+  "ethereum_validators_deposit_root_start_block": "13848500",
   "oracles_update_period": "86400"
 }

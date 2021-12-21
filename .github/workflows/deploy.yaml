@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "v*"
+
+jobs:
+  docker:
+    name: Deploy Subgraphs
+    runs-on: ubuntu-latest
+    container: node:16-alpine
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: |
+          yarn install
+          yarn prepare:mainnet
+          yarn run codegen
+          yarn run build
+          yarn global add @graphprotocol/graph-cli
+          graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
+          yarn deploy:mainnet
+        name: Deploy
