@@ -10,6 +10,7 @@ jobs:
   test:
     strategy:
       matrix:
+        node: ['14.x']
         os: [ubuntu-latest]
         network: ['goerli', 'mainnet']
 
