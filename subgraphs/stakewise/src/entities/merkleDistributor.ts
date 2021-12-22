@@ -40,11 +40,11 @@ export function calculateDistributorPoints(
   principal: BigInt,
   prevDistributorPoints: BigInt,
   updatedAtBlock: BigInt,
-  rewardsUpdatedAtBlock: BigInt,
+  fromBlock: BigInt,
   currentBlock: BigInt
 ): BigInt {
-  if (rewardsUpdatedAtBlock.ge(updatedAtBlock)) {
-    return principal.times(currentBlock.minus(rewardsUpdatedAtBlock));
+  if (fromBlock.ge(updatedAtBlock)) {
+    return principal.times(currentBlock.minus(fromBlock));
   }
 
   return prevDistributorPoints.plus(

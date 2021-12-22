@@ -9,11 +9,9 @@ import {
   CONTRACT_CHECKER_DEPLOYMENT_BLOCK,
 } from "const";
 import { StakeWiseTokenHolder, VestingEscrow } from "../../generated/schema";
-import {
-  calculateDistributorPoints,
-  createOrLoadMerkleDistributor,
-} from "./merkleDistributor";
+import { calculateDistributorPoints } from "./merkleDistributor";
 import { ContractChecker } from "../../generated/StakeWiseToken/ContractChecker";
+import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
 export function createOrLoadStakeWiseTokenHolder(
   holderAddress: Address,
@@ -38,13 +36,13 @@ export function createOrLoadStakeWiseTokenHolder(
     holder.updatedAtTimestamp = BIG_INT_ZERO;
     holder.save();
   } else {
-    let distributor = createOrLoadMerkleDistributor();
+    let rewardEthToken = createOrLoadRewardEthToken();
     holder.isContract = isContract;
     holder.distributorPoints = calculateDistributorPoints(
       holder.balance,
       holder.distributorPoints,
       holder.updatedAtBlock,
-      distributor.rewardsUpdatedAtBlock,
+      rewardEthToken.updatedAtBlock,
       currentBlock
     );
   }

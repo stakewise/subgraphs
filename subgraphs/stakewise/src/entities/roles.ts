@@ -1,10 +1,8 @@
 import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO } from "const";
-import {
-  calculateDistributorPoints,
-  createOrLoadMerkleDistributor,
-} from "./merkleDistributor";
+import { calculateDistributorPoints } from "./merkleDistributor";
 import { Partner, Referrer } from "../../generated/schema";
+import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
 export function loadPartner(
   partnerAddress: Address,
@@ -12,12 +10,12 @@ export function loadPartner(
 ): Partner | null {
   let partner = Partner.load(partnerAddress.toHexString());
   if (partner != null) {
-    let distributor = createOrLoadMerkleDistributor();
+    let rewardEthToken = createOrLoadRewardEthToken();
     partner.distributorPoints = calculateDistributorPoints(
       partner.revenueShare.times(partner.contributedAmount),
       partner.distributorPoints,
       partner.updatedAtBlock,
-      distributor.rewardsUpdatedAtBlock,
+      rewardEthToken.updatedAtBlock,
       currentBlock
     );
   }
