@@ -18,7 +18,7 @@ dataSources:
       file: ./src/mappings/pool.ts
       entities:
         - Pool
-        - MerkleDistributor
+        - RewardEthToken
         - Partner
         - Referrer
         - DepositActivation
@@ -68,7 +68,7 @@ dataSources:
       entities:
         - Operator
         - OperatorSnapshot
-        - MerkleDistributor
+        - RewardEthToken
         - Validator
         - Network
       abis:
@@ -221,7 +221,7 @@ dataSources:
       file: ./src/mappings/stakeWiseToken.ts
       entities:
         - StakeWiseTokenHolder
-        - MerkleDistributor
+        - RewardEthToken
         - Network
         - VestingEscrow
       abis:
@@ -367,7 +367,7 @@ dataSources:
         - Referrer
         - Operator
         - Network
-        - MerkleDistributor
+        - RewardEthToken
       abis:
         - name: Roles
           file: ./packages/abis/Roles.json

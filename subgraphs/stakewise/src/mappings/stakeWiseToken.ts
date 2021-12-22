@@ -1,8 +1,8 @@
 import { log } from "@graphprotocol/graph-ts";
 import { CONTRACT_CHECKER_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS } from "const";
 import {
-  createOrLoadMerkleDistributor,
   createOrLoadNetwork,
+  createOrLoadRewardEthToken,
   createOrLoadStakeWiseTokenHolder,
   isSupportedSwiseHolder,
 } from "../entities";
@@ -38,10 +38,10 @@ export function handleTransfer(event: Transfer): void {
 
     if (event.params.from.equals(MERKLE_DISTRIBUTOR_ADDRESS)) {
       // SWISE located in Merkle Distributor belongs to the claimer
-      let distributor = createOrLoadMerkleDistributor();
+      let rewardEthToken = createOrLoadRewardEthToken();
       toHolder.distributorPoints = toHolder.distributorPoints.plus(
         event.params.value.times(
-          event.block.number.minus(distributor.rewardsUpdatedAtBlock)
+          event.block.number.minus(rewardEthToken.updatedAtBlock)
         )
       );
     }

@@ -5,10 +5,8 @@ import {
   Validator,
   OperatorAllocation,
 } from "../../generated/schema";
-import {
-  calculateDistributorPoints,
-  createOrLoadMerkleDistributor,
-} from "./merkleDistributor";
+import { calculateDistributorPoints } from "./merkleDistributor";
+import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
 export function createOrLoadOperator(
   operatorAddress: Address,
@@ -32,12 +30,12 @@ export function createOrLoadOperator(
     operator.updatedAtTimestamp = BIG_INT_ZERO;
     operator.save();
   } else {
-    let distributor = createOrLoadMerkleDistributor();
+    let rewardEthToken = createOrLoadRewardEthToken();
     operator.distributorPoints = calculateDistributorPoints(
       operator.revenueShare.times(operator.validatorsCount),
       operator.distributorPoints,
       operator.updatedAtBlock,
-      distributor.rewardsUpdatedAtBlock,
+      rewardEthToken.updatedAtBlock,
       currentBlock
     );
   }
