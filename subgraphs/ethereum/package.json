@@ -1,15 +1,15 @@
 {
   "name": "ethereum",
-  "version": "0.1.1",
+  "version": "1.0.5",
   "license": "AGPL-3.0-only",
   "scripts": {
-    "codegen": "graph codegen subgraph.yaml",
-    "build": "graph build subgraph.yaml",
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "build:goerli": "yarn prepare:goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:mainnet": "yarn prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/ethereum",
-    "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-mainnet",
-    "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-goerli",
-    "deploy:local": "graph deploy --version-label 0.1.1 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/ethereum"
+    "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-mainnet",
+    "deploy:goerli": "yarn build:goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-goerli",
+    "deploy:local": "graph deploy --version-label 1.0.5 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/ethereum"
   }
 }
