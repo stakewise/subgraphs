@@ -1,6 +1,6 @@
 import { log } from "@graphprotocol/graph-ts";
-import { createOrLoadRewardEthToken } from "stakewise/src/entities";
 import { RewardsUpdated } from "../../generated/RewardEthTokenV2/RewardEthTokenV2";
+import { createOrLoadRewardEthToken } from "../entities/rewardEthToken";
 
 export function handleRewardsUpdatedV2(event: RewardsUpdated): void {
   let rewardEthToken = createOrLoadRewardEthToken();

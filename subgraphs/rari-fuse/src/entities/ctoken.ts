@@ -1,6 +1,5 @@
-import { Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { BIG_INT_ZERO } from "const";
-import { calculateDistributorPoints } from "stakewise/src/entities";
 import { AccountCToken } from "../../generated/schema";
 import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
@@ -17,6 +16,22 @@ export function createAccountCToken(
   cTokenStats.updatedAtBlock = BIG_INT_ZERO;
   cTokenStats.updatedAtTimestamp = BIG_INT_ZERO;
   return cTokenStats;
+}
+
+function calculateDistributorPoints(
+  principal: BigInt,
+  prevDistributorPoints: BigInt,
+  updatedAtBlock: BigInt,
+  fromBlock: BigInt,
+  currentBlock: BigInt
+): BigInt {
+  if (fromBlock.ge(updatedAtBlock)) {
+    return principal.times(currentBlock.minus(fromBlock));
+  }
+
+  return prevDistributorPoints.plus(
+    principal.times(currentBlock.minus(updatedAtBlock))
+  );
 }
 
 export function updateCommonCTokenStats(
