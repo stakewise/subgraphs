@@ -1,0 +1,39 @@
+"""
+RewardEthToken contract settings
+"""
+type RewardEthToken @entity {
+    "RewardEthToken contract address"
+    id: ID!
+
+    "The current rewards update block number"
+    updatedAtBlock: BigInt!
+
+    "The current rewards update timestamp"
+    updatedAtTimestamp: BigInt!
+}
+
+"""
+Stats for an account's supply of an asset
+"""
+type AccountCToken @entity {
+    "Concatenation of CToken address and user address"
+    id: ID!
+
+    "CToken address"
+    ctoken: Bytes!
+
+    "User address"
+    account: Bytes!
+
+    "CToken balance of the user"
+    cTokenBalance: BigInt!
+
+    "The distributor points are used to calculate period rewards"
+    distributorPoints: BigInt!
+
+    "The last synced rewardEthToken update block number for calculating distributor points"
+    updatedAtBlock: BigInt!
+
+    "The last synced rewardEthToken update timestamp for calculating distributor points"
+    updatedAtTimestamp: BigInt!
+}
