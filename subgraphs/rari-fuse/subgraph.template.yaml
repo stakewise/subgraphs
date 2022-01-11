@@ -1,0 +1,66 @@
+specVersion: 0.0.3
+description: Fuse is a protocol that supports isolated interest rate pools.
+repository: https://github.com/stakewise/subgraphs/subgraphs/rari-fuse
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: RewardEthTokenV2
+    network: {{ network }}
+    source:
+      address: '{{ rewardEthToken.address }}'
+      abi: RewardEthTokenV2
+      startBlock: {{ rewardEthToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/mappings/rewardEthToken.ts
+      entities:
+        - RewardEthToken
+      abis:
+        - name: RewardEthTokenV2
+          file: ./packages/abis/RewardEthTokenV2.json
+      eventHandlers:
+        - event: RewardsUpdated(uint256,uint256,uint256,uint256,uint256)
+          handler: handleRewardsUpdatedV2
+  - kind: ethereum/contract
+    name: sETH2-46
+    network: {{ network }}
+    source:
+      address: '{{ sETH2_46.address }}'
+      abi: CToken
+      startBlock: {{ sETH2_46.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/mappings/ctoken.ts
+      entities:
+        - AccountCToken
+      abis:
+        - name: CToken
+          file: ./packages/abis/ctoken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: sETH2-149
+    network: {{ network }}
+    source:
+      address: '{{ sETH2_149.address }}'
+      abi: CToken
+      startBlock: {{ sETH2_149.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/mappings/ctoken.ts
+      entities:
+        - AccountCToken
+      abis:
+        - name: CToken
+          file: ./packages/abis/ctoken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
