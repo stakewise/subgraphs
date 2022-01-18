@@ -35,8 +35,12 @@ export function createStakingRewardsSnapshot(
 
   let periodDuration = BIG_INT_ZERO;
   let submitDuration = block.timestamp.minus(lastUpdateTimestamp);
-  while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
-    periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
+  if (submitDuration.le(ORACLES_UPDATE_PERIOD)) {
+    periodDuration = submitDuration
+  } else {
+    while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
+      periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
+    }
   }
 
   snapshot.periodTotalRewards = periodTotalRewards;
