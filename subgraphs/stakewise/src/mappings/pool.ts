@@ -128,6 +128,8 @@ export function handleActivationScheduled(event: ActivationScheduled): void {
   );
 
   activation.amount = activation.amount.plus(event.params.value);
+  activation.createdAtBlock = event.block.number;
+  activation.createdAtTimestamp = event.block.timestamp;
   activation.save();
 
   let pool = createOrLoadPool();

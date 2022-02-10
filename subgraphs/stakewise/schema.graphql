@@ -80,6 +80,12 @@ type DepositActivation @entity {
 
     "The amount that will be activated"
     amount: BigInt!
+
+    "The creation block number"
+    createdAtBlock: BigInt!
+
+    "The creation timestamp"
+    createdAtTimestamp: BigInt!
 }
 
 """
