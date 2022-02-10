@@ -41,6 +41,8 @@ export function createOrLoadDepositActivation(
     activation.account = account;
     activation.validatorIndex = validatorIndex;
     activation.amount = BIG_INT_ZERO;
+    activation.createdAtBlock = BIG_INT_ZERO;
+    activation.createdAtTimestamp = BIG_INT_ZERO;
     activation.save();
   }
 
