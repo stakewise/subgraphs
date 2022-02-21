@@ -7,7 +7,7 @@
     "prepare:perm_goerli": "mustache config/perm_goerli.json subgraph.template.yaml > subgraph.yaml",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "build:goerli": "yarn prepare:goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:perm_goerli": "yarn prepare:perm_goerli && graph build subgraph.yaml",
+    "build:perm_goerli": "yarn prepare:perm_goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "build:mainnet": "yarn prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/stakewise",
     "deploy:goerli": "yarn build:goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-goerli",
