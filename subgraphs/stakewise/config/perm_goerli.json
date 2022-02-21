@@ -1,0 +1,39 @@
+{
+  "network": "goerli",
+  "pool": {
+    "address": "0x896634387c415efb1d51da80adf3d90616281949",
+    "startBlock": "6406073"
+  },
+  "poolValidators": {
+    "address": "0x7c27896338e3130036e53bcc0f013cb20e21991c",
+    "startBlock": "6406075"
+  },
+  "merkleDistributor": {
+    "address": "0x366cb066ee45fd98f7f228fc3e0ff76a4801d523",
+    "startBlock": "6406082"
+  },
+  "vestingEscrowFactory": {
+    "address": "0xba91cdd484893c1f8f75db55733ccadcd0fe5f59",
+    "startBlock": "4623211"
+  },
+  "oracles": {
+    "address": "0x4e9ca30186e829d7712adfeee491c0c6c46e1aed",
+    "startBlock": "6406083"
+  },
+  "stakeWiseToken": {
+    "address": "0x0e2497aacec2755d831e4afdea25b4ef1b823855",
+    "startBlock": "4623207"
+  },
+  "stakedEthToken": {
+    "address": "0xa5c65f2d71f9c82e31a380e1dadb680976492fc5",
+    "startBlock": "6406080"
+  },
+  "rewardEthToken": {
+    "address": "0xba9ad2a3ef7a372900644abe9d82ecd3fa8cf8dd",
+    "startBlock": "6406075"
+  },
+  "roles": {
+    "address": "0xc8b2f886d432081ee706af1b6174f80e5e690b81",
+    "startBlock": "6406072"
+  }
+}

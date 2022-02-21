@@ -1,0 +1,17 @@
+{
+  "staked_eth_token_address": "0xa5c65f2d71f9c82e31a380e1dadb680976492fc5",
+  "reward_eth_token_address": "0xba9ad2a3ef7a372900644abe9d82ecd3fa8cf8dd",
+  "stakewise_token_address": "0x0e2497aacec2755d831e4afdea25b4ef1b823855",
+  "merkle_distributor_address": "0x366CB066ee45Fd98f7F228Fc3e0ff76A4801D523",
+  "merkle_drop_address": "0xfc3513e92799f0169e5f14f354d0097e4b790498",
+  "pool_address": "0x896634387c415efb1d51da80adf3d90616281949",
+  "dao_address": "0x66d6c253084d8d51c7cffdb3c188a0b53d998a3d",
+  "future_fund_address": "0x1867c96601bc5fe24f685d112314b8f3fe228d5a",
+  "uniswap_v3_factory_address": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+  "uniswap_v3_position_manager_address": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+  "validator_registration_address": "0xff50ed3d0ec03ac01d4c79aad74928bff48a7b2b",
+  "contract_checker_address": "0x6cc99f4d1d4a6aab2143917da92ac8f3129c08fc",
+  "contract_checker_deployment_block": "6406068",
+  "ethereum_validators_deposit_root_start_block": "6413785",
+  "oracles_update_period": "86400"
+}
