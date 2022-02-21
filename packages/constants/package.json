@@ -1,15 +1,18 @@
 {
   "name": "const",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "license": "AGPL-3.0-only",
   "main": "index.ts",
   "scripts": {
     "prepare:goerli": "mustache ../../config/goerli.json index.template.ts > index.ts",
+    "prepare:perm_goerli": "mustache ../../config/perm_goerli.json index.template.ts > index.ts",
     "prepare:mainnet": "mustache ../../config/mainnet.json index.template.ts > index.ts",
     "build:goerli": "yarn prepare:goerli",
+    "build:perm_goerli": "yarn prepare:perm_goerli",
     "build:mainnet": "yarn prepare:mainnet",
     "create:local": "true",
     "deploy:goerli": "yarn build:goerli",
+    "deploy:perm_goerli": "yarn build:perm_goerli",
     "deploy:mainnet": "yarn build:mainnet",
     "deploy:local": "true"
   }

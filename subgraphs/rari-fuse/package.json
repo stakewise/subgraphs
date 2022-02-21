@@ -1,15 +1,18 @@
 {
   "name": "rari-fuse",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "true",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:perm_goerli": "true",
     "build:goerli": "yarn prepare:goerli",
     "build:mainnet": "yarn prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:perm_goerli": "yarn prepare:perm_goerli",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/rari-fuse",
     "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/rari-fuse-mainnet",
     "deploy:goerli": "yarn build:goerli",
-    "deploy:local": "graph deploy --version-label 1.0.7 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/rari-fuse"
+    "deploy:perm_goerli": "yarn build:perm_goerli",
+    "deploy:local": "graph deploy --version-label 1.0.9 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/rari-fuse"
   }
 }

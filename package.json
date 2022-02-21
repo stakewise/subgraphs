@@ -1,6 +1,6 @@
 {
   "name": "stakewise-subgraphs",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Subgraphs for the StakeWise Protocol",
   "repository": "https://github.com/stakewise/subgraphs",
   "license": "AGPL-3.0-only",
@@ -11,22 +11,24 @@
   ],
   "scripts": {
     "build:goerli": "yarn workspaces run build:goerli",
+    "build:perm_goerli": "yarn workspaces run build:perm_goerli",
     "build:mainnet": "yarn workspaces run build:mainnet",
     "create:local": "yarn workspaces run create:local",
     "deploy:goerli": "yarn workspaces run deploy:goerli",
+    "deploy:perm_goerli": "yarn workspaces run deploy:perm_goerli",
     "deploy:mainnet": "yarn workspaces run deploy:mainnet",
     "deploy:local": "yarn workspaces run deploy:local"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "0.25.0",
+    "@graphprotocol/graph-cli": "0.26.0",
     "@graphprotocol/graph-ts": "0.24.1",
-    "@types/node": "16.11.11",
-    "@typescript-eslint/eslint-plugin": "5.5.0",
-    "@typescript-eslint/parser": "5.5.0",
-    "eslint": "8.3.0",
-    "eslint-config-prettier": "8.3.0",
+    "@types/node": "17.0.19",
+    "@typescript-eslint/eslint-plugin": "5.12.0",
+    "@typescript-eslint/parser": "5.12.0",
+    "eslint": "8.9.0",
+    "eslint-config-prettier": "8.4.0",
     "mustache": "4.2.0",
-    "prettier": "2.5.0",
-    "typescript": "4.5.2"
+    "prettier": "2.5.1",
+    "typescript": "4.5.5"
   }
 }
