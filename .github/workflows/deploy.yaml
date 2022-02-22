@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        network: ['goerli', 'perm_goerli', 'mainnet']
+        network: ['goerli', 'perm_goerli', 'gnosis', 'mainnet']
 
     runs-on: ${{ matrix.os }}
 

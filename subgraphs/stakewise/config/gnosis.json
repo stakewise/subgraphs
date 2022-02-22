@@ -1,0 +1,39 @@
+{
+  "network": "xdai",
+  "pool": {
+    "address": "0x9e6631d118c28b3d61c68f14ff30a99f7e91963a",
+    "startBlock": "20759537"
+  },
+  "poolValidators": {
+    "address": "0xc8d8b1d8c37925cdf106c955ac330739ef4e9362",
+    "startBlock": "20759540"
+  },
+  "merkleDistributor": {
+    "address": "0x8c8f5bf28081984527dd94c627f591e28db7e7a0",
+    "startBlock": "20759551"
+  },
+  "vestingEscrowFactory": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "startBlock": "20759551"
+  },
+  "oracles": {
+    "address": "0xd0f5ddaed2d8bae1f451d2a11ffae1806f2ee1a5",
+    "startBlock": "20759554"
+  },
+  "stakeWiseToken": {
+    "address": "0xfda94f056346d2320d4b5e468d6ad099b2277746",
+    "startBlock": "20299140"
+  },
+  "stakedEthToken": {
+    "address": "0x9aebd2322d3d5fb69324a3cfe380dd11bc3694d2",
+    "startBlock": "20759547"
+  },
+  "rewardEthToken": {
+    "address": "0x6ffa613ed41585b1c1e517a78d140cfbd68be639",
+    "startBlock": "20759544"
+  },
+  "roles": {
+    "address": "0x814f9c8c0269f11996138c77cc16a3a7f0a36b0c",
+    "startBlock": "20759534"
+  }
+}

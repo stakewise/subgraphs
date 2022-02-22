@@ -1,6 +1,6 @@
 {
   "name": "stakewise-subgraphs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Subgraphs for the StakeWise Protocol",
   "repository": "https://github.com/stakewise/subgraphs",
   "license": "AGPL-3.0-only",
@@ -12,12 +12,14 @@
   "scripts": {
     "build:goerli": "yarn workspaces run build:goerli",
     "build:perm_goerli": "yarn workspaces run build:perm_goerli",
+    "build:gnosis": "yarn workspaces run build:gnosis",
     "build:mainnet": "yarn workspaces run build:mainnet",
-    "create:local": "yarn workspaces run create:local",
     "deploy:goerli": "yarn workspaces run deploy:goerli",
     "deploy:perm_goerli": "yarn workspaces run deploy:perm_goerli",
+    "deploy:gnosis": "yarn workspaces run deploy:gnosis",
     "deploy:mainnet": "yarn workspaces run deploy:mainnet",
-    "deploy:local": "yarn workspaces run deploy:local"
+    "deploy:local": "yarn workspaces run deploy:local",
+    "create:local": "yarn workspaces run create:local"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.26.0",

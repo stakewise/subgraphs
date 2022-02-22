@@ -1,0 +1,7 @@
+{
+  "network": "xdai",
+  "validatorRegistration": {
+    "address": "0x0b98057ea310f4d31f2a452b414647007d1645d9",
+    "startBlock": "19469076"
+  }
+}
