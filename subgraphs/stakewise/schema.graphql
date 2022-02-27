@@ -218,6 +218,9 @@ type RewardEthToken @entity {
 
     "The current rewards update timestamp"
     updatedAtTimestamp: BigInt!
+
+    "The total number of staking reward updates"
+    updatesCount: BigInt!
 }
 
 """
