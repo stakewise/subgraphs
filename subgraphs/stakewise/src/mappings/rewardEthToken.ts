@@ -1,5 +1,5 @@
 import { log } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, BIG_INT_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
+import { ADDRESS_ZERO, BIG_INT_ONE, BIG_INT_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
 import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
@@ -22,19 +22,16 @@ export function handleRewardsUpdatedV0(event: RewardsUpdatedV0): void {
   let rewardEthToken = createOrLoadRewardEthToken();
   let pool = createOrLoadPool();
 
-  let snapshotId = event.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(event.logIndex.toString());
+  let updatesCount = rewardEthToken.updatesCount.plus(BIG_INT_ONE);
   createStakingRewardsSnapshot(
-    snapshotId,
-    rewardEthToken.updatedAtTimestamp,
+    updatesCount,
     pool.totalStaked,
     event.params.periodRewards,
     BIG_INT_ZERO,
     event.block
   );
 
+  rewardEthToken.updatesCount = updatesCount;
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
@@ -54,19 +51,16 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
   let rewardEthToken = createOrLoadRewardEthToken();
   let pool = createOrLoadPool();
 
-  let snapshotId = event.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(event.logIndex.toString());
+  let updatesCount = rewardEthToken.updatesCount.plus(BIG_INT_ONE);
   createStakingRewardsSnapshot(
-    snapshotId,
-    rewardEthToken.updatedAtTimestamp,
+    updatesCount,
     pool.totalStaked,
     event.params.periodRewards,
     BIG_INT_ZERO,
     event.block
   );
 
+  rewardEthToken.updatesCount = updatesCount;
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.totalRewards = event.params.totalRewards;
   rewardEthToken.updatedAtBlock = event.block.number;
@@ -85,20 +79,17 @@ export function handleRewardsUpdatedV1(event: RewardsUpdatedV1): void {
 export function handleRewardsUpdatedV2(event: RewardsUpdatedV2): void {
   let rewardEthToken = createOrLoadRewardEthToken();
   let pool = createOrLoadPool();
-  let snapshotId = event.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(event.logIndex.toString());
 
+  let newUpdatesCount = rewardEthToken.updatesCount.plus(BIG_INT_ONE);
   createStakingRewardsSnapshot(
-    snapshotId,
-    rewardEthToken.updatedAtTimestamp,
+    rewardEthToken.updatesCount,
     pool.totalStaked,
     event.params.periodRewards,
     event.params.protocolReward,
     event.block
   );
 
+  rewardEthToken.updatesCount = newUpdatesCount;
   rewardEthToken.rewardPerStakedEthToken = event.params.rewardPerToken;
   rewardEthToken.protocolPeriodReward =
     rewardEthToken.protocolPeriodReward.plus(event.params.protocolReward);

@@ -18,31 +18,38 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
     rewardEthToken.protocolPeriodReward = BIG_INT_ZERO;
     rewardEthToken.updatedAtBlock = BIG_INT_ZERO;
     rewardEthToken.updatedAtTimestamp = BIG_INT_ZERO;
+    rewardEthToken.updatesCount = BIG_INT_ZERO;
     rewardEthToken.save();
   }
   return rewardEthToken as RewardEthToken;
 }
 
 export function createStakingRewardsSnapshot(
-  snapshotId: string,
-  lastUpdateTimestamp: BigInt,
+  newSnapshotId: BigInt,
   totalStaked: BigInt,
   periodTotalRewards: BigInt,
   periodProtocolRewards: BigInt,
   block: ethereum.Block
 ): void {
-  let snapshot = new StakingRewardsSnapshot(snapshotId);
-
+  let snapshotId0 = newSnapshotId.minus(BigInt.fromString("2")).toString();
+  let snapshot0 = StakingRewardsSnapshot.load(snapshotId0);
+  let snapshotId1 = newSnapshotId.minus(BigInt.fromString("1")).toString();
+  let snapshot1 = StakingRewardsSnapshot.load(snapshotId1);
   let periodDuration = BIG_INT_ZERO;
-  let submitDuration = block.timestamp.minus(lastUpdateTimestamp);
-  if (submitDuration.le(ORACLES_UPDATE_PERIOD)) {
-    periodDuration = submitDuration
-  } else {
-    while (periodDuration.plus(ORACLES_UPDATE_PERIOD).lt(submitDuration)) {
-      periodDuration = periodDuration.plus(ORACLES_UPDATE_PERIOD);
+  if (snapshot0 != null && snapshot1 != null) {
+    let periodStart = snapshot0.createdAtTimestamp;
+    while (periodStart.plus(ORACLES_UPDATE_PERIOD).lt(snapshot1.createdAtTimestamp)) {
+      periodStart = periodStart.plus(ORACLES_UPDATE_PERIOD);
     }
+
+    let periodEnd = snapshot1.createdAtTimestamp;
+    while (periodEnd.plus(ORACLES_UPDATE_PERIOD).lt(block.timestamp)) {
+      periodEnd = periodEnd.plus(ORACLES_UPDATE_PERIOD);
+    }
+    periodDuration = periodEnd.minus(periodStart);
   }
 
+  let snapshot = new StakingRewardsSnapshot(newSnapshotId.toString());
   snapshot.periodTotalRewards = periodTotalRewards;
   snapshot.periodProtocolRewards = periodProtocolRewards;
   snapshot.periodDuration = periodDuration;

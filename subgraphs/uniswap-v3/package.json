@@ -1,18 +1,21 @@
 {
   "name": "uniswap-v3",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
     "prepare:perm_goerli": "true",
+    "prepare:gnosis": "true",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "build:goerli": "yarn prepare:goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "build:perm_goerli": "yarn prepare:perm_goerli",
+    "build:gnosis": "yarn prepare:gnosis",
     "build:mainnet": "yarn prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "create:local": "graph create --node $GRAPH_NODE_URL stakewise/uniswap-v3",
     "deploy:goerli": "yarn build:goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-goerli",
     "deploy:perm_goerli": "yarn build:perm_goerli",
+    "deploy:gnosis": "yarn build:gnosis",
     "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-mainnet",
-    "deploy:local": "graph deploy --version-label 1.1.0 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/uniswap-v3"
+    "deploy:local": "graph deploy --version-label 1.1.1 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/uniswap-v3",
+    "create:local": "graph create --node $GRAPH_NODE_URL stakewise/uniswap-v3"
   }
 }
