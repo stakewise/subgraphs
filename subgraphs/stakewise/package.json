@@ -1,6 +1,6 @@
 {
   "name": "stakewise",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
@@ -15,7 +15,7 @@
     "deploy:perm_goerli": "yarn build:perm_goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-perm-goerli",
     "deploy:gnosis": "yarn build:gnosis && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-gnosis",
     "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-mainnet",
-    "deploy:local": "graph deploy --version-label 1.1.1 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/stakewise",
+    "deploy:local": "graph deploy --version-label 1.1.2 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/stakewise",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/stakewise"
   }
 }
