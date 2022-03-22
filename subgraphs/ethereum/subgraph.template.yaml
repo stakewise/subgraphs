@@ -1,4 +1,4 @@
-specVersion: 0.0.3
+specVersion: 0.0.4
 description: The subgraph for indexing ethereum blocks and registered validators
 repository: https://github.com/stakewise/subgraphs/subgraphs/ethereum
 schema:

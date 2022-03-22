@@ -1,11 +1,18 @@
 import { log } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, BIG_INT_ONE, BIG_INT_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
+import {
+  ADDRESS_ZERO,
+  BIG_INT_ONE,
+  BIG_INT_ZERO,
+  CONTRACT_CHECKER_ADDRESS,
+  DISTRIBUTOR_REDIRECTS,
+} from "const";
 import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,
   createOrLoadPool,
   createOrLoadStaker,
   createStakingRewardsSnapshot,
+  createOrLoadRewardsRedirect
 } from "../entities";
 import { RewardsUpdated as RewardsUpdatedV0 } from "../../generated/RewardEthTokenV0/RewardEthTokenV0";
 import { RewardsUpdated as RewardsUpdatedV1 } from "../../generated/RewardEthTokenV1/RewardEthTokenV1";
@@ -160,6 +167,11 @@ export function handleRewardsToggled(event: RewardsToggled): void {
   staker.rewardsDisabled = event.params.isDisabled;
   staker.rewardPerStakedEthToken = rewardEthToken.rewardPerStakedEthToken;
   staker.save();
+
+  let redirectedTo = DISTRIBUTOR_REDIRECTS.get(staker.id)
+  if (staker.rewardsDisabled && redirectedTo !== null) {
+    createOrLoadRewardsRedirect(staker.id, redirectedTo.toString());
+  }
 
   log.info(
     "[RewardEthToken] RewardsToggled account={} isDisabled={} sender={}",

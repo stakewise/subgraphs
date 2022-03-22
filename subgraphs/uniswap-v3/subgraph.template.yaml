@@ -1,4 +1,4 @@
-specVersion: 0.0.3
+specVersion: 0.0.4
 description: Uniswap is a decentralized protocol for automated token exchange on Ethereum
 repository: https://github.com/stakewise/subgraphs/subgraphs/uniswap-v3
 schema:

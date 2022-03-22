@@ -1,4 +1,4 @@
-specVersion: 0.0.3
+specVersion: 0.0.4
 description: Fuse is a protocol that supports isolated interest rate pools.
 repository: https://github.com/stakewise/subgraphs/subgraphs/rari-fuse
 schema:

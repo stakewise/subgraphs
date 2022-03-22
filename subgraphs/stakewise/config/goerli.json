@@ -35,5 +35,6 @@
   "roles": {
     "address": "0x81aaa59d7d1000a56326bb577debc287cbd351cc",
     "startBlock": "5905175"
-  }
+  },
+  "distributorTokens": []
 }

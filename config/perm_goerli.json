@@ -13,5 +13,6 @@
   "contract_checker_address": "0x6cc99f4d1d4a6aab2143917da92ac8f3129c08fc",
   "contract_checker_deployment_block": "6406068",
   "ethereum_validators_deposit_root_start_block": "6413785",
-  "oracles_update_period": "86400"
+  "oracles_update_period": "86400",
+  "distributor_redirects": "{}"
 }

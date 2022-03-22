@@ -35,5 +35,17 @@
   "roles": {
     "address": "0xc486c10e3611565f5b38b50ad68277b11c889623",
     "startBlock": "13776571"
-  }
+  },
+  "distributorTokens": [
+    {
+      "index": 0,
+      "address": "0x18f49849d20bc04059fe9d775df9a38cd1f5ec9f",
+      "startBlock": "13976410"
+    },
+    {
+      "index": 1,
+      "address": "0x83d534ab1d4002249b0e6d22410b62cf31978ca2",
+      "startBlock": "13398765"
+    }
+  ]
 }
