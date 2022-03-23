@@ -1,20 +1,20 @@
 import { BIG_INT_ZERO } from "const";
 import { Address, ethereum } from "@graphprotocol/graph-ts";
-import { DistributorTokenHolder, RewardsRedirect } from "../../generated/schema";
+import {
+  DistributorToken,
+  DistributorTokenHolder,
+} from "../../generated/schema";
 import { calculateDistributorPoints } from "./merkleDistributor";
 import { createOrLoadRewardEthToken } from "./rewardEthToken";
 
-export function createOrLoadRewardsRedirect(
-  account: string,
-  redirectedTo: string
-): RewardsRedirect {
-  let rewardsRedirect = RewardsRedirect.load(account);
-  if (rewardsRedirect == null) {
-    rewardsRedirect = new RewardsRedirect(account);
-    rewardsRedirect.redirectedTo = Address.fromString(redirectedTo);
-    rewardsRedirect.save();
+export function createOrLoadDistributorToken(token: Address): DistributorToken {
+  let tokenId = token.toHexString();
+  let distributorToken = DistributorToken.load(tokenId);
+  if (distributorToken == null) {
+    distributorToken = new DistributorToken(tokenId);
+    distributorToken.save();
   }
-  return rewardsRedirect;
+  return distributorToken;
 }
 
 export function createOrLoadDistributorTokenHolder(
@@ -44,5 +44,5 @@ export function createOrLoadDistributorTokenHolder(
       currentBlock.number
     );
   }
-  return holder
+  return holder;
 }

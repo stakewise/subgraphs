@@ -66,5 +66,3 @@ export let ETHEREUM_VALIDATORS_DEPOSIT_ROOT_START_BLOCK = BigInt.fromString(
 export let ORACLES_UPDATE_PERIOD = BigInt.fromString(
   "{{ oracles_update_period }}{{^oracles_update_period}}0{{/oracles_update_period}}"
 );
-
-export let DISTRIBUTOR_REDIRECTS = json.fromString("{{ distributor_redirects }}{{^distributor_redirects}}{}{{/distributor_redirects}}").toObject()

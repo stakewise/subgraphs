@@ -466,14 +466,11 @@ type Referrer @entity {
 }
 
 """
-Rewards Redirect
+Distributor Token
 """
-type RewardsRedirect @entity {
-    "Set to `account address`"
+type DistributorToken @entity {
+    "Set to `token address`"
     id: ID!
-
-    "The address where the rewards are redirected"
-    redirectedTo: Bytes!
 }
 
 """

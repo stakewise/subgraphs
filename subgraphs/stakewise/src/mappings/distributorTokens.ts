@@ -1,9 +1,11 @@
 import { ADDRESS_ZERO } from "const";
 import { log } from "@graphprotocol/graph-ts";
-import { createOrLoadDistributorTokenHolder } from "../entities";
+import { createOrLoadDistributorToken, createOrLoadDistributorTokenHolder } from "../entities";
 import { Transfer } from "../../generated/DistributorToken0/ERC20Token";
 
 export function handleTransfer(event: Transfer): void {
+  createOrLoadDistributorToken(event.address);
+
   // Checking if the FROM is the token contract or zero address
   // If so, it is a mint, and we don't need to run these calculations
   if (

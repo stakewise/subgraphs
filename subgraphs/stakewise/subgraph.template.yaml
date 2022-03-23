@@ -333,7 +333,6 @@ dataSources:
         - Network
         - Pool
         - StakingRewardsSnapshot
-        - RewardsRedirect
       abis:
         - name: RewardEthTokenV2
           file: ./packages/abis/RewardEthTokenV2.json
