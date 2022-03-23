@@ -1,4 +1,4 @@
-import { json, Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 export let ADDRESS_ZERO = Address.zero();
 export let BIG_INT_ZERO = BigInt.zero();
