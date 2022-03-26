@@ -465,12 +465,28 @@ type Referrer @entity {
     updatedAtTimestamp: BigInt!
 }
 
+
+"""
+Distributor Redirect
+"""
+type DistributorRedirect @entity {
+    "The address that redirects to token"
+    id: ID!
+
+    "The distributor token that it redirects to"
+    token: DistributorToken!
+}
+
+
 """
 Distributor Token
 """
 type DistributorToken @entity {
     "Set to `token address`"
     id: ID!
+
+    "An array of addresses that redirect rewards to this token"
+    redirectedFrom: [DistributorRedirect!]! @derivedFrom(field: "token")
 }
 
 """

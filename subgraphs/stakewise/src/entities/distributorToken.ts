@@ -1,8 +1,9 @@
-import { BIG_INT_ZERO } from "const";
+import { BIG_INT_ZERO, DISTRIBUTOR_REDIRECTED_FROM } from "const";
 import { Address, ethereum } from "@graphprotocol/graph-ts";
 import {
   DistributorToken,
   DistributorTokenHolder,
+  DistributorRedirect,
 } from "../../generated/schema";
 import { calculateDistributorPoints } from "./merkleDistributor";
 import { createOrLoadRewardEthToken } from "./rewardEthToken";
@@ -13,6 +14,15 @@ export function createOrLoadDistributorToken(token: Address): DistributorToken {
   if (distributorToken == null) {
     distributorToken = new DistributorToken(tokenId);
     distributorToken.save();
+    if (DISTRIBUTOR_REDIRECTED_FROM.has(tokenId)) {
+      let redirects = DISTRIBUTOR_REDIRECTED_FROM.get(tokenId);
+      for (let i = 0; i < redirects.length; i++) {
+        let redirect = redirects.at(i);
+        let tokenRedirect = new DistributorRedirect(redirect.toHexString());
+        tokenRedirect.token = distributorToken.id;
+        tokenRedirect.save();
+      }
+    }
   }
   return distributorToken;
 }
