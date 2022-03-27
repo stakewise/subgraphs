@@ -1,5 +1,10 @@
 import { log } from "@graphprotocol/graph-ts";
-import { ADDRESS_ZERO, BIG_INT_ONE, BIG_INT_ZERO, CONTRACT_CHECKER_ADDRESS } from "const";
+import {
+  ADDRESS_ZERO,
+  BIG_INT_ONE,
+  BIG_INT_ZERO,
+  CONTRACT_CHECKER_ADDRESS,
+} from "const";
 import {
   createOrLoadNetwork,
   createOrLoadRewardEthToken,

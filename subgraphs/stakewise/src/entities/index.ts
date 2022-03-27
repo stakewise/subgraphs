@@ -7,3 +7,4 @@ export * from "./stakeWiseToken";
 export * from "./rewardEthToken";
 export * from "./staker";
 export * from "./roles";
+export * from "./distributorToken";
