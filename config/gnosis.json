@@ -14,5 +14,6 @@
   "contract_checker_deployment_block": "20759530",
   "ethereum_validators_deposit_root_start_block": "20760606",
   "oracles_update_period": "86400",
+  "validator_deposit_amount": "1000000000000000000",
   "distributor_redirected_from": {}
 }

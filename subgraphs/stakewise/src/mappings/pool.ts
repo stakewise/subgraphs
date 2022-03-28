@@ -1,6 +1,6 @@
-import { BigInt, log, store } from "@graphprotocol/graph-ts";
+import { log, store } from "@graphprotocol/graph-ts";
 
-import { BIG_INT_1E18, BIG_INT_ONE } from "const";
+import { VALIDATOR_DEPOSIT_AMOUNT, BIG_INT_ONE } from "const";
 import {
   Activated,
   ActivatedValidatorsUpdated,
@@ -175,9 +175,7 @@ export function handleValidatorRegistered(event: ValidatorRegistered): void {
   let pool = createOrLoadPool();
 
   pool.pendingValidators = pool.pendingValidators.plus(BIG_INT_ONE);
-  pool.balance = pool.balance.minus(
-    BigInt.fromString("32").times(BIG_INT_1E18)
-  );
+  pool.balance = pool.balance.minus(VALIDATOR_DEPOSIT_AMOUNT);
   pool.save();
 
   let allocation = createOrLoadOperatorAllocation(operator);

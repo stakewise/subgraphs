@@ -132,6 +132,10 @@ export let ORACLES_UPDATE_PERIOD = BigInt.fromString(
   "${parsedData.oracles_update_period || "0"}"
 );
 
+export let VALIDATOR_DEPOSIT_AMOUNT = BigInt.fromString(
+  "${parsedData.validator_deposit_amount || "0"}"
+);
+
 ${_getDistributorRedirectedFrom(parsedData.distributor_redirected_from)}
   `;
 
