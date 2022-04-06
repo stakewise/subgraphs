@@ -36,5 +36,16 @@
     "address": "0x9b23e05aefb37d5ea9b525016d19eb82b65f255c",
     "startBlock": "21293582"
   },
-  "distributorTokens": []
+  "distributorTokens": [
+    {
+      "index": 0,
+      "address": "0xbdf4488dcf7165788d438b62b4c8a333879b7078",
+      "startBlock": "21383985"
+    },
+    {
+      "index": 1,
+      "address": "0x5d7309a01b727d6769153fcb1df5587858d53b9c",
+      "startBlock": "21391068"
+    }
+  ]
 }
