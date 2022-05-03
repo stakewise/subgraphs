@@ -20,7 +20,7 @@ dataSources:
         - Pool
         - RewardEthToken
         - Partner
-        - Referrer
+        - Referral
         - DepositActivation
         - Operator
         - OperatorSnapshot
@@ -180,6 +180,28 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
+
+  - kind: ethereum/contract
+    name: OraclesV2
+    network: {{ network }}
+    source:
+      address: '{{ oracles.address }}'
+      abi: OraclesV2
+      startBlock: {{ oracles.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/oracles.ts
+      entities:
+        - Oracle
+        - Network
+      abis:
+        - name: OraclesV2
+          file: ./packages/abis/OraclesV2.json
+      eventHandlers:
+        - event: RegisterValidatorsVoteSubmitted(indexed address,address[],uint256)
+          handler: handleRegisterValidatorsVoteSubmitted
 
   - kind: ethereum/contract
     name: VestingEscrowFactory
@@ -364,7 +386,6 @@ dataSources:
       file: ./src/mappings/roles.ts
       entities:
         - Partner
-        - Referrer
         - Operator
         - Network
         - RewardEthToken

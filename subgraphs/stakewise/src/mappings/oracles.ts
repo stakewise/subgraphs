@@ -12,6 +12,7 @@ import {
   Unpaused,
   Initialized,
 } from "../../generated/Oracles/Oracles";
+import { RegisterValidatorsVoteSubmitted } from "../../generated/OraclesV2/OraclesV2";
 import { Oracle } from "../../generated/schema";
 
 export function handleInitialized(event: Initialized): void {
@@ -89,6 +90,24 @@ export function handleRegisterValidatorVoteSubmitted(
     [
       network.oraclesValidatorsNonce.toString(),
       event.params.oracle.toHexString(),
+      event.transaction.from.toHexString(),
+    ]
+  );
+}
+
+export function handleRegisterValidatorsVoteSubmitted(
+  event: RegisterValidatorsVoteSubmitted
+): void {
+  let network = createOrLoadNetwork();
+
+  network.oraclesValidatorsNonce = event.params.nonce.plus(BIG_INT_ONE);
+  network.save();
+
+  log.info(
+    "[Oracles] RegisterValidatorsVoteSubmitted nonce={} oracles={} sender={}",
+    [
+      network.oraclesValidatorsNonce.toString(),
+      event.params.oracles.toString(),
       event.transaction.from.toHexString(),
     ]
   );
