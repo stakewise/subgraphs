@@ -1,6 +1,6 @@
 {
   "name": "ethereum",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
@@ -15,7 +15,7 @@
     "deploy:perm_goerli": "yarn build:perm_goerli",
     "deploy:gnosis": "yarn build:gnosis && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-gnosis",
     "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-mainnet",
-    "deploy:local": "graph deploy --version-label 1.2.2 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/ethereum",
+    "deploy:local": "graph deploy --version-label 1.2.3 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/ethereum",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/ethereum"
   }
 }
