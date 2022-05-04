@@ -449,20 +449,23 @@ type Partner @entity {
 }
 
 """
-StakeWise Referrer
+StakeWise Referral
 """
-type Referrer @entity {
-    "The referrer address"
+type Referral @entity {
+    "Set to `transaction hash-log index`"
     id: ID!
 
-    "The total amount of ETH contributed since last distributor update"
-    contributedAmount: BigInt!
+    "The referrer address"
+    referrer: Bytes!
 
-    "The last update block number"
-    updatedAtBlock: BigInt!
+    "The amount deposited"
+    amount: BigInt!
 
-    "The last update timestamp"
-    updatedAtTimestamp: BigInt!
+    "The creation block number"
+    createdAtBlock: BigInt!
+
+    "The creation timestamp"
+    createdAtTimestamp: BigInt!
 }
 
 

@@ -23,9 +23,8 @@ import {
   createOrLoadValidator,
   getDepositActivationId,
   loadPartner,
-  loadReferrer,
 } from "../entities";
-import { DepositActivation } from "../../generated/schema";
+import { DepositActivation, Referral } from "../../generated/schema";
 
 export function handleMinActivatingDepositUpdated(
   event: MinActivatingDepositUpdated
@@ -101,22 +100,22 @@ export function handleStakeWithPartner(event: StakedWithPartner): void {
 }
 
 export function handleStakeWithReferrer(event: StakedWithReferrer): void {
-  let referrer = loadReferrer(event.params.referrer, event.block);
-  if (referrer == null) {
-    // process only registered referrers
-    return;
-  }
-
-  referrer.contributedAmount = referrer.contributedAmount.plus(
-    event.params.amount
-  );
-  referrer.updatedAtBlock = event.block.number;
-  referrer.updatedAtTimestamp = event.block.timestamp;
-  referrer.save();
+  let referralId = event.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+  let referral = new Referral(referralId);
+  referral.referrer = event.params.referrer;
+  referral.amount = event.params.amount;
+  referral.createdAtBlock = event.block.number;
+  referral.createdAtTimestamp = event.block.timestamp;
+  referral.save();
 
   log.info("[Pool] StakedWithReferrer sender={} referrer={} amount={}", [
     event.transaction.from.toHexString(),
-    referrer.id,
+    event.params.referrer.toHexString()
+
+    ,
     event.params.amount.toString(),
   ]);
 }
