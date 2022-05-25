@@ -1,21 +1,24 @@
 {
   "name": "stakewise",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:perm_goerli": "mustache config/perm_goerli.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:gnosis": "mustache config/gnosis.json subgraph.template.yaml > subgraph.yaml",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:harbour_goerli": "mustache config/harbour_goerli.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:harbour_mainnet": "mustache config/harbour_mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:gnosis": "mustache config/gnosis.json subgraph.template.yaml > subgraph.yaml",
     "build:goerli": "yarn prepare:goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:perm_goerli": "yarn prepare:perm_goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "build:mainnet": "yarn prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:harbour_goerli": "yarn prepare:harbour_goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:harbour_mainnet": "yarn prepare:harbour_mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "build:gnosis": "yarn prepare:gnosis && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:goerli": "yarn build:goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-goerli",
-    "deploy:perm_goerli": "yarn build:perm_goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-perm-goerli",
-    "deploy:gnosis": "yarn build:gnosis && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-gnosis",
     "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-mainnet",
-    "deploy:local": "graph deploy --version-label 1.2.3 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/stakewise",
+    "deploy:harbour_goerli": "yarn build:harbour_goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-perm-goerli",
+    "deploy:harbour_mainnet": "yarn build:harbour_mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-harbour-mainnet",
+    "deploy:gnosis": "yarn build:gnosis && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-gnosis",
+    "deploy:local": "graph deploy --version-label 1.3.0 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/stakewise",
     "create:local": "graph create --node $GRAPH_NODE_URL stakewise/stakewise"
   }
 }
