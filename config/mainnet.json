@@ -15,5 +15,7 @@
   "ethereum_validators_deposit_root_start_block": "13848500",
   "oracles_update_period": "86400",
   "validator_deposit_amount": "32000000000000000000",
-  "distributor_redirected_from": {}
+  "distributor_redirected_from": {
+    "0xd60f0a53c7e97f78fe4ac9013f5749920c601494": "0x3ee101bf969fac08be892c737d2969b3db38d2b8"
+  }
 }
