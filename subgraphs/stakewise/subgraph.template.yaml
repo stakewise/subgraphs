@@ -406,6 +406,7 @@ dataSources:
         - event: Unpaused(address)
           handler: handleUnpaused
 
+{{#opiumDepositScheduler}}
   - kind: ethereum/contract
     name: OpiumDepositScheduler
     network: {{ network }}
@@ -430,6 +431,8 @@ dataSources:
           handler: handleOpiumDepositScheduled
         - event: LogUnscheduled(indexed address,indexed address,uint256)
           handler: handleOpiumDepositUnscheduled
+{{/opiumDepositScheduler}}
+
 {{#distributorTokens}}
   - kind: ethereum/contract
     name: DistributorToken{{index}}

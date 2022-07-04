@@ -36,9 +36,5 @@
     "address": "0xfe5947f029308f854db0cda57e68c43f6c21a207",
     "startBlock": "14798542"
   },
-  "opiumDepositScheduler": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "14798544"
-  },
   "distributorTokens": []
 }
