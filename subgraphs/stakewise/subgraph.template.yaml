@@ -405,6 +405,34 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
+
+{{#opiumDepositScheduler}}
+  - kind: ethereum/contract
+    name: OpiumDepositScheduler
+    network: {{ network }}
+    source:
+      address: '{{ opiumDepositScheduler.address }}'
+      abi: OpiumDepositScheduler
+      startBlock: {{ opiumDepositScheduler.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/distributorTokens.ts
+      entities:
+        - DistributorToken
+        - DistributorTokenHolders
+        - RewardEthToken
+      abis:
+        - name: OpiumDepositScheduler
+          file: ./packages/abis/OpiumDepositScheduler.json
+      eventHandlers:
+        - event: LogScheduled(indexed address,indexed address,uint256)
+          handler: handleOpiumDepositScheduled
+        - event: LogUnscheduled(indexed address,indexed address,uint256)
+          handler: handleOpiumDepositUnscheduled
+{{/opiumDepositScheduler}}
+
 {{#distributorTokens}}
   - kind: ethereum/contract
     name: DistributorToken{{index}}

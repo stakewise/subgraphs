@@ -1,7 +1,8 @@
 import { ADDRESS_ZERO } from "const";
-import { log } from "@graphprotocol/graph-ts";
-import { createOrLoadDistributorToken, createOrLoadDistributorTokenHolder } from "../entities";
+import { Address, log } from "@graphprotocol/graph-ts";
 import { Transfer } from "../../generated/DistributorToken0/ERC20Token";
+import { LogScheduled, LogUnscheduled } from "../../generated/OpiumDepositScheduler/OpiumDepositScheduler";
+import { createOrLoadDistributorToken, createOrLoadDistributorTokenHolder } from "../entities";
 
 export function handleTransfer(event: Transfer): void {
   createOrLoadDistributorToken(event.address);
@@ -48,6 +49,58 @@ export function handleTransfer(event: Transfer): void {
       event.params.from.toHexString(),
       event.params.to.toHexString(),
       event.params.value.toString(),
+    ]
+  );
+}
+
+export function handleOpiumDepositScheduled(event: LogScheduled): void {
+  createOrLoadDistributorToken(event.address);
+
+  if (event.params._pool != Address.fromString("0x3ee101bf969fac08be892c737d2969b3db38d2b8")) {
+    return;
+  }
+
+  let holder = createOrLoadDistributorTokenHolder(
+    event.params._user,
+    event.address,
+    event.block
+  );
+  holder.amount = holder.amount.plus(event.params._amount);
+  holder.updatedAtBlock = event.block.number;
+  holder.updatedAtTimestamp = event.block.timestamp;
+  holder.save();
+
+  log.info(
+    "[DistributorTokenHolder] Opium LogScheduled user={} amount={}",
+    [
+      event.params._user.toHexString(),
+      event.params._amount.toHexString(),
+    ]
+  );
+}
+
+export function handleOpiumDepositUnscheduled(event: LogUnscheduled): void {
+  createOrLoadDistributorToken(event.address);
+
+  if (event.params._pool != Address.fromString("0x3ee101bf969fac08be892c737d2969b3db38d2b8")) {
+    return;
+  }
+
+  let holder = createOrLoadDistributorTokenHolder(
+    event.params._user,
+    event.address,
+    event.block
+  );
+  holder.amount = holder.amount.minus(event.params._amount);
+  holder.updatedAtBlock = event.block.number;
+  holder.updatedAtTimestamp = event.block.timestamp;
+  holder.save();
+
+  log.info(
+    "[DistributorTokenHolder] Opium LogUnscheduled user={} amount={}",
+    [
+      event.params._user.toHexString(),
+      event.params._amount.toHexString(),
     ]
   );
 }
