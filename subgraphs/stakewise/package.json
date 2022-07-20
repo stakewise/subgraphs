@@ -1,6 +1,6 @@
 {
   "name": "stakewise",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "npm run --prefix=../../packages/constants prepare:goerli && mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
@@ -11,7 +11,7 @@
     "build:mainnet": "npm run prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:mainnet": "npm run build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-mainnet",
     "create:mainnet:local": "graph create --node $GRAPH_MAINNET_URL stakewise/stakewise",
-    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.1 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/stakewise",
+    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.2 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/stakewise",
 
     "prepare:harbour_goerli": "npm run --prefix=../../packages/constants prepare:harbour_goerli && mustache config/harbour_goerli.json subgraph.template.yaml > subgraph.yaml",
     "build:harbour_goerli": "npm run prepare:harbour_goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
@@ -21,12 +21,12 @@
     "build:harbour_mainnet": "npm run prepare:harbour_mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:harbour_mainnet": "npm run build:harbour_mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-harbour-mainnet",
     "create:harbour_mainnet:local": "graph create --node $GRAPH_MAINNET_URL stakewise/stakewise-harbour",
-    "deploy:harbour_mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.1 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/stakewise-harbour",
+    "deploy:harbour_mainnet:local": "npm run build:harbour_mainnet && npm run create:harbour_mainnet:local && graph deploy --version-label 1.4.2 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/stakewise-harbour",
 
     "prepare:gnosis": "npm run --prefix=../../packages/constants prepare:gnosis && mustache config/gnosis.json subgraph.template.yaml > subgraph.yaml",
     "build:gnosis": "npm run prepare:gnosis && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:gnosis": "npm run build:gnosis && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/stakewise-gnosis",
     "create:gnosis:local": "graph create --node $GRAPH_GNOSIS_URL stakewise/stakewise",
-    "deploy:gnosis:local": "npm run build:gnosis && npm run create:gnosis:local && graph deploy --version-label 1.4.1 --node $GRAPH_GNOSIS_URL --ipfs $IPFS_GNOSIS_URL stakewise/stakewise"
+    "deploy:gnosis:local": "npm run build:gnosis && npm run create:gnosis:local && graph deploy --version-label 1.4.2 --node $GRAPH_GNOSIS_URL --ipfs $IPFS_GNOSIS_URL stakewise/stakewise"
   }
 }

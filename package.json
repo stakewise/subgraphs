@@ -1,6 +1,6 @@
 {
   "name": "stakewise-subgraphs",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Subgraphs for the StakeWise Protocol",
   "repository": "https://github.com/stakewise/subgraphs",
   "license": "AGPL-3.0-only",
@@ -18,7 +18,8 @@
     "deploy:harbour_mainnet:local": "npm run --prefix=./subgraphs/stakewise deploy:harbour_mainnet:local",
     "build:gnosis": "npm run --prefix=./subgraphs/ethereum build:gnosis && npm run --prefix=./subgraphs/stakewise build:gnosis",
     "deploy:gnosis": "npm run --prefix=./subgraphs/ethereum deploy:gnosis && npm run --prefix=./subgraphs/stakewise deploy:gnosis",
-    "deploy:gnosis:local": "npm run --prefix=./subgraphs/ethereum deploy:gnosis:local && npm run --prefix=./subgraphs/stakewise deploy:gnosis:local"
+    "deploy:gnosis:local": "npm run --prefix=./subgraphs/ethereum deploy:gnosis:local && npm run --prefix=./subgraphs/stakewise deploy:gnosis:local",
+    "graph:auth": "npx run graph auth https://api.thegraph.com/deploy/ $GRAPH_TOKEN"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.28.1",
