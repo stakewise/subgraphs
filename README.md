@@ -17,25 +17,25 @@ Current subgraphs:
 1. Install dependencies:
 
    ```shell script
-   yarn install
+   npm install
    ```
 
 2. Prepare subgraphs for the network you want to deploy on (supports goerli and mainnet):
 
    ```shell script
-   yarn prepare:mainnet
+   npm run prepare:mainnet
    ```
 
 3. Generate types for the Typescript source code:
 
     ```shell script
-    yarn run codegen
+    npm run codegen
     ```
 
 4. Optionally, build the subgraph to check compile errors before deploying:
 
     ```shell script
-    yarn run build
+    npm run build
     ```
 
 5. Authenticate to the Graph API for deployment:
@@ -45,7 +45,7 @@ Current subgraphs:
 
 6. Deploy all the subgraphs or a specific one by navigating to `subgraphs/<subgraph_name>` and running:
     ```shell script
-    yarn deploy:mainnet
+    npm run deploy:mainnet
     ```
 
 ## Documentation

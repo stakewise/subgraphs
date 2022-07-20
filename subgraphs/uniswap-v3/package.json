@@ -1,24 +1,16 @@
 {
   "name": "uniswap-v3",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "license": "AGPL-3.0-only",
   "scripts": {
-    "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:harbour_goerli": "true",
-    "prepare:harbour_mainnet": "true",
-    "prepare:gnosis": "true",
-    "build:goerli": "yarn prepare:goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:mainnet": "yarn prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:harbour_goerli": "yarn prepare:harbour_goerli",
-    "build:harbour_mainnet": "yarn prepare:harbour_mainnet",
-    "build:gnosis": "yarn prepare:gnosis",
-    "deploy:goerli": "yarn build:goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-goerli",
-    "deploy:mainnet": "yarn build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-mainnet",
-    "deploy:harbour_goerli": "yarn build:harbour_goerli",
-    "deploy:harbour_mainnet": "yarn build:harbour_mainnet",
-    "deploy:gnosis": "yarn build:gnosis",
-    "deploy:local": "graph deploy --version-label 1.3.1 --node $GRAPH_NODE_URL --ipfs $IPFS_URL stakewise/uniswap-v3",
-    "create:local": "graph create --node $GRAPH_NODE_URL stakewise/uniswap-v3"
+    "prepare:goerli": "npm run --prefix=../../packages/constants prepare:goerli && mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
+    "build:goerli": "npm run prepare:goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "deploy:goerli": "npm run build:goerli && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-goerli",
+
+    "prepare:mainnet": "npm run --prefix=../../packages/constants prepare:mainnet && mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "build:mainnet": "npm run prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "deploy:mainnet": "npm run build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-mainnet",
+    "create:mainnet:local": "graph create --node $GRAPH_MAINNET_URL stakewise/uniswap-v3",
+    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.0 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/uniswap-v3"
   }
 }
