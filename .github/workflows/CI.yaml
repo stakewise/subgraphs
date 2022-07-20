@@ -47,9 +47,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Authenticate to Graph Service
-        run: GRAPH_TOKEN=${{ secrets.THEGRAPH_TOKEN }} npm run graph:auth
-
       - name: Build subgraph
         env:
           NETWORK: ${{ matrix.network }}
