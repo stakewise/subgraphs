@@ -48,7 +48,7 @@ jobs:
         run: npm install
 
       - name: Authenticate to Graph Service
-        run: npx run graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
+        run: GRAPH_TOKEN=${{ secrets.THEGRAPH_TOKEN }} npm run graph:auth
 
       - name: Deploy Subgraphs
         env:
