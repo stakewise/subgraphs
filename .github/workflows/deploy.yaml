@@ -47,10 +47,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Graph CLI
-        run: |
-          npm install -g @graphprotocol/graph-cli
-          graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
+      - name: Authenticate to Graph Service
+        run: npx run graph auth https://api.thegraph.com/deploy/ ${{ secrets.THEGRAPH_TOKEN }}
 
       - name: Deploy Subgraphs
         env:
