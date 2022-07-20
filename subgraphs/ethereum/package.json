@@ -9,6 +9,7 @@
 
     "prepare:mainnet": "npm run --prefix=../../packages/constants prepare:mainnet && mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "build:mainnet": "npm run prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "deploy:mainnet": "npm run build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-mainnet",
     "create:mainnet:local": "graph create --node $GRAPH_MAINNET_URL stakewise/ethereum",
     "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.2 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/ethereum",
 
