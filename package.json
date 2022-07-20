@@ -19,7 +19,7 @@
     "build:gnosis": "npm run --prefix=./subgraphs/ethereum build:gnosis && npm run --prefix=./subgraphs/stakewise build:gnosis",
     "deploy:gnosis": "npm run --prefix=./subgraphs/ethereum deploy:gnosis && npm run --prefix=./subgraphs/stakewise deploy:gnosis",
     "deploy:gnosis:local": "npm run --prefix=./subgraphs/ethereum deploy:gnosis:local && npm run --prefix=./subgraphs/stakewise deploy:gnosis:local",
-    "graph:auth": "npx run graph auth https://api.thegraph.com/deploy/ $GRAPH_TOKEN"
+    "graph:auth": "graph auth https://api.thegraph.com/deploy/ $GRAPH_TOKEN"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.28.1",
