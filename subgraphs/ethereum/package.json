@@ -1,6 +1,6 @@
 {
   "name": "ethereum",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "npm run --prefix=../../packages/constants prepare:goerli && mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
@@ -10,12 +10,12 @@
     "prepare:mainnet": "npm run --prefix=../../packages/constants prepare:mainnet && mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "build:mainnet": "npm run prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "create:mainnet:local": "graph create --node $GRAPH_MAINNET_URL stakewise/ethereum",
-    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.0 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/ethereum",
+    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.1 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/ethereum",
 
     "prepare:gnosis": "npm run --prefix=../../packages/constants prepare:gnosis && mustache config/gnosis.json subgraph.template.yaml > subgraph.yaml",
     "build:gnosis": "npm run prepare:gnosis && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:gnosis": "npm run build:gnosis && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/ethereum-gnosis",
     "create:gnosis:local": "graph create --node $GRAPH_GNOSIS_URL stakewise/ethereum",
-    "deploy:gnosis:local": "npm run build:gnosis && npm run create:gnosis:local && graph deploy --version-label 1.4.0 --node $GRAPH_GNOSIS_URL --ipfs $IPFS_GNOSIS_URL stakewise/ethereum"
+    "deploy:gnosis:local": "npm run build:gnosis && npm run create:gnosis:local && graph deploy --version-label 1.4.1 --node $GRAPH_GNOSIS_URL --ipfs $IPFS_GNOSIS_URL stakewise/ethereum"
   }
 }
