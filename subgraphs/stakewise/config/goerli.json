@@ -32,6 +32,10 @@
     "address": "0x826f88d423440c305d9096cc1581ae751efcafb0",
     "startBlock": "4468093"
   },
+  "feesEscrow": {
+    "address": "0x6A9d30e05C6832E868390F155388c7d97A6faEAC",
+    "startBlock": "7468611"
+  },
   "roles": {
     "address": "0x81aaa59d7d1000a56326bb577debc287cbd351cc",
     "startBlock": "5905175"
