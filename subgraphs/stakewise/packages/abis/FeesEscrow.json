@@ -29,6 +29,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountDAI",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountMGNO",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeesTransferred",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "transferToPool",
     "outputs": [

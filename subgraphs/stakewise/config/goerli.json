@@ -33,7 +33,7 @@
     "startBlock": "4468093"
   },
   "feesEscrow": {
-    "address": "0x6A9d30e05C6832E868390F155388c7d97A6faEAC",
+    "address": "0x6a9d30e05c6832e868390f155388c7d97a6faeac",
     "startBlock": "7468611"
   },
   "roles": {
