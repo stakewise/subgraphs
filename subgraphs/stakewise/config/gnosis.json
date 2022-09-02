@@ -40,6 +40,10 @@
     "address": "0x0000000000000000000000000000000000000000",
     "startBlock": "21584842"
   },
+  "feesEscrow": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "startBlock": "21584842"
+  },
   "distributorTokens": [
     {
       "index": 0,
