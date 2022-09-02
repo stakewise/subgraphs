@@ -392,8 +392,6 @@ dataSources:
       eventHandlers:
         - event: FeesTransferred(uint256)
           handler: handleFeesTransferred
-        - event: FeesTransferred(uint256,uint256)
-          handler: handleFeesTransferredGnosis
 
   - kind: ethereum/contract
     name: Roles
