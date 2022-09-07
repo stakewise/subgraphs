@@ -373,6 +373,27 @@ dataSources:
           handler: handleUnpaused
 
   - kind: ethereum/contract
+    name: FeesEscrow
+    network: {{ network }}
+    source:
+      address: '{{ feesEscrow.address }}'
+      abi: FeesEscrow
+      startBlock: {{ feesEscrow.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/feesEscrow.ts
+      entities:
+        - Pool
+      abis:
+        - name: FeesEscrow
+          file: ./packages/abis/FeesEscrow.json
+      eventHandlers:
+        - event: FeesTransferred(uint256)
+          handler: handleFeesTransferred
+
+  - kind: ethereum/contract
     name: Roles
     network: {{ network }}
     source:
