@@ -37,8 +37,8 @@
     "startBlock": "14798542"
   },
   "feesEscrow": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "startBlock": "14798545"
+    "address": "0xb5230ebe5b1a9299a5c44f459ed2e8eb7496f581",
+    "startBlock": "15508750"
   },
   "distributorTokens": []
 }

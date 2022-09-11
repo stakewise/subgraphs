@@ -113,9 +113,7 @@ export function handleStakeWithReferrer(event: StakedWithReferrer): void {
 
   log.info("[Pool] StakedWithReferrer sender={} referrer={} amount={}", [
     event.transaction.from.toHexString(),
-    event.params.referrer.toHexString()
-
-    ,
+    event.params.referrer.toHexString(),
     event.params.amount.toString(),
   ]);
 }
