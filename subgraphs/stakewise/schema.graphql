@@ -213,6 +213,9 @@ type RewardEthToken @entity {
     "Total rewards"
     totalRewards: BigInt!
 
+    "Total fees accumulated from priority fees and MEV"
+    totalFees: BigInt!
+
     "The current rewards update block number"
     updatedAtBlock: BigInt!
 

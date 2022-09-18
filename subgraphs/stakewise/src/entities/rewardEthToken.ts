@@ -16,6 +16,8 @@ export function createOrLoadRewardEthToken(): RewardEthToken {
     rewardEthToken.rewardPerStakedEthToken = BIG_INT_ZERO;
     rewardEthToken.distributorPeriodReward = BIG_INT_ZERO;
     rewardEthToken.protocolPeriodReward = BIG_INT_ZERO;
+    rewardEthToken.totalRewards = BIG_INT_ZERO;
+    rewardEthToken.totalFees = BIG_INT_ZERO;
     rewardEthToken.updatedAtBlock = BIG_INT_ZERO;
     rewardEthToken.updatedAtTimestamp = BIG_INT_ZERO;
     rewardEthToken.updatesCount = BIG_INT_ZERO;
