@@ -386,6 +386,7 @@ dataSources:
       file: ./src/mappings/feesEscrow.ts
       entities:
         - Pool
+        - RewardEthToken
       abis:
         - name: FeesEscrow
           file: ./packages/abis/FeesEscrow.json
