@@ -1,6 +1,6 @@
 {
   "name": "stakewise-subgraphs",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Subgraphs for the StakeWise Protocol",
   "repository": "https://github.com/stakewise/subgraphs",
   "license": "AGPL-3.0-only",
