@@ -1,6 +1,6 @@
 {
   "name": "uniswap-v3",
-  "version": "1.4.6",
+  "version": "1.5.0",
   "license": "AGPL-3.0-only",
   "scripts": {
     "prepare:goerli": "npm run --prefix=../../packages/constants prepare:goerli && mustache config/goerli.json subgraph.template.yaml > subgraph.yaml",
@@ -11,6 +11,6 @@
     "build:mainnet": "npm run prepare:mainnet && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:mainnet": "npm run build:mainnet && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ stakewise/uniswap-v3-mainnet",
     "create:mainnet:local": "graph create --node $GRAPH_MAINNET_URL stakewise/uniswap-v3",
-    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.4.6 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/uniswap-v3"
+    "deploy:mainnet:local": "npm run build:mainnet && npm run create:mainnet:local && graph deploy --version-label 1.5.0 --node $GRAPH_MAINNET_URL --ipfs $IPFS_MAINNET_URL stakewise/uniswap-v3"
   }
 }

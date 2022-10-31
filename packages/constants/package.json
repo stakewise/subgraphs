@@ -1,6 +1,6 @@
 {
   "name": "const",
-  "version": "1.4.6",
+  "version": "1.5.0",
   "license": "AGPL-3.0-only",
   "main": "index.ts",
   "type": "module",
