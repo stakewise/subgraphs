@@ -1,4 +1,4 @@
-specVersion: 0.0.4
+specVersion: 0.0.7
 description: The liquid staking protocol
 repository: https://github.com/stakewise/subgraphs/subgraphs/stakewise
 schema:
@@ -13,7 +13,7 @@ dataSources:
       startBlock: {{ pool.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/pool.ts
       entities:
@@ -62,7 +62,7 @@ dataSources:
       startBlock: {{ poolValidators.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/poolValidators.ts
       entities:
@@ -96,7 +96,7 @@ dataSources:
       startBlock: {{ merkleDistributor.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/merkleDistributor.ts
       entities:
@@ -117,7 +117,7 @@ dataSources:
       startBlock: {{ merkleDistributor.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/merkleDistributor.ts
       entities:
@@ -154,7 +154,7 @@ dataSources:
       startBlock: {{ oracles.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/oracles.ts
       entities:
@@ -190,7 +190,7 @@ dataSources:
       startBlock: {{ oracles.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/oracles.ts
       entities:
@@ -212,7 +212,7 @@ dataSources:
       startBlock: {{ vestingEscrowFactory.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/vestingEscrowFactory.ts
       entities:
@@ -238,7 +238,7 @@ dataSources:
       startBlock: {{ stakeWiseToken.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/stakeWiseToken.ts
       entities:
@@ -268,7 +268,7 @@ dataSources:
       startBlock: {{ stakedEthToken.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/stakedEthToken.ts
       entities:
@@ -299,7 +299,7 @@ dataSources:
       startBlock: {{ rewardEthToken.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/rewardEthToken.ts
       entities:
@@ -323,7 +323,7 @@ dataSources:
       startBlock: {{ rewardEthToken.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/rewardEthToken.ts
       entities:
@@ -346,7 +346,7 @@ dataSources:
       startBlock: {{ rewardEthToken.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/rewardEthToken.ts
       entities:
@@ -381,7 +381,7 @@ dataSources:
       startBlock: {{ feesEscrow.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/feesEscrow.ts
       entities:
@@ -403,7 +403,7 @@ dataSources:
       startBlock: {{ roles.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/roles.ts
       entities:
@@ -438,7 +438,7 @@ dataSources:
       startBlock: {{ opiumDepositScheduler.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/distributorTokens.ts
       entities:
@@ -465,7 +465,7 @@ dataSources:
       startBlock: {{ startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/distributorTokens.ts
       entities:
@@ -487,7 +487,7 @@ templates:
       abi: VestingEscrow
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/mappings/vestingEscrow.ts
       entities:
